@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using AtrocidadesRSS.Generator.Infrastructure.Persistence.Entities;
+using AtrocidadesRSS.Generator.Web.Models.Cases;
 
 namespace AtrocidadesRSS.Generator.Web.Services;
 
@@ -33,6 +34,23 @@ public interface IGeneratorApiClient
     Task<(Case? Result, string? Error)> UpdateCaseAsync(
         int id, 
         Contracts.Cases.UpdateCaseRequest request, 
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets all field history for a case, ordered by ChangedAt descending.
+    /// </summary>
+    /// <returns>List of history entries, or empty list if case not found.</returns>
+    Task<List<CaseFieldHistoryViewModel>> GetCaseHistoryAsync(
+        int caseId, 
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets field history for a specific field.
+    /// </summary>
+    /// <returns>List of history entries for the field, or empty list if case/field not found.</returns>
+    Task<List<CaseFieldHistoryViewModel>> GetCaseFieldHistoryAsync(
+        int caseId, 
+        string fieldName, 
         CancellationToken cancellationToken = default);
 }
 
@@ -111,6 +129,70 @@ public class GeneratorApiClient : IGeneratorApiClient
         
         var updatedCase = await response.Content.ReadFromJsonAsync<Case>(cancellationToken: cancellationToken);
         return (updatedCase, null);
+    }
+
+    /// <inheritdoc/>
+    public async Task<List<CaseFieldHistoryViewModel>> GetCaseHistoryAsync(
+        int caseId, 
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"{BaseUrl}/{caseId}/history", cancellationToken);
+            
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new List<CaseFieldHistoryViewModel>();
+            }
+            
+            response.EnsureSuccessStatusCode();
+            
+            var dtos = await response.Content.ReadFromJsonAsync<List<Contracts.Cases.CaseFieldHistoryDto>>(
+                cancellationToken: cancellationToken);
+            
+            return dtos != null 
+                ? CaseFieldHistoryViewModel.FromDtoList(dtos) 
+                : new List<CaseFieldHistoryViewModel>();
+        }
+        catch (Exception)
+        {
+            // Return empty list on error for resilient behavior
+            return new List<CaseFieldHistoryViewModel>();
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task<List<CaseFieldHistoryViewModel>> GetCaseFieldHistoryAsync(
+        int caseId, 
+        string fieldName, 
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var encodedFieldName = Uri.EscapeDataString(fieldName);
+            var response = await _httpClient.GetAsync(
+                $"{BaseUrl}/{caseId}/history/{encodedFieldName}", 
+                cancellationToken);
+            
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new List<CaseFieldHistoryViewModel>();
+            }
+            
+            response.EnsureSuccessStatusCode();
+            
+            var dtos = await response.Content.ReadFromJsonAsync<List<Contracts.Cases.CaseFieldHistoryDto>>(
+                cancellationToken: cancellationToken);
+            
+            return dtos != null 
+                ? CaseFieldHistoryViewModel.FromDtoList(dtos) 
+                : new List<CaseFieldHistoryViewModel>();
+        }
+        catch (Exception)
+        {
+            // Return empty list on error for resilient behavior
+            return new List<CaseFieldHistoryViewModel>();
+        }
     }
 }
 

@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\AtrocidadesRSS.Generator\AtrocidadesRSS.Generator.csproj" />
+    <ProjectReference Include="..\..\src\AtrocidadesRSS.Generator.Web\AtrocidadesRSS.Generator.Web.csproj" />
   </ItemGroup>
 
 </Project>
