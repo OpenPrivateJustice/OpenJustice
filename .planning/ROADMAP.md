@@ -86,7 +86,7 @@
 
 **Plans**: 
 - [x] 03-01: Append-only field history capture + history API
-- [ ] 03-02: Generator timeline + visual diff UI
+- [x] 03-02: Generator timeline + visual diff UI
 
 ---
 
