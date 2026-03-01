@@ -63,6 +63,7 @@
 
 **Plans**: 
 - [x] 02-01: Case management API with validation (COMPLETE)
+- [x] 02-02: Curation workflow controls (COMPLETE)
 
 ---
 
@@ -132,7 +133,7 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Database & Configuration Foundation | 4/4 | Complete | 01-01, 01-02, 01-03, 01-04 |
-| 2. Generator Core | 1/1 | Complete | 02-01 |
+| 2. Generator Core | 2/2 | Complete | 02-01, 02-02 |
 | 3. Generator History System | 0/1 | Not started | - |
 | 4. Reader Core | 0/1 | Not started | - |
 | 5. Reader History UI & Polish | 0/1 | Not started | - |
