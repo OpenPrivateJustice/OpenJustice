@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 
 ## Current Position
 
-Phase: 3 of 5 (Generator History)
-Plan: 03-02 complete
-Status: Plan executed
-Last activity: March 1, 2026 — Plan 03-02 completed
+Phase: 4 of 5 (Reader Core)
+Plan: Not started
+Status: Ready to begin
+Last activity: March 1, 2026 — Phase 3 complete
 
-Progress: [▓▓▓▓▓▓▓▓▓▓] 80%
+Progress: [▓▓▓▓▓▓▓▓▓▓▓] 90%
 
 ## Performance Metrics
 
@@ -100,7 +100,9 @@ Key decisions from Phase 3 Plan 1:
 
 - Phase 1 complete - Database foundation laid
 - Phase 2 complete - Generator core API implemented
-- Phase 3 in progress - Generator history system implemented
+- Phase 3 complete - Generator history system implemented
+- Phase 4 in progress - Reader Core (Blazor WASM, torrent, local SQL)
+- Phase 5 - Reader History UI & Polish
 
 ### Blockers/Concerns
 
