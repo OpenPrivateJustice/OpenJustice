@@ -10,25 +10,25 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 2 of 5 (Generator Core)
-Plan: 02-04 complete
+Plan: 02-05 complete
 Status: Plan executed
-Last activity: March 1, 2026 — Plan 02-04 completed
+Last activity: March 1, 2026 — Plan 02-05 completed
 
-Progress: [▓▓▓▓▓▓▓▓▓▓] 40%
+Progress: [▓▓▓▓▓▓▓▓▓▓] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 8.8 min
-- Total execution time: 0.88 hours
+- Total plans completed: 7
+- Average duration: 8.3 min
+- Total execution time: 0.97 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
-| 2. Generator Core | 4/- | 35 min | 8.8 min |
+| 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | - | - | - |
 | 4. Reader Core | - | - | - |
 | 5. Reader History UI | - | - | - |
@@ -40,6 +40,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 40%
 - Plan 02-02: Curation workflow controls - 5 min
 - Plan 02-03: Blazor web UI for case management - 15 min
 - Plan 02-04: Discovery ingestion + curator review - 2 min
+- Plan 02-05: Generator core finalization - 10 min
 
 *Updated after each plan completion*
 
@@ -80,6 +81,13 @@ Key decisions from Phase 2 Plan 4:
 - Hash-based deduplication prevents duplicate discovered items from same source URL
 - Idempotent approve/reject operations for already-processed items
 
+Key decisions from Phase 2 Plan 5:
+- Evidence association uses EF Core relationship updates with duplicate-prevention
+- Tag association supports both Tag ID lookup and TagName create-or-find
+- Snapshot versioning uses sequential vN.sql naming with regex pattern matching
+- GeneratorOptions consolidates all config into single options class with validation
+- Export service requires pg_dump availability check before attempting export
+
 ### Pending Todos
 
 - Phase 1 complete - Database foundation laid
@@ -92,7 +100,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 1, 2026
-Stopped at: Completed 02-04-PLAN.md execution
+Stopped at: Completed 02-05-PLAN.md execution
 Resume file: None
 
 ## Requirements Status (DB)
@@ -119,3 +127,22 @@ Resume file: None
 - [x] DB-20: Migrations
 - [x] DB-21: Backup/restore
 - [x] DB-22: SQL snapshot export
+
+## Requirements Status (Generator)
+
+- [x] GEN-01: Case CRUD API endpoints
+- [x] GEN-02: Reference code generation (ATRO-YYYY-NNNN)
+- [x] GEN-03: FluentValidation for case requests
+- [x] GEN-04: Curation workflow (approve/reject/verify)
+- [x] GEN-05: Case audit log
+- [x] GEN-06: Discovery RSS aggregator service
+- [x] GEN-07: Discovery Reddit scraper service
+- [x] GEN-08: Discovered case review workflow
+- [x] GEN-09: Hash-based deduplication
+- [x] GEN-10: Blazor Server UI components
+- [x] GEN-11: Typed HTTP client for API calls
+- [x] GEN-12: Evidence association API
+- [x] GEN-13: Tag association API
+- [x] GEN-15: Snapshot export service (pg_dump)
+- [x] GEN-16: Snapshot versioning (v1, v2, ...)
+- [x] GEN-17: Appsettings configuration validation
