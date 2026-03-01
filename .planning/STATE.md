@@ -10,25 +10,25 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 2 of 5 (Generator Core)
-Plan: 02-01 complete
+Plan: 02-02 complete
 Status: Plan executed
-Last activity: March 1, 2026 — Plan 02-01 completed
+Last activity: March 1, 2026 — Plan 02-02 completed
 
-Progress: [▓▓▓▓▓▓▓▓░░░] 24%
+Progress: [▓▓▓▓▓▓▓▓▓░] 28%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 9 min
-- Total execution time: 0.45 hours
+- Total plans completed: 4
+- Average duration: 8 min
+- Total execution time: 0.50 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
-| 2. Generator Core | 1/- | 11 min | 11 min |
+| 2. Generator Core | 2/- | 16 min | 8 min |
 | 3. Generator History | - | - | - |
 | 4. Reader Core | - | - | - |
 | 5. Reader History UI | - | - | - |
@@ -37,6 +37,7 @@ Progress: [▓▓▓▓▓▓▓▓░░░] 24%
 - Plan 01-01: EF Core domain schema - 5 min
 - Plan 01-02: EF Core migration + backup/restore - 10 min
 - Plan 02-01: Case management API - 11 min
+- Plan 02-02: Curation workflow controls - 5 min
 
 *Updated after each plan completion*
 
@@ -61,6 +62,11 @@ Key decisions from Phase 2 Plan 1:
 - Reference code gerado apenas na criação, nunca regenerado na edição
 - Banco in-memory para testes unitários
 
+Key decisions from Phase 2 Plan 2:
+- CurationStatus enum com estados Pending/Approved/Rejected
+- Auditoria append-only ( CaseAuditLog )
+- Transições de estado atômicas com log de auditoria na mesma transação
+
 ### Pending Todos
 
 - Phase 1 complete - Database foundation laid
@@ -73,7 +79,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 1, 2026
-Stopped at: Completed 02-01-PLAN.md execution
+Stopped at: Completed 02-02-PLAN.md execution
 Resume file: None
 
 ## Requirements Status (DB)
