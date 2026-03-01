@@ -109,7 +109,13 @@
 9. Sources, evidence links, and judicial info displayed clearly
 10. Configuration loaded from appsettings.json
 
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Reader WASM scaffold + configuration
+- [ ] 04-02-PLAN.md — Torrent sync, version check, local SQL load
+- [ ] 04-03-PLAN.md — Search, filters, sorting, pagination
+- [ ] 04-04-PLAN.md — Case details view + sensitive content gate
 
 ---
 
