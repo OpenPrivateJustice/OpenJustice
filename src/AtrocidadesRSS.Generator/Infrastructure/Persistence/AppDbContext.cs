@@ -106,6 +106,12 @@ public class AppDbContext : DbContext
             entity.HasIndex(e => e.VictimName);
             entity.HasIndex(e => e.AccusedName);
             entity.HasIndex(e => e.JudicialStatusId);
+
+            // Composite indexes for multi-column filter queries (DB-16)
+            entity.HasIndex(e => new { e.CrimeTypeId, e.JudicialStatusId })
+                .HasDatabaseName("IX_Cases_CrimeTypeId_JudicialStatusId");
+            entity.HasIndex(e => new { e.CrimeLocationState, e.CrimeDate })
+                .HasDatabaseName("IX_Cases_CrimeLocationState_CrimeDate");
         });
 
         // CrimeType Entity Configuration
