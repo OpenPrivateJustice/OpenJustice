@@ -8,16 +8,16 @@
 - [ ] **GEN-01**: API RESTful para inserção manual de casos via .NET Core 10
 - [ ] **GEN-02**: Validação de dados obrigatórios antes da inserção
 - [ ] **GEN-03**: Validação de consistência (datas, relacionamentos, formatos)
-- [ ] **GEN-04**: Interface web SPA para inserção de casos
-- [ ] **GEN-05**: Interface web SPA para edição de casos existentes
+- [x] **GEN-04**: Interface web SPA para inserção de casos
+- [x] **GEN-05**: Interface web SPA para edição de casos existentes
 - [ ] **GEN-06**: Sistema de curadoria e aprovação de registros
 - [ ] **GEN-07**: Marcador de "Verificado" por curador
 - [ ] **GEN-08**: Histórico de alterações (audit log) por caso
 
 #### Coleta de Dados
-- [ ] **GEN-09**: RSS feed aggregator para levantar potenciais casos
-- [ ] **GEN-10**: Extração de dados de threads do Reddit (subreddit)
-- [ ] **GEN-11**: Sistema de aprovação/rejeição de casos levantados automaticamente
+- [x] **GEN-09**: RSS feed aggregator para levantar potenciais casos
+- [x] **GEN-10**: Extração de dados de threads do Reddit (subreddit)
+- [x] **GEN-11**: Sistema de aprovação/rejeição de casos levantados automaticamente
 - [ ] **GEN-12**: Upload/associação de evidências (links, documentos)
 - [ ] **GEN-13**: Tags e categorização de casos
 
@@ -157,14 +157,14 @@
 | GEN-01 | Phase 2 | Pending |
 | GEN-02 | Phase 2 | Pending |
 | GEN-03 | Phase 2 | Pending |
-| GEN-04 | Phase 2 | Pending |
-| GEN-05 | Phase 2 | Pending |
+| GEN-04 | Phase 2 | Complete |
+| GEN-05 | Phase 2 | Complete |
 | GEN-06 | Phase 2 | Pending |
 | GEN-07 | Phase 2 | Pending |
 | GEN-08 | Phase 2 | Pending |
-| GEN-09 | Phase 2 | Pending |
-| GEN-10 | Phase 2 | Pending |
-| GEN-11 | Phase 2 | Pending |
+| GEN-09 | Phase 2 | Complete |
+| GEN-10 | Phase 2 | Complete |
+| GEN-11 | Phase 2 | Complete |
 | GEN-12 | Phase 2 | Pending |
 | GEN-13 | Phase 2 | Pending |
 | GEN-14 | Phase 2 | Pending |

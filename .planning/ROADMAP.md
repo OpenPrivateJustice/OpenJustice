@@ -8,7 +8,7 @@
 ## Phases
 
 - [x] **Phase 1: Database & Configuration Foundation** - PostgreSQL schema, indices, migrations, appsettings
-- [ ] **Phase 2: Generator Core** - API, Web UI, Curation, Export, RSS/Reddit scraping
+- [x] **Phase 2: Generator Core** - API, Web UI, Curation, Export, RSS/Reddit scraping
 - [ ] **Phase 3: Generator History System** - CaseFieldHistory, confidence scores, timeline & diff UI
 - [ ] **Phase 4: Reader Core** - Blazor SPA, torrent download, local SQL, search/filters, case viewing
 - [ ] **Phase 5: Reader History UI & Polish** - Timeline, diff, confidence display, responsive UI, error handling
@@ -64,6 +64,8 @@
 **Plans**: 
 - [x] 02-01: Case management API with validation (COMPLETE)
 - [x] 02-02: Curation workflow controls (COMPLETE)
+- [x] 02-03: Blazor web UI for case management (COMPLETE)
+- [x] 02-04: Discovery ingestion + curator review (COMPLETE)
 
 ---
 
@@ -133,7 +135,7 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Database & Configuration Foundation | 4/4 | Complete | 01-01, 01-02, 01-03, 01-04 |
-| 2. Generator Core | 2/2 | Complete | 02-01, 02-02 |
+| 2. Generator Core | 4/4 | Complete | 02-01, 02-02, 02-03, 02-04 |
 | 3. Generator History System | 0/1 | Not started | - |
 | 4. Reader Core | 0/1 | Not started | - |
 | 5. Reader History UI & Polish | 0/1 | Not started | - |

@@ -10,25 +10,25 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 2 of 5 (Generator Core)
-Plan: 02-03 complete
+Plan: 02-04 complete
 Status: Plan executed
-Last activity: March 1, 2026 — Plan 02-03 completed
+Last activity: March 1, 2026 — Plan 02-04 completed
 
-Progress: [▓▓▓▓▓▓▓▓▓▓] 35%
+Progress: [▓▓▓▓▓▓▓▓▓▓] 40%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 9.2 min
-- Total execution time: 0.75 hours
+- Total plans completed: 6
+- Average duration: 8.8 min
+- Total execution time: 0.88 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
-| 2. Generator Core | 3/- | 31 min | 10.3 min |
+| 2. Generator Core | 4/- | 35 min | 8.8 min |
 | 3. Generator History | - | - | - |
 | 4. Reader Core | - | - | - |
 | 5. Reader History UI | - | - | - |
@@ -39,6 +39,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 35%
 - Plan 02-01: Case management API - 11 min
 - Plan 02-02: Curation workflow controls - 5 min
 - Plan 02-03: Blazor web UI for case management - 15 min
+- Plan 02-04: Discovery ingestion + curator review - 2 min
 
 *Updated after each plan completion*
 
@@ -74,6 +75,11 @@ Key decisions from Phase 2 Plan 3:
 - Typed HttpClient para chamadas API com tratamento de erros
 - Lookup data estático para dropdowns (simplificação)
 
+Key decisions from Phase 2 Plan 4:
+- Discovery items remain gated by curator review before promotion to official cases
+- Hash-based deduplication prevents duplicate discovered items from same source URL
+- Idempotent approve/reject operations for already-processed items
+
 ### Pending Todos
 
 - Phase 1 complete - Database foundation laid
@@ -86,7 +92,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 1, 2026
-Stopped at: Completed 02-03-PLAN.md execution
+Stopped at: Completed 02-04-PLAN.md execution
 Resume file: None
 
 ## Requirements Status (DB)
