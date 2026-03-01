@@ -10,25 +10,25 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 2 of 5 (Generator Core)
-Plan: 02-02 complete
+Plan: 02-03 complete
 Status: Plan executed
-Last activity: March 1, 2026 — Plan 02-02 completed
+Last activity: March 1, 2026 — Plan 02-03 completed
 
-Progress: [▓▓▓▓▓▓▓▓▓░] 28%
+Progress: [▓▓▓▓▓▓▓▓▓▓] 35%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 8 min
-- Total execution time: 0.50 hours
+- Total plans completed: 5
+- Average duration: 9.2 min
+- Total execution time: 0.75 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
-| 2. Generator Core | 2/- | 16 min | 8 min |
+| 2. Generator Core | 3/- | 31 min | 10.3 min |
 | 3. Generator History | - | - | - |
 | 4. Reader Core | - | - | - |
 | 5. Reader History UI | - | - | - |
@@ -38,6 +38,7 @@ Progress: [▓▓▓▓▓▓▓▓▓░] 28%
 - Plan 01-02: EF Core migration + backup/restore - 10 min
 - Plan 02-01: Case management API - 11 min
 - Plan 02-02: Curation workflow controls - 5 min
+- Plan 02-03: Blazor web UI for case management - 15 min
 
 *Updated after each plan completion*
 
@@ -67,6 +68,12 @@ Key decisions from Phase 2 Plan 2:
 - Auditoria append-only ( CaseAuditLog )
 - Transições de estado atômicas com log de auditoria na mesma transação
 
+Key decisions from Phase 2 Plan 3:
+- Blazor Server rendering mode para integração completa com .NET
+- CaseFormModel com DataAnnotations para validação declarativa
+- Typed HttpClient para chamadas API com tratamento de erros
+- Lookup data estático para dropdowns (simplificação)
+
 ### Pending Todos
 
 - Phase 1 complete - Database foundation laid
@@ -79,7 +86,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 1, 2026
-Stopped at: Completed 02-02-PLAN.md execution
+Stopped at: Completed 02-03-PLAN.md execution
 Resume file: None
 
 ## Requirements Status (DB)
