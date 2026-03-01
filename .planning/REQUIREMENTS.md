@@ -142,12 +142,74 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GEN-01 | TBD | Not Mapped |
-| GEN-02 | TBD | Not Mapped |
-| ... | ... | ... |
-
-*Traceability section auto-populated by roadmap creation*
+| GEN-01 | Phase 2 | Pending |
+| GEN-02 | Phase 2 | Pending |
+| GEN-03 | Phase 2 | Pending |
+| GEN-04 | Phase 2 | Pending |
+| GEN-05 | Phase 2 | Pending |
+| GEN-06 | Phase 2 | Pending |
+| GEN-07 | Phase 2 | Pending |
+| GEN-08 | Phase 2 | Pending |
+| GEN-09 | Phase 3 | Pending |
+| GEN-10 | Phase 3 | Pending |
+| GEN-11 | Phase 3 | Pending |
+| GEN-12 | Phase 3 | Pending |
+| GEN-13 | Phase 3 | Pending |
+| GEN-14 | Phase 2 | Pending |
+| GEN-15 | Phase 2 | Pending |
+| GEN-16 | Phase 2 | Pending |
+| GEN-17 | Phase 2 | Pending |
+| RDR-01 | Phase 4 | Pending |
+| RDR-02 | Phase 4 | Pending |
+| RDR-03 | Phase 4 | Pending |
+| RDR-04 | Phase 4 | Pending |
+| RDR-05 | Phase 4 | Pending |
+| RDR-06 | Phase 4 | Pending |
+| RDR-07 | Phase 4 | Pending |
+| RDR-08 | Phase 4 | Pending |
+| RDR-09 | Phase 4 | Pending |
+| RDR-10 | Phase 4 | Pending |
+| RDR-11 | Phase 4 | Pending |
+| RDR-12 | Phase 4 | Pending |
+| RDR-13 | Phase 4 | Pending |
+| RDR-14 | Phase 4 | Pending |
+| RDR-15 | Phase 4 | Pending |
+| RDR-16 | Phase 4 | Pending |
+| RDR-17 | Phase 4 | Pending |
+| RDR-18 | Phase 4 | Pending |
+| RDR-19 | Phase 4 | Pending |
+| RDR-20 | Phase 4 | Pending |
+| RDR-21 | Phase 4 | Pending |
+| RDR-22 | Phase 4 | Pending |
+| RDR-23 | Phase 4 | Pending |
+| RDR-24 | Phase 4 | Pending |
+| DB-01 | Phase 1 | Pending |
+| DB-02 | Phase 1 | Pending |
+| DB-03 | Phase 1 | Pending |
+| DB-04 | Phase 1 | Pending |
+| DB-05 | Phase 1 | Pending |
+| DB-06 | Phase 1 | Pending |
+| DB-07 | Phase 1 | Pending |
+| DB-08 | Phase 1 | Pending |
+| DB-09 | Phase 1 | Pending |
+| DB-10 | Phase 1 | Pending |
+| DB-11 | Phase 1 | Pending |
+| DB-12 | Phase 1 | Pending |
+| DB-13 | Phase 1 | Pending |
+| DB-14 | Phase 1 | Pending |
+| DB-15 | Phase 1 | Pending |
+| DB-16 | Phase 1 | Pending |
+| DB-17 | Phase 1 | Pending |
+| DB-18 | Phase 1 | Pending |
+| DB-19 | Phase 1 | Pending |
+| DB-20 | Phase 1 | Pending |
+| CFG-01 | Phase 1 | Pending |
+| CFG-02 | Phase 1 | Pending |
+| CFG-03 | Phase 1 | Pending |
+| CFG-04 | Phase 1 | Pending |
+| CFG-05 | Phase 1 | Pending |
+| CFG-06 | Phase 1 | Pending |
 
 ---
 
-*Last updated: March 1, 2026 after requirements definition*
+*Last updated: March 1, 2026 after roadmap creation*
