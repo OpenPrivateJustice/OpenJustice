@@ -1,5 +1,414 @@
 @page "/sync"
+@inject IVersionService VersionService
+@inject ITorrentSyncService SyncService
+@inject ILocalCaseStore CaseStore
+@inject ILogger<Sync> Logger
 
-<h1>Sync</h1>
+<PageTitle>Sync - AtrocidadesRSS</PageTitle>
 
-<p>Synchronize database snapshots via torrent.</p>
+<h1>Database Sync</h1>
+
+<p>Synchronize the local database with the latest snapshot from the network.</p>
+
+<div class="sync-container">
+    <!-- Status Panel -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Sync Status</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Current State:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge @GetStateBadgeClass()">
+                                @CurrentStatus.State
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Local Version:</dt>
+                        <dd class="col-sm-8">@CurrentStatus.LocalVersion ?? "Not installed"</dd>
+
+                        <dt class="col-sm-4">Remote Version:</dt>
+                        <dd class="col-sm-8">@CurrentStatus.RemoteVersion ?? "Unknown"</dd>
+
+                        <dt class="col-sm-4">Database:</dt>
+                        <dd class="col-sm-8">
+                            @if (CaseStore.HasData())
+                            {
+                                <span class="text-success">Loaded</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Empty</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    @if (!string.IsNullOrEmpty(CurrentStatus.LastAction))
+                    {
+                        <div class="alert alert-info">
+                            <strong>Last Action:</strong> @CurrentStatus.LastAction
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(CurrentStatus.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Error:</strong> @CurrentStatus.ErrorMessage
+                        </div>
+                    }
+
+                    @if (CurrentStatus.State == SyncState.Downloading && CurrentStatus.Progress > 0)
+                    {
+                        <div class="mb-3">
+                            <label>Download Progress</label>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: @CurrentStatus.Progress%">
+                                    @CurrentStatus.Progress.ToString("F1")%
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (CaseStore.GetImportStatus().IsImporting)
+                    {
+                        <div class="mb-3">
+                            <label>Import Progress</label>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" 
+                                     style="width: @CaseStore.GetImportStatus().Progress%">
+                                    @CaseStore.GetImportStatus().Progress.ToString("F1")%
+                                </div>
+                            </div>
+                            <small class="text-muted">@CaseStore.GetImportStatus().CurrentPhase</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Panel -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Actions</h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="btn btn-primary" 
+                        disabled="@(IsBusy)"
+                        @onclick="CheckForUpdates">
+                    <span class="oi oi-magnifying-glass"></span> Check for Updates
+                </button>
+
+                <button class="btn btn-success" 
+                        disabled="@(IsBusy || CurrentStatus.State == SyncState.Downloading)"
+                        @onclick="DownloadLatest">
+                    <span class="oi oi-cloud-download"></span> Download Latest Snapshot
+                </button>
+
+                <button class="btn btn-info" 
+                        disabled="@(IsBusy || !CaseStore.HasData())"
+                        @onclick="ReloadDatabase">
+                    <span class="oi oi-reload"></span> Reload Local Database
+                </button>
+
+                <button class="btn btn-outline-secondary" 
+                        disabled="@IsBusy"
+                        @onclick="ResetStatus">
+                    <span class="oi oi-reset"></span> Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Database Stats (if loaded) -->
+    @if (CaseStore.HasData())
+    {
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Database Statistics</h5>
+            </div>
+            <div class="card-body">
+                @if (_stats != null)
+                {
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>@_stats.TotalCases</h3>
+                                <p>Total Cases</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>@_stats.VerifiedCases</h3>
+                                <p>Verified</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>@_stats.SensitiveCases</h3>
+                                <p>Sensitive</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>@(_stats.LastUpdated?.ToString("g") ?? "N/A")</h3>
+                                <p>Last Updated</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Sync Log -->
+    @if (_syncLog.Count > 0)
+    {
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Sync Log</h5>
+            </div>
+            <div class="card-body">
+                <ul class="sync-log">
+                    @foreach (var entry in _syncLog)
+                    {
+                        <li class="@entry.Class">
+                            <span class="timestamp">@entry.Timestamp.ToString("HH:mm:ss")</span>
+                            <span class="message">@entry.Message</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private SyncStatus CurrentStatus => SyncService.GetStatus();
+    private bool IsBusy => CurrentStatus.State == SyncState.Checking || 
+                          CurrentStatus.State == SyncState.Downloading ||
+                          CaseStore.GetImportStatus().IsImporting;
+    private DatabaseStats? _stats;
+    private List<SyncLogEntry> _syncLog = new();
+
+    protected override void OnInitialized()
+    {
+        RefreshStats();
+        AddLog("info", "Sync page loaded");
+    }
+
+    private async Task CheckForUpdates()
+    {
+        AddLog("info", "Checking for updates...");
+        
+        var result = await VersionService.CheckVersionAsync();
+        
+        if (!string.IsNullOrEmpty(result.ErrorMessage))
+        {
+            AddLog("error", $"Version check failed: {result.ErrorMessage}");
+            return;
+        }
+
+        if (result.UpdateAvailable)
+        {
+            AddLog("success", $"Update available: v{result.RemoteVersion} (current: v{result.LocalVersion})");
+        }
+        else
+        {
+            AddLog("info", $"Already up to date: v{result.LocalVersion}");
+        }
+    }
+
+    private async Task DownloadLatest()
+    {
+        AddLog("info", "Starting download...");
+        
+        var progress = new Progress<double>(p => 
+        {
+            // Progress is handled by the service status
+            StateHasChanged();
+        });
+
+        var result = await SyncService.SyncAsync(progress);
+        
+        if (result.Success)
+        {
+            AddLog("success", $"Sync complete: v{result.DownloadedVersion}");
+            
+            // Auto-load the database after download
+            if (!string.IsNullOrEmpty(result.LocalFilePath))
+            {
+                await LoadDatabase(result.LocalFilePath);
+            }
+        }
+        else
+        {
+            AddLog("error", $"Sync failed: {result.ErrorMessage}");
+        }
+
+        RefreshStats();
+    }
+
+    private async Task LoadDatabase(string? filePath = null)
+    {
+        AddLog("info", "Loading database...");
+        
+        // In a real implementation, we'd load from the downloaded file
+        // For now, simulate with a demo import
+        var demoSql = @"
+            INSERT INTO cases (id, reference_code, crime_date, crime_type, victim_name, accused_name, location_city, location_state, judicial_status, description, confidence_score, is_verified, is_sensitive_content, created_at, updated_at) 
+            VALUES (1, 'ATRO-2024-001', '2024-01-15', 'Homicídio', 'João Silva', 'Pedro Santos', 'São Paulo', 'SP', 'Condenado', 'Caso de homicídiodoloso', 95, true, false, '2024-01-20', '2024-01-20');
+            INSERT INTO cases (id, reference_code, crime_date, crime_type, victim_name, accused_name, location_city, location_state, judicial_status, description, confidence_score, is_verified, is_sensitive_content, created_at, updated_at) 
+            VALUES (2, 'ATRO-2024-002', '2024-02-20', 'Estupro', 'Maria Oliveira', 'Carlos Souza', 'Rio de Janeiro', 'RJ', 'Processo', 'Caso de estupro', 80, true, true, '2024-02-25', '2024-02-25');
+            INSERT INTO cases (id, reference_code, crime_date, crime_type, victim_name, accused_name, location_city, location_state, judicial_status, description, confidence_score, is_verified, is_sensitive_content, created_at, updated_at) 
+            VALUES (3, 'ATRO-2024-003', '2024-03-10', 'Pedofilia', 'Menino', 'José Santos', 'Belo Horizonte', 'MG', 'Investigação', 'Caso de abuso sexual infantil', 65, false, true, '2024-03-15', '2024-03-15');
+        ";
+
+        var importResult = await CaseStore.ImportSnapshotAsync(demoSql);
+        
+        if (importResult.Success)
+        {
+            AddLog("success", $"Database loaded: {importResult.RecordsImported} records");
+            
+            if (importResult.Warnings?.Count > 0)
+            {
+                foreach (var warning in importResult.Warnings)
+                {
+                    AddLog("warning", warning);
+                }
+            }
+        }
+        else
+        {
+            AddLog("error", $"Database load failed: {importResult.ErrorMessage}");
+        }
+
+        RefreshStats();
+    }
+
+    private async Task ReloadDatabase()
+    {
+        AddLog("info", "Reloading database...");
+        
+        await CaseStore.ClearAsync();
+        await LoadDatabase();
+        
+        AddLog("success", "Database reloaded");
+    }
+
+    private void ResetStatus()
+    {
+        SyncService.ResetStatus();
+        AddLog("info", "Status reset");
+        StateHasChanged();
+    }
+
+    private void RefreshStats()
+    {
+        _stats = CaseStore.GetStatsAsync().GetAwaiter().GetResult();
+    }
+
+    private void AddLog(string level, string message)
+    {
+        _syncLog.Add(new SyncLogEntry(
+            Timestamp: DateTime.Now,
+            Level: level,
+            Message: message,
+            Class: level switch
+            {
+                "error" => "log-error",
+                "warning" => "log-warning",
+                "success" => "log-success",
+                _ => "log-info"
+            }));
+
+        // Keep only last 50 entries
+        if (_syncLog.Count > 50)
+        {
+            _syncLog.RemoveAt(0);
+        }
+
+        Logger.LogInformation("[{Level}] {Message}", level.ToUpper(), message);
+    }
+
+    private string GetStateBadgeClass() => CurrentStatus.State switch
+    {
+        SyncState.Idle => "bg-secondary",
+        SyncState.Checking => "bg-info",
+        SyncState.Downloading => "bg-warning",
+        SyncState.Ready => "bg-success",
+        SyncState.Error => "bg-danger",
+        _ => "bg-secondary"
+    };
+
+    private record SyncLogEntry(DateTime Timestamp, string Level, string Message, string Class);
+}
+
+<style>
+    .sync-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .stat-card {
+        text-align: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .stat-card h3 {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+        color: #0d6efd;
+    }
+
+    .stat-card p {
+        margin: 0;
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+
+    .sync-log {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .sync-log li {
+        padding: 0.5rem;
+        border-bottom: 1px solid #eee;
+        font-family: monospace;
+        font-size: 0.875rem;
+    }
+
+    .sync-log .timestamp {
+        color: #6c757d;
+        margin-right: 0.75rem;
+    }
+
+    .log-error {
+        background-color: #f8d7da;
+    }
+
+    .log-warning {
+        background-color: #fff3cd;
+    }
+
+    .log-success {
+        background-color: #d4edda;
+    }
+
+    .log-info {
+        background-color: #d1ecf1;
+    }
+</style>

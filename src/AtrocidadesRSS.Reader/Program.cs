@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using AtrocidadesRSS.Reader;
 using AtrocidadesRSS.Reader.Configuration;
+using AtrocidadesRSS.Reader.Services.Sync;
+using AtrocidadesRSS.Reader.Services.Data;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -20,6 +23,13 @@ builder.Services.AddOptions<ReaderOptions>()
 
 // Register options validator
 builder.Services.AddSingleton<IValidateOptions<ReaderOptions>, ReaderOptionsValidator>();
+
+// Register sync services
+builder.Services.AddSingleton<IVersionService, VersionService>();
+builder.Services.AddSingleton<ITorrentSyncService, TorrentSyncService>();
+
+// Register local case store
+builder.Services.AddSingleton<ILocalCaseStore, SqliteCaseStore>();
 
 // Validate configuration at startup - this will fail fast if required values are missing
 var optionsValidation = builder.Services.BuildServiceProvider().GetService<IOptions<ReaderOptions>>();
