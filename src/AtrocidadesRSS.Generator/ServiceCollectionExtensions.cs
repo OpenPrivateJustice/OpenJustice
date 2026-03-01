@@ -1,6 +1,8 @@
 using AtrocidadesRSS.Generator.Configuration;
 using AtrocidadesRSS.Generator.Services.Cases;
 using AtrocidadesRSS.Generator.Services.Curation;
+using AtrocidadesRSS.Generator.Services.Discovery;
+using AtrocidadesRSS.Generator.Services.Export;
 using AtrocidadesRSS.Generator.Services.History;
 using AtrocidadesRSS.Generator.Validation.Cases;
 using FluentValidation;
@@ -27,8 +29,9 @@ public static class ServiceCollectionExtensions
         var connectionStrings = configuration.GetSection("ConnectionStrings");
         var filePaths = configuration.GetSection("FilePaths");
         var torrent = configuration.GetSection("Torrent");
+        var discovery = configuration.GetSection("Discovery");
 
-        // Register configuration options using PostConfigure
+        // Register legacy AppOptions for backward compatibility
         services.PostConfigure<AppOptions>(options =>
         {
             options.ConnectionStrings = connectionStrings.Get<ConnectionStrings>() ?? new ConnectionStrings();
@@ -36,8 +39,74 @@ public static class ServiceCollectionExtensions
             options.Torrent = torrent.Get<TorrentOptions>() ?? new TorrentOptions();
         });
 
-        // Add configuration validation
+        // Add configuration validation for legacy options
         services.AddSingleton<IValidateOptions<AppOptions>, AppConfigurationValidator>();
+
+        // Register new GeneratorOptions (primary configuration)
+        services.Configure<GeneratorOptions>(options =>
+        {
+            // Bind database settings
+            var dbConfig = configuration.GetSection("Database");
+            if (dbConfig.Exists())
+            {
+                options.Database = dbConfig.Get<DatabaseOptions>() ?? new DatabaseOptions();
+            }
+            else
+            {
+                // Fall back to ConnectionStrings for backward compatibility
+                var connStr = connectionStrings.Get<ConnectionStrings>();
+                if (connStr != null)
+                {
+                    options.Database.ConnectionString = connStr.DefaultConnection;
+                }
+            }
+
+            // Bind file paths
+            options.FilePaths = filePaths.Get<FilePathsOptions>() ?? new FilePathsOptions();
+
+            // Bind discovery
+            options.Discovery = discovery.Get<DiscoveryOptions>() ?? new DiscoveryOptions();
+
+            // Bind export settings
+            var export = configuration.GetSection("Export");
+            if (export.Exists())
+            {
+                options.Export = export.Get<ExportOptions>() ?? new ExportOptions();
+            }
+
+            // Bind torrent
+            options.Torrent = torrent.Get<TorrentOptions>();
+        });
+
+        // Add validation for GeneratorOptions
+        services.AddSingleton<IValidateOptions<GeneratorOptions>, GeneratorOptionsValidator>();
+
+        // Register Snapshot services
+        services.AddSingleton<ISnapshotVersionService, SnapshotVersionService>();
+        services.Configure<SnapshotExportOptions>(snapshotOptions =>
+        {
+            // Map from GeneratorOptions to SnapshotExportOptions
+            var genOptions = new GeneratorOptions();
+            configuration.GetSection("Database").Bind(genOptions.Database);
+            filePaths.Bind(genOptions.FilePaths);
+            
+            var export = configuration.GetSection("Export");
+            if (export.Exists())
+            {
+                export.Bind(genOptions.Export);
+            }
+
+            // Set snapshot-specific options
+            snapshotOptions.SnapshotDirectory = genOptions.FilePaths.SnapshotDirectory;
+            snapshotOptions.ConnectionString = genOptions.Database.ConnectionString;
+            snapshotOptions.Host = genOptions.Database.Host;
+            snapshotOptions.Port = genOptions.Database.Port;
+            snapshotOptions.Database = genOptions.Database.Name;
+            snapshotOptions.Username = genOptions.Database.Username;
+            snapshotOptions.Password = genOptions.Database.Password;
+            snapshotOptions.FilePrefix = genOptions.Export.FilePrefix;
+            snapshotOptions.PgDumpPath = genOptions.Export.PgDumpPath;
+        });
 
         // Ensure directories exist at startup
         EnsureDirectoriesExist(filePaths);
@@ -90,6 +159,37 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Add discovery services for automated RSS and Reddit ingestion.
+    /// </summary>
+    public static IServiceCollection AddDiscoveryServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        // Register Discovery options
+        services.Configure<DiscoveryOptions>(configuration.GetSection("Discovery"));
+        
+        // Register discovery services
+        services.AddScoped<IRssAggregatorService, RssAggregatorService>();
+        services.AddScoped<IRedditThreadScraperService, RedditThreadScraperService>();
+        services.AddScoped<IDiscoveredCaseReviewService, DiscoveredCaseReviewService>();
+        
+        // Register HttpClient for discovery services
+        services.AddHttpClient<IRssAggregatorService, RssAggregatorService>();
+        services.AddHttpClient<IRedditThreadScraperService, RedditThreadScraperService>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Add export services for SQL snapshot generation.
+    /// </summary>
+    public static IServiceCollection AddExportServices(this IServiceCollection services)
+    {
+        // Register snapshot export service
+        services.AddScoped<ISnapshotExportService, SnapshotExportService>();
+
+        return services;
+    }
+
+    /// <summary>
     /// Validate configuration at startup - call after AddAtrocidadesRssConfiguration
     /// </summary>
     public static IServiceCollection ValidateAtrocidadesRssConfiguration(this IServiceCollection services)
@@ -100,13 +200,13 @@ public static class ServiceCollectionExtensions
 
     private static void EnsureDirectoriesExist(IConfigurationSection filePathsSection)
     {
-        var filePaths = new FilePaths();
+        var filePaths = new FilePathsOptions();
         filePathsSection.Bind(filePaths);
         
-        EnsureDirectoryExists(filePaths.ExportDirectory);
-        EnsureDirectoryExists(filePaths.BackupDirectory);
-        EnsureDirectoryExists(filePaths.TempDirectory);
         EnsureDirectoryExists(filePaths.SnapshotDirectory);
+        EnsureDirectoryExists(filePaths.BackupDirectory);
+        EnsureDirectoryExists(filePaths.ExportDirectory);
+        EnsureDirectoryExists(filePaths.TempDirectory);
     }
 
     private static void EnsureDirectoryExists(string? path)
