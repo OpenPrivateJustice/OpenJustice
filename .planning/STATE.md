@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 
 ## Current Position
 
-Phase: 2 of 5 (Generator Core)
-Plan: 02-05 complete
+Phase: 3 of 5 (Generator History)
+Plan: 03-01 complete
 Status: Plan executed
-Last activity: March 1, 2026 — Plan 02-05 completed
+Last activity: March 1, 2026 — Plan 03-01 completed
 
-Progress: [▓▓▓▓▓▓▓▓▓▓] 50%
+Progress: [▓▓▓▓▓▓▓▓▓▓] 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 8.3 min
-- Total execution time: 0.97 hours
+- Total execution time: 1.06 hours
 
 **By Phase:**
 
@@ -29,7 +29,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 50%
 |-------|-------|-------|----------|
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
-| 3. Generator History | - | - | - |
+| 3. Generator History | 1/1 | 9 min | 9.0 min |
 | 4. Reader Core | - | - | - |
 | 5. Reader History UI | - | - | - |
 
@@ -41,6 +41,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 50%
 - Plan 02-03: Blazor web UI for case management - 15 min
 - Plan 02-04: Discovery ingestion + curator review - 2 min
 - Plan 02-05: Generator core finalization - 10 min
+- Plan 03-01: Generator history system - 9 min
 
 *Updated after each plan completion*
 
@@ -88,10 +89,17 @@ Key decisions from Phase 2 Plan 5:
 - GeneratorOptions consolidates all config into single options class with validation
 - Export service requires pg_dump availability check before attempting export
 
+Key decisions from Phase 3 Plan 1:
+- Append-only pattern chosen for immutable audit trail
+- Confidence scores preserved per field change without rollback coupling
+- Field values serialized as JSON for flexibility
+- History ordered by ChangedAt descending for timeline rendering
+
 ### Pending Todos
 
 - Phase 1 complete - Database foundation laid
-- Phase 2 in progress - Generator core API implemented
+- Phase 2 complete - Generator core API implemented
+- Phase 3 in progress - Generator history system implemented
 
 ### Blockers/Concerns
 
@@ -100,7 +108,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 1, 2026
-Stopped at: Completed 02-05-PLAN.md execution
+Stopped at: Completed 03-01-PLAN.md execution
 Resume file: None
 
 ## Requirements Status (DB)
@@ -146,3 +154,6 @@ Resume file: None
 - [x] GEN-15: Snapshot export service (pg_dump)
 - [x] GEN-16: Snapshot versioning (v1, v2, ...)
 - [x] GEN-17: Appsettings configuration validation
+- [x] GEN-18: Case field history append-only tracking
+- [x] GEN-19: Case history API endpoints
+- [x] GEN-20: Change confidence per history entry

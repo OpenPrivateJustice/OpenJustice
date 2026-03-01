@@ -84,7 +84,9 @@
 4. Curator can view timeline showing evolution of any field over time
 5. Curator can see diff view comparing any two versions of a field (e.g., "name changed from 'X' to 'Y' on date")
 
-**Plans**: TBD
+**Plans**: 
+- [x] 03-01: Append-only field history capture + history API
+- [ ] 03-02: Generator timeline + visual diff UI
 
 ---
 
@@ -136,8 +138,8 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Database & Configuration Foundation | 4/4 | Complete | 01-01, 01-02, 01-03, 01-04 |
-| 2. Generator Core | 4/4 | Complete | 02-01, 02-02, 02-03, 02-04 |
-| 3. Generator History System | 0/1 | Not started | - |
+| 2. Generator Core | 5/5 | Complete | 02-01, 02-02, 02-03, 02-04, 02-05 |
+| 3. Generator History System | 1/2 | In Progress | 03-01 |
 | 4. Reader Core | 0/1 | Not started | - |
 | 5. Reader History UI & Polish | 0/1 | Not started | - |
 
