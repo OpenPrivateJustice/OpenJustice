@@ -113,8 +113,8 @@
 
 Plans:
 - [x] 04-01-PLAN.md — Reader WASM scaffold + configuration
-- [ ] 04-02-PLAN.md — Torrent sync, version check, local SQL load
-- [ ] 04-03-PLAN.md — Search, filters, sorting, pagination
+- [x] 04-02-PLAN.md — Torrent sync, version check, local SQL load
+- [x] 04-03-PLAN.md — Search, filters, sorting, pagination
 - [ ] 04-04-PLAN.md — Case details view + sensitive content gate
 
 ---
@@ -146,7 +146,7 @@ Plans:
 | 1. Database & Configuration Foundation | 4/4 | Complete | 01-01, 01-02, 01-03, 01-04 |
 | 2. Generator Core | 5/5 | Complete | 02-01, 02-02, 02-03, 02-04, 02-05 |
 | 3. Generator History System | 2/2 | Complete | 03-01, 03-02 |
-| 4. Reader Core | 1/4 | In Progress | 04-01 |
+| 4. Reader Core | 3/4 | In Progress| 04-01, 04-02, 04-03 |
 | 5. Reader History UI & Polish | 0/1 | Not started | - |
 
 ---

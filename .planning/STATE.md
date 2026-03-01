@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 4 of 5 (Reader Core)
-Plan: 1 of 4
-Status: Complete
-Last activity: March 1, 2026 — Completed 04-01-PLAN.md
+Plan: 3 of 4
+Status: In Progress
+Last activity: March 1, 2026 — Completed 04-03-PLAN.md (Search Experience)
 
-Progress: [▓▓▓▓▓▓▓▓▓▓▓] 95%
+Progress: [▓▓▓▓▓▓▓▓▓▓] 85%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 11
 - Average duration: 8.2 min
-- Total execution time: 1.10 hours
+- Total execution time: 1.18 hours
 
 **By Phase:**
 
@@ -30,7 +30,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓] 95%
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | 2/2 | 21 min | 10.5 min |
-| 4. Reader Core | 1/4 | 4 min | 4.0 min |
+| 4. Reader Core | 3/4 | 17 min | 5.7 min |
 | 5. Reader History UI | - | - | - |
 
 **Recent Trend:**
@@ -44,8 +44,11 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓] 95%
 - Plan 03-01: Generator history system - 9 min
 - Plan 03-02: Generator history UI - 12 min
 - Plan 04-01: Reader core bootstrap - 4 min
+- Plan 04-02: Reader sync pipeline - 5 min
+- Plan 04-03: Reader search experience - 8 min
 
 *Updated after each plan completion*
+| Phase 04-reader-core P02 | 5 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -103,13 +106,15 @@ Key decisions from Phase 4 Plan 1:
 - Created strongly-typed ReaderOptions with DataAnnotations validation
 - Placed appsettings.json in wwwroot (standard for Blazor WASM)
 - Added navigation entries for Sync, Search, Cases pages
+- [Phase 04-reader-core]: Implemented sync pipeline with HTTP download fallback for browser WASM, in-memory SQL store
+- [Phase 04-reader-core]: Implemented search with fuzzy name matching (Levenshtein distance), composable filters, sorting, and pagination
 
 ### Pending Todos
 
 - Phase 1 complete - Database foundation laid
 - Phase 2 complete - Generator core API implemented
 - Phase 3 complete - Generator history system implemented
-- Phase 4 in progress - Reader Core bootstrap complete (1/4 plans)
+- Phase 4 in progress - Reader Core search experience complete (3/4 plans)
 - Phase 5 - Reader History UI & Polish
 
 ### Blockers/Concerns
@@ -174,7 +179,15 @@ Resume file: None
 ## Requirements Status (Reader)
 
 - [x] RDR-01: Reader opens as a client-side Blazor WebAssembly SPA
-- [ ] RDR-02: Local SQLite database for offline access
-- [ ] RDR-03: Torrent-based database sync
-- [ ] RDR-04: Search interface with filters
+- [x] RDR-02: Local SQLite database for offline access
+- [x] RDR-03: Torrent-based database sync
+- [x] RDR-04: Search interface with filters
 - [x] RDR-05: Reader reads required runtime settings from appsettings.json
+- [x] RDR-06: Search by name with fuzzy matching
+- [x] RDR-07: Filter by crime type
+- [x] RDR-08: Filter by state
+- [x] RDR-09: Filter by period (date range)
+- [x] RDR-10: Filter by judicial status
+- [x] RDR-11: Sort results
+- [x] RDR-12: Paginate results
+- [x] RDR-13: Combined filter AND conditions
