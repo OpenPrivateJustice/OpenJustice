@@ -61,7 +61,8 @@
 9. System exports complete PostgreSQL snapshot as versioned SQL file
 10. All scrapers and API read from appsettings.json configuration
 
-**Plans**: TBD
+**Plans**: 
+- [x] 02-01: Case management API with validation (COMPLETE)
 
 ---
 
@@ -131,7 +132,7 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Database & Configuration Foundation | 4/4 | Complete | 01-01, 01-02, 01-03, 01-04 |
-| 2. Generator Core | 0/1 | Not started | - |
+| 2. Generator Core | 1/1 | Complete | 02-01 |
 | 3. Generator History System | 0/1 | Not started | - |
 | 4. Reader Core | 0/1 | Not started | - |
 | 5. Reader History UI & Polish | 0/1 | Not started | - |

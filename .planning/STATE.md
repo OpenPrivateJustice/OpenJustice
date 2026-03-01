@@ -9,26 +9,26 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 
 ## Current Position
 
-Phase: 1 of 5 (Database & Configuration Foundation)
-Plan: 01-02 complete
-Status: Executing plan
-Last activity: March 1, 2026 — Plan 01-02 completed
+Phase: 2 of 5 (Generator Core)
+Plan: 02-01 complete
+Status: Plan executed
+Last activity: March 1, 2026 — Plan 02-01 completed
 
-Progress: [▓▓▓▓▓▓▓▓▓▓] 20%
+Progress: [▓▓▓▓▓▓▓▓░░░] 24%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 7.5 min
-- Total execution time: 0.25 hours
+- Total plans completed: 3
+- Average duration: 9 min
+- Total execution time: 0.45 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
-| 2. Generator Core | - | - | - |
+| 2. Generator Core | 1/- | 11 min | 11 min |
 | 3. Generator History | - | - | - |
 | 4. Reader Core | - | - | - |
 | 5. Reader History UI | - | - | - |
@@ -36,6 +36,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 20%
 **Recent Trend:**
 - Plan 01-01: EF Core domain schema - 5 min
 - Plan 01-02: EF Core migration + backup/restore - 10 min
+- Plan 02-01: Case management API - 11 min
 
 *Updated after each plan completion*
 
@@ -55,9 +56,15 @@ Key decisions from Phase 1 Plan 1:
 - Usou sintaxe moderna EF Core 10 ToTable(lambda) para check constraints
 - Cascade delete para coleções filhas, restrict para lookups obrigatórios
 
+Key decisions from Phase 2 Plan 1:
+- FluentValidation para regras de validação declarativas
+- Reference code gerado apenas na criação, nunca regenerado na edição
+- Banco in-memory para testes unitários
+
 ### Pending Todos
 
 - Phase 1 complete - Database foundation laid
+- Phase 2 in progress - Generator core API implemented
 
 ### Blockers/Concerns
 
@@ -66,7 +73,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 1, 2026
-Stopped at: Completed 01-01-PLAN.md execution
+Stopped at: Completed 02-01-PLAN.md execution
 Resume file: None
 
 ## Requirements Status (DB)
