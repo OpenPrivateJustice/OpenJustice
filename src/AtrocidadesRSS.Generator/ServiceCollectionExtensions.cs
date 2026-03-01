@@ -142,6 +142,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICaseReferenceCodeGenerator, CaseReferenceCodeGenerator>();
         services.AddScoped<ICaseWorkflowService, CaseWorkflowService>();
         services.AddScoped<ICaseAuditLogService, CaseAuditLogService>();
+        services.AddScoped<ICaseFieldHistoryService, CaseFieldHistoryService>();
         services.AddScoped<ICurationService, CurationService>();
 
         return services;

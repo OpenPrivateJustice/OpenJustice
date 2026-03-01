@@ -4,6 +4,7 @@ using AtrocidadesRSS.Generator.Contracts.Cases;
 using AtrocidadesRSS.Generator.Infrastructure.Persistence;
 using AtrocidadesRSS.Generator.Infrastructure.Persistence.Entities;
 using AtrocidadesRSS.Generator.Services.Cases;
+using AtrocidadesRSS.Generator.Services.History;
 using FluentAssertions;
 using Xunit;
 
@@ -34,13 +35,19 @@ public class CaseWorkflowServiceTests
         return context;
     }
 
+    private ICaseWorkflowService CreateService(AppDbContext context)
+    {
+        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
+        var fieldHistoryService = new CaseFieldHistoryService(context);
+        return new CaseWorkflowService(context, referenceCodeGenerator, fieldHistoryService);
+    }
+
     [Fact]
     public async Task CreateCaseAsync_ValidRequest_CreatesCaseWithReferenceCode()
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         var request = new CreateCaseRequest
         {
@@ -76,8 +83,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         var request = new CreateCaseRequest
         {
@@ -97,8 +103,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         var request = new CreateCaseRequest
         {
@@ -118,8 +123,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         var request = new CreateCaseRequest
         {
@@ -139,8 +143,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         // First create a case
         var createRequest = new CreateCaseRequest
@@ -191,8 +194,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         var request = new UpdateCaseRequest
         {
@@ -212,8 +214,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         var createRequest = new CreateCaseRequest
         {
@@ -245,8 +246,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         // Act
         var result = await service.GetCaseByIdAsync(999);
@@ -260,8 +260,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         // Act
         var result = await service.ValidateForeignKeyAsync(1, 1, 1);
@@ -275,8 +274,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         // Act
         var result = await service.ValidateForeignKeyAsync(999, 1, 1);
@@ -290,8 +288,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         // Act
         var result = await service.ValidateForeignKeyAsync(1, 999, 1);
@@ -305,8 +302,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         // Act
         var result = await service.ValidateForeignKeyAsync(1, 1, 999);
@@ -320,8 +316,7 @@ public class CaseWorkflowServiceTests
     {
         // Arrange
         using var context = CreateInMemoryContext();
-        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
-        var service = new CaseWorkflowService(context, referenceCodeGenerator);
+        var service = CreateService(context);
 
         // Act - Create multiple cases
         var case1 = await service.CreateCaseAsync(new CreateCaseRequest

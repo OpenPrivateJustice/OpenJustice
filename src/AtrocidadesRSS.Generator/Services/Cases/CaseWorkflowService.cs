@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using AtrocidadesRSS.Generator.Contracts.Cases;
 using AtrocidadesRSS.Generator.Infrastructure.Persistence;
 using AtrocidadesRSS.Generator.Infrastructure.Persistence.Entities;
+using AtrocidadesRSS.Generator.Services.History;
 
 namespace AtrocidadesRSS.Generator.Services.Cases;
 
@@ -52,11 +53,16 @@ public class CaseWorkflowService : ICaseWorkflowService
 {
     private readonly AppDbContext _context;
     private readonly ICaseReferenceCodeGenerator _referenceCodeGenerator;
+    private readonly ICaseFieldHistoryService _fieldHistoryService;
 
-    public CaseWorkflowService(AppDbContext context, ICaseReferenceCodeGenerator referenceCodeGenerator)
+    public CaseWorkflowService(
+        AppDbContext context, 
+        ICaseReferenceCodeGenerator referenceCodeGenerator,
+        ICaseFieldHistoryService fieldHistoryService)
     {
         _context = context;
         _referenceCodeGenerator = referenceCodeGenerator;
+        _fieldHistoryService = fieldHistoryService;
     }
 
     /// <inheritdoc/>
@@ -169,6 +175,9 @@ public class CaseWorkflowService : ICaseWorkflowService
             throw new ArgumentException($"Case with ID {caseId} not found.");
         }
 
+        // Capture the current state before updating for history tracking
+        var caseBeforeUpdate = CloneCaseForHistory(existingCase);
+
         // Validate foreign keys exist
         var fkValid = await ValidateForeignKeyAsync(
             request.CrimeTypeId, 
@@ -252,6 +261,14 @@ public class CaseWorkflowService : ICaseWorkflowService
 
         await _context.SaveChangesAsync(cancellationToken);
         
+        // Record field history - append-only tracking of all changes
+        await _fieldHistoryService.AppendChangesAsync(
+            caseId,
+            caseBeforeUpdate,
+            existingCase,
+            request.CuratorId,
+            cancellationToken);
+        
         return existingCase;
     }
 
@@ -302,5 +319,85 @@ public class CaseWorkflowService : ICaseWorkflowService
             .Include(c => c.JudicialStatus)
             .OrderByDescending(c => c.LastUpdated)
             .ToListAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Creates a shallow clone of the case entity for history tracking before updates.
+    /// This captures the state before modifications for comparison.
+    /// </summary>
+    private Case? CloneCaseForHistory(Case? original)
+    {
+        if (original == null) return null;
+
+        return new Case
+        {
+            Id = original.Id,
+            ReferenceCode = original.ReferenceCode,
+            RegistrationDate = original.RegistrationDate,
+            CrimeDate = original.CrimeDate,
+            ReportDate = original.ReportDate,
+            LastUpdated = original.LastUpdated,
+            
+            // Victim Information
+            VictimName = original.VictimName,
+            VictimGender = original.VictimGender,
+            VictimAge = original.VictimAge,
+            VictimNationality = original.VictimNationality,
+            VictimProfession = original.VictimProfession,
+            VictimRelationshipToAccused = original.VictimRelationshipToAccused,
+            VictimConfidence = original.VictimConfidence,
+            
+            // Accused Information
+            AccusedName = original.AccusedName,
+            AccusedSocialName = original.AccusedSocialName,
+            AccusedGender = original.AccusedGender,
+            AccusedAge = original.AccusedAge,
+            AccusedNationality = original.AccusedNationality,
+            AccusedProfession = original.AccusedProfession,
+            AccusedDocument = original.AccusedDocument,
+            AccusedAddress = original.AccusedAddress,
+            AccusedRelationshipToVictim = original.AccusedRelationshipToVictim,
+            AccusedConfidence = original.AccusedConfidence,
+            
+            // Crime Details
+            CrimeTypeId = original.CrimeTypeId,
+            CrimeSubtype = original.CrimeSubtype,
+            EstimatedCrimeDateTime = original.EstimatedCrimeDateTime,
+            CrimeLocationAddress = original.CrimeLocationAddress,
+            CrimeLocationCity = original.CrimeLocationCity,
+            CrimeLocationState = original.CrimeLocationState,
+            CrimeCoordinates = original.CrimeCoordinates,
+            CrimeDescription = original.CrimeDescription,
+            CaseTypeId = original.CaseTypeId,
+            NumberOfVictims = original.NumberOfVictims,
+            NumberOfAccused = original.NumberOfAccused,
+            WeaponUsed = original.WeaponUsed,
+            Motivation = original.Motivation,
+            Premeditation = original.Premeditation,
+            CrimeConfidence = original.CrimeConfidence,
+            
+            // Judicial Information
+            JudicialStatusId = original.JudicialStatusId,
+            ProcessNumber = original.ProcessNumber,
+            Court = original.Court,
+            County = original.County,
+            CurrentPhase = original.CurrentPhase,
+            JudicialReportDate = original.JudicialReportDate,
+            SentencingDate = original.SentencingDate,
+            Sentence = original.Sentence,
+            PendingAppeals = original.PendingAppeals,
+            JudicialConfidence = original.JudicialConfidence,
+            
+            // Classification
+            MainCategory = original.MainCategory,
+            IsSensitiveContent = original.IsSensitiveContent,
+            IsVerified = original.IsVerified,
+            AnonymizationStatus = original.AnonymizationStatus,
+            
+            // Metadata
+            CreatedAt = original.CreatedAt,
+            UpdatedAt = original.UpdatedAt,
+            CuratorId = original.CuratorId
+        };
     }
 }

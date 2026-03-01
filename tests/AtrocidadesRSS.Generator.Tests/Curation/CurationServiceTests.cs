@@ -33,6 +33,7 @@ public class CurationServiceTests
     private Case CreateTestCase(AppDbContext context)
     {
         var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
+        var fieldHistoryService = new CaseFieldHistoryService(context);
         
         var request = new Contracts.Cases.CreateCaseRequest
         {
@@ -50,7 +51,7 @@ public class CurationServiceTests
             JudicialConfidence = 50
         };
 
-        var workflowService = new CaseWorkflowService(context, referenceCodeGenerator);
+        var workflowService = new CaseWorkflowService(context, referenceCodeGenerator, fieldHistoryService);
         return workflowService.CreateCaseAsync(request).GetAwaiter().GetResult();
     }
 
