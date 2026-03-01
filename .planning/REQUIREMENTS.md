@@ -25,23 +25,30 @@
 - [ ] **GEN-14**: Geração automática de código de referência (ATRO-AAAA-NNNN)
 - [ ] **GEN-15**: Compilação do banco PostgreSQL para snapshot SQL
 - [ ] **GEN-16**: Sistema de versionamento de snapshots (v1.sql, v2.sql, etc.)
-- [ ] **GEN-17**: Configuração via appsettings.json (conexão PostgreSQL, caminhos)
+- [ ] **GEN-17**: Configuração via appsettings.json (banco, conexão, etc.)
+
+#### Histórico de Alterações
+- [ ] **GEN-18**: Sistema de histórico por campo (CaseFieldHistory)
+- [ ] **GEN-19**: Registro de todas as alterações de cada campo (valor anterior, valor novo, data, curador)
+- [ ] **GEN-20**: Campo de nível de confiança (0-100%) para cada informação
+- [ ] **GEN-21**: UI para visualização do histórico de alterações de cada campo
+- [ ] **GEN-22**: UI para diff visual entre versões de um campo
 
 ### Leitor - Aplicação Pública (RDR)
 
 #### SPA Blazor WebAssembly
 - [ ] **RDR-01**: Aplicação SPA Blazor executável localmente no navegador
 - [ ] **RDR-02**: Download da base de dados completa via torrent
-- [ ] **RDR-03**: Verificação de novas versões via torrent (checksum/versão)
-- [ ] **RDR-04**: Carregamento de banco SQL local via WebAssembly
-- [ ] **RDR-05**: Configuração via appsettings.json (torrent tracker, paths)
+- [ ] **RDR-03**: Verificação de novas versões via torrent
+- [ ] **RDR-04**: Carregamento de banco SQL local
+- [ ] **RDR-05**: Configuração via appsettings.json (torrent tracker, etc.)
 
 #### Interface de Busca
 - [ ] **RDR-06**: Busca por nome (acusado/vítima) com fuzzy matching
-- [ ] **RDR-07**: Filtro por tipo de crime
-- [ ] **RDR-08**: Filtro por estado/localização
-- [ ] **RDR-09**: Filtro por período de tempo (data do crime)
-- [ ] **RDR-10**: Filtro por status judicial
+- [ ] **RDR-07**: Filtros por tipo de crime
+- [ ] **RDR-08**: Filtros por estado/localização
+- [ ] **RDR-09**: Filtros por período de tempo
+- [ ] **RDR-10**: Filtros por status judicial
 - [ ] **RDR-11**: Combinação de múltiplos filtros simultâneos
 - [ ] **RDR-12**: Paginação de resultados
 - [ ] **RDR-13**: Ordenação por diferentes campos
@@ -49,17 +56,20 @@
 #### Visualização de Casos
 - [ ] **RDR-14**: Visualização detalhada de cada caso com todos os campos
 - [ ] **RDR-15**: Tratamento de conteúdo sensível (IsSensitiveContent boolean)
-- [ ] **RDR-16**: Warning modal para conteúdo sensível antes de exibir
+- [ ] **RDR-16**: Warning para conteúdo sensível antes de exibir
 - [ ] **RDR-17**: Exibição de fontes e links originais
-- [ ] **RDR-18**: Exibição de evidências (links para documentos/fotos)
+- [ ] **RDR-18**: Exibição de evidências (links para fotos/dados)
 - [ ] **RDR-19**: Exibição de informações jurídicas (nº processo, status, etc.)
 - [ ] **RDR-20**: Exibição de metadados (data registro, verificado, tags)
+- [ ] **RDR-21**: Exibição de nível de confiança (0-100%) para cada campo
+- [ ] **RDR-22**: Timeline de histórico de alterações por campo
+- [ ] **RDR-23**: Diff visual entre versões de cada campo
+- [ ] **RDR-24**: Interface responsiva (mobile/desktop)
 
 #### UI/UX
-- [ ] **RDR-21**: Interface responsiva (mobile/desktop)
-- [ ] **RDR-22**: Loading states para operações assíncronas
-- [ ] **RDR-23**: Error handling para falhas de download/parse
-- [ ] **RDR-24**: Navegação por breadcrumbs/back button
+- [ ] **RDR-25**: Loading states para operações assíncronas
+- [ ] **RDR-26**: Error handling para falhas de download/parse
+- [ ] **RDR-27**: Navegação por breadcrumbs/back button
 
 ### Banco de Dados (DB)
 
@@ -72,22 +82,24 @@
 - [ ] **DB-06**: Tabela `Evidence` (evidências vinculadas)
 - [ ] **DB-07**: Tabela `Tags` (categorização)
 - [ ] **DB-08**: Relacionamento many-to-many entre Cases e Tags
+- [ ] **DB-09**: Tabela `CaseFieldHistory` (histórico ilimitado por campo)
+- [ ] **DB-10**: Campos de nível de confiança em tabelas principais
 
 #### Índices & Performance
-- [ ] **DB-09**: Índices para busca eficiente por nome (acusado/vítima)
-- [ ] **DB-10**: Índices para filtragem por tipo de crime
-- [ ] **DB-11**: Índices para filtragem por estado/localização
-- [ ] **DB-12**: Índices para filtragem por data do crime
-- [ ] **DB-13**: Índices para filtragem por status judicial
-- [ ] **DB-14**: Índices compostos para queries combinadas
+- [ ] **DB-11**: Índices para busca eficiente por nome (acusado/vítima)
+- [ ] **DB-12**: Índices para filtragem por tipo de crime
+- [ ] **DB-13**: Índices para filtragem por estado/localização
+- [ ] **DB-14**: Índices para filtragem por data do crime
+- [ ] **DB-15**: Índices para filtragem por status judicial
+- [ ] **DB-16**: Índices compostos para queries combinadas
 
 #### Integridade & Manutenção
-- [ ] **DB-15**: Constraints de integridade referencial entre tabelas
-- [ ] **DB-16**: NOT NULL constraints para campos obrigatórios
-- [ ] **DB-17**: DEFAULT values para campos opcionais
-- [ ] **DB-18**: Migrações para versionamento do schema
-- [ ] **DB-19**: Backup/restore procedures
-- [ ] **DB-20**: Geração de snapshot SQL exportável
+- [ ] **DB-17**: Constraints de integridade referencial entre tabelas
+- [ ] **DB-18**: NOT NULL constraints para campos obrigatórios
+- [ ] **DB-19**: DEFAULT values para campos opcionais
+- [ ] **DB-20**: Migrações para versionamento do schema
+- [ ] **DB-21**: Backup/restore procedures
+- [ ] **DB-22**: Geração de snapshot SQL exportável
 
 ### Configuração (CFG)
 
@@ -142,74 +154,86 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GEN-01 | Phase 2 | Pending |
-| GEN-02 | Phase 2 | Pending |
-| GEN-03 | Phase 2 | Pending |
-| GEN-04 | Phase 2 | Pending |
-| GEN-05 | Phase 2 | Pending |
-| GEN-06 | Phase 2 | Pending |
-| GEN-07 | Phase 2 | Pending |
-| GEN-08 | Phase 2 | Pending |
-| GEN-09 | Phase 3 | Pending |
-| GEN-10 | Phase 3 | Pending |
-| GEN-11 | Phase 3 | Pending |
-| GEN-12 | Phase 3 | Pending |
-| GEN-13 | Phase 3 | Pending |
-| GEN-14 | Phase 2 | Pending |
-| GEN-15 | Phase 2 | Pending |
-| GEN-16 | Phase 2 | Pending |
-| GEN-17 | Phase 2 | Pending |
-| RDR-01 | Phase 4 | Pending |
-| RDR-02 | Phase 4 | Pending |
-| RDR-03 | Phase 4 | Pending |
-| RDR-04 | Phase 4 | Pending |
-| RDR-05 | Phase 4 | Pending |
-| RDR-06 | Phase 4 | Pending |
-| RDR-07 | Phase 4 | Pending |
-| RDR-08 | Phase 4 | Pending |
-| RDR-09 | Phase 4 | Pending |
-| RDR-10 | Phase 4 | Pending |
-| RDR-11 | Phase 4 | Pending |
-| RDR-12 | Phase 4 | Pending |
-| RDR-13 | Phase 4 | Pending |
-| RDR-14 | Phase 4 | Pending |
-| RDR-15 | Phase 4 | Pending |
-| RDR-16 | Phase 4 | Pending |
-| RDR-17 | Phase 4 | Pending |
-| RDR-18 | Phase 4 | Pending |
-| RDR-19 | Phase 4 | Pending |
-| RDR-20 | Phase 4 | Pending |
-| RDR-21 | Phase 4 | Pending |
-| RDR-22 | Phase 4 | Pending |
-| RDR-23 | Phase 4 | Pending |
-| RDR-24 | Phase 4 | Pending |
-| DB-01 | Phase 1 | Pending |
-| DB-02 | Phase 1 | Pending |
-| DB-03 | Phase 1 | Pending |
-| DB-04 | Phase 1 | Pending |
-| DB-05 | Phase 1 | Pending |
-| DB-06 | Phase 1 | Pending |
-| DB-07 | Phase 1 | Pending |
-| DB-08 | Phase 1 | Pending |
-| DB-09 | Phase 1 | Pending |
-| DB-10 | Phase 1 | Pending |
-| DB-11 | Phase 1 | Pending |
-| DB-12 | Phase 1 | Pending |
-| DB-13 | Phase 1 | Pending |
-| DB-14 | Phase 1 | Pending |
-| DB-15 | Phase 1 | Pending |
-| DB-16 | Phase 1 | Pending |
-| DB-17 | Phase 1 | Pending |
-| DB-18 | Phase 1 | Pending |
-| DB-19 | Phase 1 | Pending |
-| DB-20 | Phase 1 | Pending |
-| CFG-01 | Phase 1 | Pending |
-| CFG-02 | Phase 1 | Pending |
-| CFG-03 | Phase 1 | Pending |
-| CFG-04 | Phase 1 | Pending |
-| CFG-05 | Phase 1 | Pending |
-| CFG-06 | Phase 1 | Pending |
+| GEN-01 | TBD | Not Mapped |
+| GEN-02 | TBD | Not Mapped |
+| GEN-03 | TBD | Not Mapped |
+| GEN-04 | TBD | Not Mapped |
+| GEN-05 | TBD | Not Mapped |
+| GEN-06 | TBD | Not Mapped |
+| GEN-07 | TBD | Not Mapped |
+| GEN-08 | TBD | Not Mapped |
+| GEN-09 | TBD | Not Mapped |
+| GEN-10 | TBD | Not Mapped |
+| GEN-11 | TBD | Not Mapped |
+| GEN-12 | TBD | Not Mapped |
+| GEN-13 | TBD | Not Mapped |
+| GEN-14 | TBD | Not Mapped |
+| GEN-15 | TBD | Not Mapped |
+| GEN-16 | TBD | Not Mapped |
+| GEN-17 | TBD | Not Mapped |
+| GEN-18 | TBD | Not Mapped |
+| GEN-19 | TBD | Not Mapped |
+| GEN-20 | TBD | Not Mapped |
+| GEN-21 | TBD | Not Mapped |
+| GEN-22 | TBD | Not Mapped |
+| RDR-01 | TBD | Not Mapped |
+| RDR-02 | TBD | Not Mapped |
+| RDR-03 | TBD | Not Mapped |
+| RDR-04 | TBD | Not Mapped |
+| RDR-05 | TBD | Not Mapped |
+| RDR-06 | TBD | Not Mapped |
+| RDR-07 | TBD | Not Mapped |
+| RDR-08 | TBD | Not Mapped |
+| RDR-09 | TBD | Not Mapped |
+| RDR-10 | TBD | Not Mapped |
+| RDR-11 | TBD | Not Mapped |
+| RDR-12 | TBD | Not Mapped |
+| RDR-13 | TBD | Not Mapped |
+| RDR-14 | TBD | Not Mapped |
+| RDR-15 | TBD | Not Mapped |
+| RDR-16 | TBD | Not Mapped |
+| RDR-17 | TBD | Not Mapped |
+| RDR-18 | TBD | Not Mapped |
+| RDR-19 | TBD | Not Mapped |
+| RDR-20 | TBD | Not Mapped |
+| RDR-21 | TBD | Not Mapped |
+| RDR-22 | TBD | Not Mapped |
+| RDR-23 | TBD | Not Mapped |
+| RDR-24 | TBD | Not Mapped |
+| RDR-25 | TBD | Not Mapped |
+| RDR-26 | TBD | Not Mapped |
+| RDR-27 | TBD | Not Mapped |
+| DB-01 | TBD | Not Mapped |
+| DB-02 | TBD | Not Mapped |
+| DB-03 | TBD | Not Mapped |
+| DB-04 | TBD | Not Mapped |
+| DB-05 | TBD | Not Mapped |
+| DB-06 | TBD | Not Mapped |
+| DB-07 | TBD | Not Mapped |
+| DB-08 | TBD | Not Mapped |
+| DB-09 | TBD | Not Mapped |
+| DB-10 | TBD | Not Mapped |
+| DB-11 | TBD | Not Mapped |
+| DB-12 | TBD | Not Mapped |
+| DB-13 | TBD | Not Mapped |
+| DB-14 | TBD | Not Mapped |
+| DB-15 | TBD | Not Mapped |
+| DB-16 | TBD | Not Mapped |
+| DB-17 | TBD | Not Mapped |
+| DB-18 | TBD | Not Mapped |
+| DB-19 | TBD | Not Mapped |
+| DB-20 | TBD | Not Mapped |
+| DB-21 | TBD | Not Mapped |
+| DB-22 | TBD | Not Mapped |
+| CFG-01 | TBD | Not Mapped |
+| CFG-02 | TBD | Not Mapped |
+| CFG-03 | TBD | Not Mapped |
+| CFG-04 | TBD | Not Mapped |
+| CFG-05 | TBD | Not Mapped |
+| CFG-06 | TBD | Not Mapped |
+
+*Traceability section auto-populated by roadmap creation*
 
 ---
 
-*Last updated: March 1, 2026 after roadmap creation*
+*Last updated: March 1, 2026 after requirements definition*

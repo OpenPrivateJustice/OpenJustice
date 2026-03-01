@@ -27,6 +27,7 @@ AtrocidadesRSS é uma base de dados descentralizada de registros históricos de 
 - Validação de dados antes da inserção
 - Compilação do banco de dados PostgreSQL para snapshot SQL
 - Geração de versão atualizada para distribuição
+- **Sistema de histórico de alterações por campo**
 
 #### Leitor (público)
 - Aplicação SPA Blazor (executa localmente no navegador do usuário)
@@ -37,6 +38,8 @@ AtrocidadesRSS é uma base de dados descentralizada de registros históricos de 
   - Período de tempo
   - Status judicial
 - Visualização detalhada de cada caso com todos os campos disponíveis
+- **Timeline de histórico de alterações por campo**
+- **Diff visual entre versões**
 - Download da base de dados completa via torrent
 - Verificação de novas versões via torrent
 - Tratamento de conteúdo sensível (IsSensitiveContent boolean)
@@ -81,6 +84,7 @@ Campos principais para cada registro de crime:
 - Nacionalidade
 - Profissão/ocupação (se relevante)
 - Relação com o acusado
+- Nível de confiança (0-100%)
 
 **Acusado**
 - Nome completo
@@ -92,6 +96,7 @@ Campos principais para cada registro de crime:
 - CPF/RG (se disponível)
 - Endereço/localização
 - Relacionamento com vítima
+- Nível de confiança (0-100%)
 
 **Detalhes do Crime**
 - Tipo de crime (assassinato, estupro, pedofilia, etc.)
@@ -106,6 +111,7 @@ Campos principais para cada registro de crime:
 - Arma utilizada (se aplicável)
 - Motivação (se conhecida)
 - Premeditação (sim/não/desconhecido)
+- Nível de confiança (0-100%)
 
 **Informações Jurídicas**
 - Status judicial (investigação, processo, condenado, absolvido, arquivado)
@@ -117,6 +123,7 @@ Campos principais para cada registro de crime:
 - Data da sentença
 - Pena aplicada (se condenado)
 - Recursos pendentes
+- Nível de confiança (0-100%)
 
 **Fontes e Evidências**
 - Fonte primária (nome do subreddit, thread URL)
@@ -134,6 +141,15 @@ Campos principais para cada registro de crime:
 - IsSensitiveContent (boolean)
 - Verificado (sim/não)
 - Status de anonimização
+
+**Sistema de Histórico de Alterações**
+Cada campo de cada caso tem histórico completo e ilimitado de alterações:
+- Campo `CaseFieldHistory` com registro de TODAS as mudanças
+- Para cada mudança: campo alterado, valor anterior, valor novo, data, curador responsável
+- Nível de confiança (0-100%) para cada informação (independente do histórico)
+- Timeline visual no frontend mostrando evolução de cada campo
+- Diff visual entre versões (ex: "nome da vítima mudou de 'anonimizado' para 'João Silva' em DD/MM/AAAA")
+- Histórico ilimitado para preservação histórica completa
 
 ## Decisões de Arquitetura
 
@@ -153,6 +169,8 @@ Campos principais para cada registro de crime:
 - Sem filtragem ou censura de conteúdo
 - Status judicial claramente indicado para cada caso
 - Fontes originais vinculadas a cada registro
+- Histórico completo de alterações de cada campo visível
+- Nível de confiança explícito para cada informação
 
 ### Configuração flexível
 - Todas as configurações de hospedagem em appsettings.json
@@ -171,6 +189,11 @@ Campos principais para cada registro de crime:
 | Sem autenticação | Acesso aberto a todos, transparência total | Fora do escopo MVP |
 | Sem conteúdo de vídeo no MVP | Complexidade técnica, storage issues | Fora do escopo MVP |
 | Gerador privado | Controle de qualidade, curadoria humana | Implementado como sistema privado |
+| Histórico ilimitado por campo | Transparência completa, evolução dos fatos | CaseFieldHistory table, ilimitado |
+| Nível de confiança (0-100%) | Usuários avaliam qualidade da informação | Campo confidenciality_score em cada dado |
+| Timeline de alterações no frontend | Transparência visual da evolução | UI component no Blazor reader |
+| Diff visual entre versões | Comparação clara de mudanças | UI component no Blazor reader |
+| Sem reversão de versões | Histórico como registro permanente | Apenas append, no updates |
 
 ---
 
