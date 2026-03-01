@@ -1,4 +1,8 @@
 using AtrocidadesRSS.Generator.Configuration;
+using AtrocidadesRSS.Generator.Services.Cases;
+using AtrocidadesRSS.Generator.Validation.Cases;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -35,6 +39,37 @@ public static class ServiceCollectionExtensions
 
         // Ensure directories exist at startup
         EnsureDirectoriesExist(filePaths);
+
+        return services;
+    }
+
+    /// <summary>
+    /// Add case management services for the generator API.
+    /// </summary>
+    public static IServiceCollection AddCaseServices(this IServiceCollection services)
+    {
+        // Register validators
+        services.AddValidatorsFromAssemblyContaining<CreateCaseRequestValidator>();
+        
+        // Register FluentValidation for API controllers
+        services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
+            {
+                var problemDetails = new ValidationProblemDetails(context.ModelState)
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Title = "Validation Error",
+                    Detail = "One or more validation errors occurred.",
+                    Type = "https://tools.ietf.org/html/rfc7807#section-3.1"
+                };
+                return new BadRequestObjectResult(problemDetails);
+            };
+        });
+
+        // Register services
+        services.AddScoped<ICaseReferenceCodeGenerator, CaseReferenceCodeGenerator>();
+        services.AddScoped<ICaseWorkflowService, CaseWorkflowService>();
 
         return services;
     }
