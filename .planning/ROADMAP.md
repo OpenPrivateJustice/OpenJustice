@@ -66,6 +66,7 @@
 - [x] 02-02: Curation workflow controls (COMPLETE)
 - [x] 02-03: Blazor web UI for case management (COMPLETE)
 - [x] 02-04: Discovery ingestion + curator review (COMPLETE)
+- [x] 02-05: Metadata APIs, snapshot export, configuration (COMPLETE)
 
 ---
 
