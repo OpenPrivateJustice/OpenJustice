@@ -1,0 +1,147 @@
+@using AtrocidadesRSS.Reader.Models.Cases
+
+<div class="case-judicial">
+    <h5 class="section-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" 
+             class="bi bi-building me-2" viewBox="0 0 16 16">
+            <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+            <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+        </svg>
+        Informações Judiciais
+    </h5>
+
+    @if (JudicialInfo == null || string.IsNullOrEmpty(JudicialInfo.ProcessNumber))
+    {
+        <p class="text-muted">Nenhuma informação judicial disponível para este caso.</p>
+    }
+    else
+    {
+        <div class="judicial-info">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        @if (!string.IsNullOrEmpty(JudicialInfo.ProcessNumber))
+                        {
+                            <dt class="col-sm-5">Número do Processo:</dt>
+                            <dd class="col-sm-7">
+                                <code>@JudicialInfo.ProcessNumber</code>
+                            </dd>
+                        }
+                        @if (!string.IsNullOrEmpty(JudicialInfo.Court))
+                        {
+                            <dt class="col-sm-5">Tribunal:</dt>
+                            <dd class="col-sm-7">@JudicialInfo.Court</dd>
+                        }
+                        @if (!string.IsNullOrEmpty(JudicialInfo.Judge))
+                        {
+                            <dt class="col-sm-5">Juiz:</dt>
+                            <dd class="col-sm-7">@JudicialInfo.Judge</dd>
+                        }
+                        @if (JudicialInfo.FilingDate.HasValue)
+                        {
+                            <dt class="col-sm-5">Data de Distribuição:</dt>
+                            <dd class="col-sm-7">@JudicialInfo.FilingDate.Value.ToString("dd/MM/yyyy")</dd>
+                        }
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        @if (JudicialInfo.JudgmentDate.HasValue)
+                        {
+                            <dt class="col-sm-5">Data do Julgamento:</dt>
+                            <dd class="col-sm-7">@JudicialInfo.JudgmentDate.Value.ToString("dd/MM/yyyy")</dd>
+                        }
+                        @if (!string.IsNullOrEmpty(JudicialInfo.Outcome))
+                        {
+                            <dt class="col-sm-5">Resultado:</dt>
+                            <dd class="col-sm-7">
+                                <span class="badge @GetOutcomeBadge(JudicialInfo.Outcome)">
+                                    @JudicialInfo.Outcome
+                                </span>
+                            </dd>
+                        }
+                        @if (JudicialInfo.PrisonSentenceYears.HasValue && JudicialInfo.PrisonSentenceYears > 0)
+                        {
+                            <dt class="col-sm-5">Pena:</dt>
+                            <dd class="col-sm-7">@JudicialInfo.PrisonSentenceYears anos</dd>
+                        }
+                        @if (JudicialInfo.FineAmount.HasValue && JudicialInfo.FineAmount > 0)
+                        {
+                            <dt class="col-sm-5">Multa:</dt>
+                            <dd class="col-sm-7">R$ @JudicialInfo.FineAmount.Value.ToString("N2")</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(JudicialInfo.Sentence))
+            {
+                <div class="mt-3">
+                    <h6>Sentença:</h6>
+                    <p class="text-body">@JudicialInfo.Sentence</p>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(JudicialInfo.AppealOutcome))
+            {
+                <div class="mt-3">
+                    <h6>Resultado do Recurso:</h6>
+                    <p class="text-body">@JudicialInfo.AppealOutcome</p>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(JudicialInfo.Notes))
+            {
+                <div class="mt-3">
+                    <h6>Observações:</h6>
+                    <p class="text-muted small">@JudicialInfo.Notes</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public JudicialInfoViewModel? JudicialInfo { get; set; }
+
+    private string GetOutcomeBadge(string? outcome)
+    {
+        return outcome?.ToLowerInvariant() switch
+        {
+            "condenado" or "condenada" => "bg-danger",
+            "absolvido" or "absolvida" => "bg-success",
+            "parcialmente condenado" => "bg-warning",
+            "extinto" or "extinta" => "bg-secondary",
+            "transitado em julgado" => "bg-primary",
+            _ => "bg-info"
+        };
+    }
+}
+
+<style>
+    .case-judicial .section-title {
+        display: flex;
+        align-items: center;
+        color: #212529;
+        border-bottom: 2px solid #dee2e6;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .judicial-info dt {
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+    .judicial-info dd {
+        margin-bottom: 0.5rem;
+    }
+
+    .judicial-info code {
+        font-size: 0.875rem;
+        background-color: #e9ecef;
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+    }
+</style>

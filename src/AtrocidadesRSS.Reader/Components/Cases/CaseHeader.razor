@@ -1,0 +1,173 @@
+@using AtrocidadesRSS.Reader.Models.Cases
+
+<div class="case-header">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="case-title">
+                @if (!string.IsNullOrEmpty(Model.VictimName))
+                {
+                    <span>Caso de @Model.VictimName</span>
+                }
+                else
+                {
+                    <span>Caso sem vítima identificada</span>
+                }
+            </h1>
+            <p class="case-reference text-muted">
+                <strong>Código de Referência:</strong> @Model.ReferenceCode
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <div class="case-badges">
+                @if (Model.IsVerified)
+                {
+                    <span class="badge bg-success me-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" 
+                             class="bi bi-check-circle-fill me-1" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                        Verificado
+                    </span>
+                }
+                @if (Model.IsSensitiveContent)
+                {
+                    <span class="badge bg-warning text-dark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" 
+                             class="bi bi-exclamation-triangle-fill me-1" viewBox="0 0 16 16">
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        Conteúdo Sensível
+                    </span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="case-meta mt-3">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    @if (Model.CrimeDate.HasValue)
+                    {
+                        <dt class="col-sm-4">Data do Crime:</dt>
+                        <dd class="col-sm-8">@Model.CrimeDate.Value.ToString("dd/MM/yyyy")</dd>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.CrimeType))
+                    {
+                        <dt class="col-sm-4">Tipo de Crime:</dt>
+                        <dd class="col-sm-8">@Model.CrimeType</dd>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.CaseType))
+                    {
+                        <dt class="col-sm-4">Classificação:</dt>
+                        <dd class="col-sm-8">@Model.CaseType</dd>
+                    }
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    @if (!string.IsNullOrEmpty(Model.LocationCity) || !string.IsNullOrEmpty(Model.LocationState))
+                    {
+                        <dt class="col-sm-4">Localização:</dt>
+                        <dd class="col-sm-8">
+                            @Model.LocationCity@(string.IsNullOrEmpty(Model.LocationCity) || string.IsNullOrEmpty(Model.LocationState) ? "" : ", ")@Model.LocationState
+                        </dd>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.JudicialStatus))
+                    {
+                        <dt class="col-sm-4">Status Judicial:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge @GetJudicialStatusBadge(Model.JudicialStatus)">
+                                @Model.JudicialStatus
+                            </span>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.ConfidenceScore > 0)
+    {
+        <div class="confidence-score mt-3">
+            <label class="form-label">Pontuação de Confiança:</label>
+            <div class="progress" style="height: 24px;">
+                <div class="progress-bar @GetConfidenceBarClass(Model.ConfidenceScore)" 
+                     role="progressbar" 
+                     style="width: @Model.ConfidenceScore%">
+                    @Model.ConfidenceScore%
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public CaseDetailViewModel Model { get; set; } = null!;
+
+    private string GetJudicialStatusBadge(string? status)
+    {
+        return status?.ToLowerInvariant() switch
+        {
+            "em andamento" or "em andamento - aguarda jul" => "bg-warning",
+            "condenado" or "condenada" => "bg-danger",
+            "absolvido" or "absolvida" => "bg-success",
+            "arquivado" => "bg-secondary",
+            _ => "bg-info"
+        };
+    }
+
+    private string GetConfidenceBarClass(int score)
+    {
+        return score switch
+        {
+            >= 80 => "bg-success",
+            >= 60 => "bg-info",
+            >= 40 => "bg-warning",
+            _ => "bg-danger"
+        };
+    }
+}
+
+<style>
+    .case-header {
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .case-title {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+        color: #212529;
+    }
+
+    .case-reference {
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+
+    .case-badges {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .case-meta dt {
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+    .case-meta dd {
+        margin-bottom: 0.25rem;
+    }
+
+    .confidence-score .form-label {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+</style>
