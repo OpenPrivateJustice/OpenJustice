@@ -7,7 +7,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: Database & Configuration Foundation** - PostgreSQL schema, indices, migrations, appsettings
+- [x] **Phase 1: Database & Configuration Foundation** - PostgreSQL schema, indices, migrations, appsettings
 - [ ] **Phase 2: Generator Core** - API, Web UI, Curation, Export, RSS/Reddit scraping
 - [ ] **Phase 3: Generator History System** - CaseFieldHistory, confidence scores, timeline & diff UI
 - [ ] **Phase 4: Reader Core** - Blazor SPA, torrent download, local SQL, search/filters, case viewing
@@ -36,7 +36,9 @@
 
 **Plans**: 
 - [x] 01-01: EF Core domain schema (COMPLETE)
-- [ ] 01-02: Database configuration and migrations
+- [x] 01-02: Database configuration and migrations (COMPLETE)
+- [x] 01-03: Composite indexes for multi-column queries (COMPLETE - Gap closure)
+- [x] 01-04: Configuration system with appsettings.json (COMPLETE - Gap closure)
 
 ---
 
@@ -128,7 +130,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Database & Configuration Foundation | 1/2 | In progress | 01-01 |
+| 1. Database & Configuration Foundation | 4/4 | Complete | 01-01, 01-02, 01-03, 01-04 |
 | 2. Generator Core | 0/1 | Not started | - |
 | 3. Generator History System | 0/1 | Not started | - |
 | 4. Reader Core | 0/1 | Not started | - |
