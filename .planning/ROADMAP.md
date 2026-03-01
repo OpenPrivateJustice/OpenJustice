@@ -1,107 +1,136 @@
-# AtrocidadesRSS - Roadmap
+# ROADMAP - AtrocidadesRSS
 
 ## Project Overview
-- **Core Value**: Decentralized database of Brazilian crime records with transparency and historical preservation
-- **Components**: Generator (private curation) + Reader (public Blazor SPA)
-- **Distribution**: PostgreSQL with SQL snapshots via torrent
+- **Core Value**: Decentralized database of Brazilian historical crimes with full history tracking and confidence scores
+- **Components**: Generator (private .NET Core 10) + Reader (public Blazor WASM)
+- **Depth**: Quick | **Mode**: YOLO | **Coverage**: 94/94 requirements
 
 ## Phases
 
-- [ ] **Phase 1: Database Foundation** - PostgreSQL schema, indices, migrations, and configuration
-- [ ] **Phase 2: Generator Core** - API, web UI, curation system, and SQL export
-- [ ] **Phase 3: Generator Data Collection** - RSS aggregation and Reddit scraping
-- [ ] **Phase 4: Reader Application** - Blazor SPA with torrent download, search, and case viewing
+- [ ] **Phase 1: Database & Configuration Foundation** - PostgreSQL schema, indices, migrations, appsettings
+- [ ] **Phase 2: Generator Core** - API, Web UI, Curation, Export, RSS/Reddit scraping
+- [ ] **Phase 3: Generator History System** - CaseFieldHistory, confidence scores, timeline & diff UI
+- [ ] **Phase 4: Reader Core** - Blazor SPA, torrent download, local SQL, search/filters, case viewing
+- [ ] **Phase 5: Reader History UI & Polish** - Timeline, diff, confidence display, responsive UI, error handling
+
+---
 
 ## Phase Details
 
-### Phase 1: Database Foundation
-**Goal**: PostgreSQL database schema, indices, and configuration ready for both applications
+### Phase 1: Database & Configuration Foundation
+**Goal**: PostgreSQL database schema with all tables, indices, migrations, and configuration system ready
 
 **Depends on**: Nothing (first phase)
 
-**Requirements**: DB-01, DB-02, DB-03, DB-04, DB-05, DB-06, DB-07, DB-08, DB-09, DB-10, DB-11, DB-12, DB-13, DB-14, DB-15, DB-16, DB-17, DB-18, DB-19, DB-20, CFG-01, CFG-02, CFG-03, CFG-04, CFG-05, CFG-06
+**Requirements**: DB-01, DB-02, DB-03, DB-04, DB-05, DB-06, DB-07, DB-08, DB-09, DB-10, DB-11, DB-12, DB-13, DB-14, DB-15, DB-16, DB-17, DB-18, DB-19, DB-20, DB-21, DB-22, CFG-01, CFG-02, CFG-03, CFG-04, CFG-05, CFG-06
 
 **Success Criteria** (what must be TRUE):
-  1. PostgreSQL database is running with all tables (Cases, CrimeType, CaseType, JudicialStatus, Sources, Evidence, Tags) properly defined
-  2. All foreign key constraints and NOT NULL validations are enforced at database level
-  3. Search queries by name return results in under 1 second (indices working)
-  4. Filters by crime type, state, date range, and status return results efficiently (composite indices working)
-  5. SQL snapshot can be exported and re-imported without data loss
+1. PostgreSQL database is created with all tables (Cases, CrimeType, CaseType, JudicialStatus, Sources, Evidence, Tags, CaseFieldHistory)
+2. All foreign key relationships enforced between tables
+3. Indices created for efficient querying by name, crime type, location, date, status
+4. Migration system functional for future schema changes
+5. appsettings.json configured for database connection, file paths, torrent settings
+6. Snapshot SQL export generates valid, importable SQL file
+7. NOT NULL constraints prevent invalid data insertion
+8. Confidence score fields (0-100%) exist in main tables
 
 **Plans**: TBD
 
 ---
 
 ### Phase 2: Generator Core
-**Goal**: Private curation system with API, web UI, data validation, and SQL export capabilities
+**Goal**: Private curation system with API, web UI, case management, RSS/Reddit scraping, and export
 
 **Depends on**: Phase 1
 
-**Requirements**: GEN-01, GEN-02, GEN-03, GEN-04, GEN-05, GEN-06, GEN-07, GEN-08, GEN-14, GEN-15, GEN-16, GEN-17
+**Requirements**: GEN-01, GEN-02, GEN-03, GEN-04, GEN-05, GEN-06, GEN-07, GEN-08, GEN-09, GEN-10, GEN-11, GEN-12, GEN-13, GEN-14, GEN-15, GEN-16, GEN-17
 
 **Success Criteria** (what must be TRUE):
-  1. Curator can insert new cases via web interface with all required fields
-  2. Invalid data (missing required fields, invalid dates) is rejected with clear error messages
-  3. Curator can edit existing cases and changes are tracked in audit log
-  4. Curator can approve/reject pending cases and mark them as verified
-  5. System generates SQL snapshots that can be downloaded (ATRO-YYYY-NNNN format)
+1. Curator can insert new cases via web interface with all required fields validated
+2. Curator can edit existing cases with proper validation
+3. Cases require approval workflow before becoming "official"
+4. Curators can mark cases as "Verificado" with their identity recorded
+5. System automatically generates ATRO-YYYY-NNNN reference codes
+6. RSS feed aggregator discovers potential cases from configured sources
+7. Reddit thread scraper extracts case data from subreddit posts
+8. Curator can approve/reject auto-discovered cases
+9. System exports complete PostgreSQL snapshot as versioned SQL file
+10. All scrapers and API read from appsettings.json configuration
 
 **Plans**: TBD
 
 ---
 
-### Phase 3: Generator Data Collection
-**Goal**: Automated data collection via RSS feeds and Reddit scraping with approval workflow
+### Phase 3: Generator History System
+**Goal**: Complete history tracking with unlimited changes per field, confidence scores, timeline and diff visualization
 
 **Depends on**: Phase 2
 
-**Requirements**: GEN-09, GEN-10, GEN-11, GEN-12, GEN-13
+**Requirements**: GEN-18, GEN-19, GEN-20, GEN-21, GEN-22
 
 **Success Criteria** (what must be TRUE):
-  1. System automatically ingests RSS feeds and creates pending cases
-  2. Reddit threads are scraped and converted to pending case records
-  3. Curator can review automated imports and approve/reject each one
-  4. Evidence links and tags can be associated with cases
+1. Every field change creates immutable CaseFieldHistory record (append-only)
+2. Each history record contains: field name, previous value, new value, timestamp, curator ID
+3. Each data field has 0-100% confidence score independent of history
+4. Curator can view timeline showing evolution of any field over time
+5. Curator can see diff view comparing any two versions of a field (e.g., "name changed from 'X' to 'Y' on date")
 
 **Plans**: TBD
 
 ---
 
-### Phase 4: Reader Application
-**Goal**: Public Blazor WASM application for searching and viewing crime records
+### Phase 4: Reader Core
+**Goal**: Public Blazor WASM SPA with torrent download, local SQL database, search/filters, and case viewing
 
-**Depends on**: Phase 1 (database schema) and Phase 2 (SQL export capability)
+**Depends on**: Phase 1 (database schema)
 
-**Requirements**: RDR-01, RDR-02, RDR-03, RDR-04, RDR-05, RDR-06, RDR-07, RDR-08, RDR-09, RDR-10, RDR-11, RDR-12, RDR-13, RDR-14, RDR-15, RDR-16, RDR-17, RDR-18, RDR-19, RDR-20, RDR-21, RDR-22, RDR-23, RDR-24
+**Requirements**: RDR-01, RDR-02, RDR-03, RDR-04, RDR-05, RDR-06, RDR-07, RDR-08, RDR-09, RDR-10, RDR-11, RDR-12, RDR-13, RDR-14, RDR-15, RDR-16, RDR-17, RDR-18, RDR-19, RDR-20
 
 **Success Criteria** (what must be TRUE):
-  1. User can download database via torrent and verify integrity
-  2. User can search by name with fuzzy matching
-  3. User can apply multiple filters simultaneously (crime type, state, date range, status)
-  4. Sensitive content shows warning modal before display
-  5. All case details, sources, evidence links, and judicial information are visible
+1. User can download complete database via torrent and load locally
+2. User can check for new versions via torrent
+3. User can search by accused/victim name with fuzzy matching
+4. User can filter by crime type, state, time period, judicial status
+5. User can combine multiple filters simultaneously
+6. User can view paginated, sortable results
+7. User can view complete case details with all fields
+8. Sensitive content shows warning before display
+9. Sources, evidence links, and judicial info displayed clearly
+10. Configuration loaded from appsettings.json
 
 **Plans**: TBD
 
 ---
 
-## Coverage Map
+### Phase 5: Reader History UI & Polish
+**Goal**: Timeline visualization, diff comparison, confidence display, responsive UI, error handling
 
-| Phase | Requirements |
-|-------|--------------|
-| 1 - Database Foundation | DB-01 to DB-20, CFG-01 to CFG-06 |
-| 2 - Generator Core | GEN-01, GEN-02, GEN-03, GEN-04, GEN-05, GEN-06, GEN-07, GEN-08, GEN-14, GEN-15, GEN-16, GEN-17 |
-| 3 - Generator Data Collection | GEN-09, GEN-10, GEN-11, GEN-12, GEN-13 |
-| 4 - Reader Application | RDR-01 to RDR-24 |
+**Depends on**: Phase 4
 
-## Progress
+**Requirements**: RDR-21, RDR-22, RDR-23, RDR-24, RDR-25, RDR-26, RDR-27
+
+**Success Criteria** (what must be TRUE):
+1. User can view timeline showing all changes to any field with dates
+2. User can see visual diff between any two versions of a field
+3. Confidence scores (0-100%) displayed alongside each data field
+4. UI works on both mobile and desktop browsers
+5. Loading indicators shown during async operations
+6. Clear error messages if torrent download or SQL parse fails
+7. Browser back button and breadcrumbs work correctly
+
+**Plans**: TBD
+
+---
+
+## Progress Table
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Database Foundation | 0/1 | Not started | - |
+| 1. Database & Configuration Foundation | 0/1 | Not started | - |
 | 2. Generator Core | 0/1 | Not started | - |
-| 3. Generator Data Collection | 0/1 | Not started | - |
-| 4. Reader Application | 0/1 | Not started | - |
+| 3. Generator History System | 0/1 | Not started | - |
+| 4. Reader Core | 0/1 | Not started | - |
+| 5. Reader History UI & Polish | 0/1 | Not started | - |
 
 ---
 
