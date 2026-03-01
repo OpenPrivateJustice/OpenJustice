@@ -1,0 +1,153 @@
+# AtrocidadesRSS - Requirements v1
+
+## v1 Requirements
+
+### Gerador - Sistema de Curadoria (GEN)
+
+#### API & Backend
+- [ ] **GEN-01**: API RESTful para inserção manual de casos via .NET Core 10
+- [ ] **GEN-02**: Validação de dados obrigatórios antes da inserção
+- [ ] **GEN-03**: Validação de consistência (datas, relacionamentos, formatos)
+- [ ] **GEN-04**: Interface web SPA para inserção de casos
+- [ ] **GEN-05**: Interface web SPA para edição de casos existentes
+- [ ] **GEN-06**: Sistema de curadoria e aprovação de registros
+- [ ] **GEN-07**: Marcador de "Verificado" por curador
+- [ ] **GEN-08**: Histórico de alterações (audit log) por caso
+
+#### Coleta de Dados
+- [ ] **GEN-09**: RSS feed aggregator para levantar potenciais casos
+- [ ] **GEN-10**: Extração de dados de threads do Reddit (subreddit)
+- [ ] **GEN-11**: Sistema de aprovação/rejeição de casos levantados automaticamente
+- [ ] **GEN-12**: Upload/associação de evidências (links, documentos)
+- [ ] **GEN-13**: Tags e categorização de casos
+
+#### Exportação
+- [ ] **GEN-14**: Geração automática de código de referência (ATRO-AAAA-NNNN)
+- [ ] **GEN-15**: Compilação do banco PostgreSQL para snapshot SQL
+- [ ] **GEN-16**: Sistema de versionamento de snapshots (v1.sql, v2.sql, etc.)
+- [ ] **GEN-17**: Configuração via appsettings.json (conexão PostgreSQL, caminhos)
+
+### Leitor - Aplicação Pública (RDR)
+
+#### SPA Blazor WebAssembly
+- [ ] **RDR-01**: Aplicação SPA Blazor executável localmente no navegador
+- [ ] **RDR-02**: Download da base de dados completa via torrent
+- [ ] **RDR-03**: Verificação de novas versões via torrent (checksum/versão)
+- [ ] **RDR-04**: Carregamento de banco SQL local via WebAssembly
+- [ ] **RDR-05**: Configuração via appsettings.json (torrent tracker, paths)
+
+#### Interface de Busca
+- [ ] **RDR-06**: Busca por nome (acusado/vítima) com fuzzy matching
+- [ ] **RDR-07**: Filtro por tipo de crime
+- [ ] **RDR-08**: Filtro por estado/localização
+- [ ] **RDR-09**: Filtro por período de tempo (data do crime)
+- [ ] **RDR-10**: Filtro por status judicial
+- [ ] **RDR-11**: Combinação de múltiplos filtros simultâneos
+- [ ] **RDR-12**: Paginação de resultados
+- [ ] **RDR-13**: Ordenação por diferentes campos
+
+#### Visualização de Casos
+- [ ] **RDR-14**: Visualização detalhada de cada caso com todos os campos
+- [ ] **RDR-15**: Tratamento de conteúdo sensível (IsSensitiveContent boolean)
+- [ ] **RDR-16**: Warning modal para conteúdo sensível antes de exibir
+- [ ] **RDR-17**: Exibição de fontes e links originais
+- [ ] **RDR-18**: Exibição de evidências (links para documentos/fotos)
+- [ ] **RDR-19**: Exibição de informações jurídicas (nº processo, status, etc.)
+- [ ] **RDR-20**: Exibição de metadados (data registro, verificado, tags)
+
+#### UI/UX
+- [ ] **RDR-21**: Interface responsiva (mobile/desktop)
+- [ ] **RDR-22**: Loading states para operações assíncronas
+- [ ] **RDR-23**: Error handling para falhas de download/parse
+- [ ] **RDR-24**: Navegação por breadcrumbs/back button
+
+### Banco de Dados (DB)
+
+#### Schema & Modelos
+- [ ] **DB-01**: Tabela `Cases` com todos os campos definidos no PROJECT.md
+- [ ] **DB-02**: Tabela `CrimeType` (tipo de crime)
+- [ ] **DB-03**: Tabela `CaseType` (modalidade - tentativa/consumado)
+- [ ] **DB-04**: Tabela `JudicialStatus` (status judicial)
+- [ ] **DB-05**: Tabela `Sources` (fontes/reportagens)
+- [ ] **DB-06**: Tabela `Evidence` (evidências vinculadas)
+- [ ] **DB-07**: Tabela `Tags` (categorização)
+- [ ] **DB-08**: Relacionamento many-to-many entre Cases e Tags
+
+#### Índices & Performance
+- [ ] **DB-09**: Índices para busca eficiente por nome (acusado/vítima)
+- [ ] **DB-10**: Índices para filtragem por tipo de crime
+- [ ] **DB-11**: Índices para filtragem por estado/localização
+- [ ] **DB-12**: Índices para filtragem por data do crime
+- [ ] **DB-13**: Índices para filtragem por status judicial
+- [ ] **DB-14**: Índices compostos para queries combinadas
+
+#### Integridade & Manutenção
+- [ ] **DB-15**: Constraints de integridade referencial entre tabelas
+- [ ] **DB-16**: NOT NULL constraints para campos obrigatórios
+- [ ] **DB-17**: DEFAULT values para campos opcionais
+- [ ] **DB-18**: Migrações para versionamento do schema
+- [ ] **DB-19**: Backup/restore procedures
+- [ ] **DB-20**: Geração de snapshot SQL exportável
+
+### Configuração (CFG)
+
+#### App Settings
+- [ ] **CFG-01**: appsettings.json para configuração de conexão PostgreSQL
+- [ ] **CFG-02**: appsettings.json para configuração de paths de arquivos
+- [ ] **CFG-03**: appsettings.json para configuração de torrent (tracker, ports)
+- [ ] **CFG-04**: Suporte a appsettings.Development.json
+- [ ] **CFG-05**: Validação de configurações obrigatórias no startup
+- [ ] **CFG-06**: Documentação de todas as opções de configuração
+
+---
+
+## v2 Requirements (Deferred)
+
+### Gerador
+- [ ] Importação em massa de dados de formatos externos (CSV, Excel)
+- [ ] Sistema de notificações para curadores
+- [ ] Dashboard de estatísticas de curadoria
+- [ ] Exportação de dados para múltiplos formatos
+
+### Leitor
+- [ ] API pública para integração de terceiros (v2 feature)
+- [ ] Sistema de autenticação de usuários
+- [ ] Contas de usuário com preferências salvas
+- [ ] Sistema de comentários/discussão por caso
+- [ ] Estatísticas e dashboards públicos
+- [ ] Conteúdo de vídeo completo (streaming)
+
+### Infraestrutura
+- [ ] Funcionalidade de seed torrent (usuários podem servir)
+- [ ] CDN para distribuição de snapshots
+- [ ] Monitoramento de saúde do sistema
+- [ ] Automação de deploy
+
+---
+
+## Out of Scope (Explicit Exclusions)
+
+- [ ] **API pública no MVP** - Será implementada em v2
+- [ ] **Sistema de autenticação** - Acesso aberto a todos, sem login
+- [ ] **Conteúdo de vídeo completo** - Vídeos isolados para implementação futura
+- [ ] **Funcionalidade de seed torrent no MVP** - Apenas download, seed vem depois
+- [ ] **Exportação de dados** - Fora do escopo inicial
+- [ ] **Sistema de notificações** - Usuários verificam atualizações manualmente via torrent
+- [ ] **Estatísticas e dashboards** - Feature v2
+- [ ] **Sistema de comentários** - Não haverá interação entre usuários por caso
+
+---
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| GEN-01 | TBD | Not Mapped |
+| GEN-02 | TBD | Not Mapped |
+| ... | ... | ... |
+
+*Traceability section auto-populated by roadmap creation*
+
+---
+
+*Last updated: March 1, 2026 after requirements definition*
