@@ -1,0 +1,12 @@
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/bin/Debug/net10.0/AtrocidadesRSS.Generator.deps.json
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/bin/Debug/net10.0/AtrocidadesRSS.Generator.dll
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/bin/Debug/net10.0/AtrocidadesRSS.Generator.pdb
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/obj/Debug/net10.0/AtrocidadesRSS.Generator.csproj.AssemblyReference.cache
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/obj/Debug/net10.0/AtrocidadesRSS.Generator.GeneratedMSBuildEditorConfig.editorconfig
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/obj/Debug/net10.0/AtrocidadesRSS.Generator.AssemblyInfoInputs.cache
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/obj/Debug/net10.0/AtrocidadesRSS.Generator.AssemblyInfo.cs
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/obj/Debug/net10.0/AtrocidadesRSS.Generator.csproj.CoreCompileInputs.cache
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/obj/Debug/net10.0/AtrocidadesRSS.Generator.dll
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/obj/Debug/net10.0/refint/AtrocidadesRSS.Generator.dll
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/obj/Debug/net10.0/AtrocidadesRSS.Generator.pdb
+/home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator/obj/Debug/net10.0/ref/AtrocidadesRSS.Generator.dll
