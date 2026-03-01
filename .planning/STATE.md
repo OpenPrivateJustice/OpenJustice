@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 4 of 5 (Reader Core)
-Plan: Not started
-Status: Ready to begin
-Last activity: March 1, 2026 — Phase 3 complete
+Plan: 1 of 4
+Status: Complete
+Last activity: March 1, 2026 — Completed 04-01-PLAN.md
 
-Progress: [▓▓▓▓▓▓▓▓▓▓▓] 90%
+Progress: [▓▓▓▓▓▓▓▓▓▓▓] 95%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 8.3 min
-- Total execution time: 1.06 hours
+- Total plans completed: 9
+- Average duration: 8.2 min
+- Total execution time: 1.10 hours
 
 **By Phase:**
 
@@ -30,7 +30,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓] 90%
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | 2/2 | 21 min | 10.5 min |
-| 4. Reader Core | - | - | - |
+| 4. Reader Core | 1/4 | 4 min | 4.0 min |
 | 5. Reader History UI | - | - | - |
 
 **Recent Trend:**
@@ -43,6 +43,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓] 90%
 - Plan 02-05: Generator core finalization - 10 min
 - Plan 03-01: Generator history system - 9 min
 - Plan 03-02: Generator history UI - 12 min
+- Plan 04-01: Reader core bootstrap - 4 min
 
 *Updated after each plan completion*
 
@@ -96,12 +97,19 @@ Key decisions from Phase 3 Plan 1:
 - Field values serialized as JSON for flexibility
 - History ordered by ChangedAt descending for timeline rendering
 
+Key decisions from Phase 4 Plan 1:
+- Created Reader WASM project as standalone SPA isolated from Generator.Web runtime
+- Used IOptions pattern with IValidateOptions mirroring Generator's approach
+- Created strongly-typed ReaderOptions with DataAnnotations validation
+- Placed appsettings.json in wwwroot (standard for Blazor WASM)
+- Added navigation entries for Sync, Search, Cases pages
+
 ### Pending Todos
 
 - Phase 1 complete - Database foundation laid
 - Phase 2 complete - Generator core API implemented
 - Phase 3 complete - Generator history system implemented
-- Phase 4 in progress - Reader Core (Blazor WASM, torrent, local SQL)
+- Phase 4 in progress - Reader Core bootstrap complete (1/4 plans)
 - Phase 5 - Reader History UI & Polish
 
 ### Blockers/Concerns
@@ -111,7 +119,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 1, 2026
-Stopped at: Completed 03-02-PLAN.md execution
+Stopped at: Completed 04-01-PLAN.md execution
 Resume file: None
 
 ## Requirements Status (DB)
@@ -162,3 +170,11 @@ Resume file: None
 - [x] GEN-20: Change confidence per history entry
 - [x] GEN-21: Generator UI exposes history timeline for each case
 - [x] GEN-22: Diff view compares two selected versions with confidence scores
+
+## Requirements Status (Reader)
+
+- [x] RDR-01: Reader opens as a client-side Blazor WebAssembly SPA
+- [ ] RDR-02: Local SQLite database for offline access
+- [ ] RDR-03: Torrent-based database sync
+- [ ] RDR-04: Search interface with filters
+- [x] RDR-05: Reader reads required runtime settings from appsettings.json
