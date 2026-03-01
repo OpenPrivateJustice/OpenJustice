@@ -9,7 +9,7 @@
 
 - [x] **Phase 1: Database & Configuration Foundation** - PostgreSQL schema, indices, migrations, appsettings
 - [x] **Phase 2: Generator Core** - API, Web UI, Curation, Export, RSS/Reddit scraping
-- [ ] **Phase 3: Generator History System** - CaseFieldHistory, confidence scores, timeline & diff UI
+- [x] **Phase 3: Generator History System** - CaseFieldHistory, confidence scores, timeline & diff UI
 - [ ] **Phase 4: Reader Core** - Blazor SPA, torrent download, local SQL, search/filters, case viewing
 - [ ] **Phase 5: Reader History UI & Polish** - Timeline, diff, confidence display, responsive UI, error handling
 
@@ -139,7 +139,7 @@
 |-------|----------------|--------|-----------|
 | 1. Database & Configuration Foundation | 4/4 | Complete | 01-01, 01-02, 01-03, 01-04 |
 | 2. Generator Core | 5/5 | Complete | 02-01, 02-02, 02-03, 02-04, 02-05 |
-| 3. Generator History System | 1/2 | In Progress | 03-01 |
+| 3. Generator History System | 2/2 | Complete | 03-01, 03-02 |
 | 4. Reader Core | 0/1 | Not started | - |
 | 5. Reader History UI & Polish | 0/1 | Not started | - |
 
