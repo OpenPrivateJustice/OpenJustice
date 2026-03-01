@@ -1,0 +1,185 @@
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Filtros de Busca</h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <!-- Name Search -->
+            <div class="col-12">
+                <label for="nameSearch" class="form-label">Nome (Acusado/Vítima)</label>
+                <input 
+                    type="text" 
+                    id="nameSearch" 
+                    class="form-control" 
+                    placeholder="Buscar por nome com correspondência fuzzy..."
+                    @bind="NameText"
+                    @bind:event="oninput" />
+            </div>
+
+            <!-- Crime Type -->
+            <div class="col-md-4">
+                <label for="crimeType" class="form-label">Tipo de Crime</label>
+                <select 
+                    id="crimeType" 
+                    class="form-select"
+                    @bind="CrimeType">
+                    <option value="">Todos os tipos</option>
+                    @foreach (var type in CrimeTypes)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
+            </div>
+
+            <!-- State -->
+            <div class="col-md-4">
+                <label for="state" class="form-label">Estado</label>
+                <select 
+                    id="state" 
+                    class="form-select"
+                    @bind="State">
+                    <option value="">Todos os estados</option>
+                    @foreach (var state in States)
+                    {
+                        <option value="@state">@state</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Judicial Status -->
+            <div class="col-md-4">
+                <label for="judicialStatus" class="form-label">Status Judicial</label>
+                <select 
+                    id="judicialStatus" 
+                    class="form-select"
+                    @bind="JudicialStatus">
+                    <option value="">Todos os status</option>
+                    @foreach (var status in JudicialStatuses)
+                    {
+                        <option value="@status">@status</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Period Start -->
+            <div class="col-md-4">
+                <label for="periodStart" class="form-label">Período - Início</label>
+                <input 
+                    type="date" 
+                    id="periodStart" 
+                    class="form-control"
+                    @bind="PeriodStart" />
+            </div>
+
+            <!-- Period End -->
+            <div class="col-md-4">
+                <label for="periodEnd" class="form-label">Período - Fim</label>
+                <input 
+                    type="date" 
+                    id="periodEnd" 
+                    class="form-control"
+                    @bind="PeriodEnd" />
+            </div>
+
+            <!-- Buttons -->
+            <div class="col-md-4 d-flex align-items-end gap-2">
+                <button 
+                    type="button" 
+                    class="btn btn-primary flex-grow-1"
+                    @onclick="ApplyFilters">
+                    Buscar
+                </button>
+                <button 
+                    type="button" 
+                    class="btn btn-outline-secondary"
+                    @onclick="ResetFilters">
+                    Limpar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? NameText { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> NameTextChanged { get; set; }
+
+    [Parameter]
+    public string? CrimeType { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> CrimeTypeChanged { get; set; }
+
+    [Parameter]
+    public string? State { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> StateChanged { get; set; }
+
+    [Parameter]
+    public string? JudicialStatus { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> JudicialStatusChanged { get; set; }
+
+    [Parameter]
+    public DateTime? PeriodStart { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime?> PeriodStartChanged { get; set; }
+
+    [Parameter]
+    public DateTime? PeriodEnd { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime?> PeriodEndChanged { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<string> CrimeTypes { get; set; } = Array.Empty<string>();
+
+    [Parameter]
+    public IReadOnlyList<string> States { get; set; } = Array.Empty<string>();
+
+    [Parameter]
+    public IReadOnlyList<string> JudicialStatuses { get; set; } = Array.Empty<string>();
+
+    [Parameter]
+    public EventCallback OnFilterChanged { get; set; }
+
+    private async Task ApplyFilters()
+    {
+        await NameTextChanged.InvokeAsync(NameText);
+        await CrimeTypeChanged.InvokeAsync(CrimeType);
+        await StateChanged.InvokeAsync(State);
+        await JudicialStatusChanged.InvokeAsync(JudicialStatus);
+        await PeriodStartChanged.InvokeAsync(PeriodStart);
+        await PeriodEndChanged.InvokeAsync(PeriodEnd);
+        await OnFilterChanged.InvokeAsync();
+    }
+
+    private async Task ResetFilters()
+    {
+        NameText = null;
+        await NameTextChanged.InvokeAsync(null);
+        
+        CrimeType = null;
+        await CrimeTypeChanged.InvokeAsync(null);
+        
+        State = null;
+        await StateChanged.InvokeAsync(null);
+        
+        JudicialStatus = null;
+        await JudicialStatusChanged.InvokeAsync(null);
+        
+        PeriodStart = null;
+        await PeriodStartChanged.InvokeAsync(null);
+        
+        PeriodEnd = null;
+        await PeriodEndChanged.InvokeAsync(null);
+        
+        await OnFilterChanged.InvokeAsync();
+    }
+}

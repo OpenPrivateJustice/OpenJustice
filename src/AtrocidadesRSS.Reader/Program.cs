@@ -6,6 +6,7 @@ using AtrocidadesRSS.Reader;
 using AtrocidadesRSS.Reader.Configuration;
 using AtrocidadesRSS.Reader.Services.Sync;
 using AtrocidadesRSS.Reader.Services.Data;
+using AtrocidadesRSS.Reader.Services.Search;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -30,6 +31,9 @@ builder.Services.AddSingleton<ITorrentSyncService, TorrentSyncService>();
 
 // Register local case store
 builder.Services.AddSingleton<ILocalCaseStore, SqliteCaseStore>();
+
+// Register search service
+builder.Services.AddSingleton<ICaseSearchService, CaseSearchService>();
 
 // Validate configuration at startup - this will fail fast if required values are missing
 var optionsValidation = builder.Services.BuildServiceProvider().GetService<IOptions<ReaderOptions>>();
