@@ -10,24 +10,24 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 1 of 5 (Database & Configuration Foundation)
-Plan: 01-01 complete, 01-02 pending
+Plan: 01-02 complete
 Status: Executing plan
-Last activity: March 1, 2026 — Plan 01-01 completed
+Last activity: March 1, 2026 — Plan 01-02 completed
 
-Progress: [▓▓▓▓▓▓▓▓░░] 10%
+Progress: [▓▓▓▓▓▓▓▓▓▓] 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 5 min
-- Total execution time: 0.08 hours
+- Total plans completed: 2
+- Average duration: 7.5 min
+- Total execution time: 0.25 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1. Database & Config | 1/2 | 5 min | 5 min |
+| 1. Database & Config | 2/2 | 15 min | 7.5 min |
 | 2. Generator Core | - | - | - |
 | 3. Generator History | - | - | - |
 | 4. Reader Core | - | - | - |
@@ -35,6 +35,7 @@ Progress: [▓▓▓▓▓▓▓▓░░] 10%
 
 **Recent Trend:**
 - Plan 01-01: EF Core domain schema - 5 min
+- Plan 01-02: EF Core migration + backup/restore - 10 min
 
 *Updated after each plan completion*
 
@@ -56,7 +57,7 @@ Key decisions from Phase 1 Plan 1:
 
 ### Pending Todos
 
-- Phase 1 Plan 2: Database configuration and migration setup
+- Phase 1 complete - Database foundation laid
 
 ### Blockers/Concerns
 
@@ -80,15 +81,15 @@ Resume file: None
 - [x] DB-08: Many-to-many Cases-Tags
 - [x] DB-09: CaseFieldHistory
 - [x] DB-10: Confidence scores
-- [ ] DB-11: Index name search
-- [ ] DB-12: Index crime type
-- [ ] DB-13: Index location
-- [ ] DB-14: Index crime date
-- [ ] DB-15: Index judicial status
-- [ ] DB-16: Composite indexes
+- [x] DB-11: Index name search
+- [x] DB-12: Index crime type
+- [x] DB-13: Index location
+- [x] DB-14: Index crime date
+- [x] DB-15: Index judicial status
+- [x] DB-16: Composite indexes (partial - FK only)
 - [x] DB-17: FK constraints
 - [x] DB-18: NOT NULL constraints
 - [x] DB-19: DEFAULT values
-- [ ] DB-20: Migrations
-- [ ] DB-21: Backup/restore
-- [ ] DB-22: SQL snapshot export
+- [x] DB-20: Migrations
+- [x] DB-21: Backup/restore
+- [x] DB-22: SQL snapshot export
