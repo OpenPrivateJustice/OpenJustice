@@ -1,3 +1,5 @@
+using AtrocidadesRSS.Generator.Domain.Enums;
+
 namespace AtrocidadesRSS.Generator.Infrastructure.Persistence.Entities;
 
 public class Case
@@ -65,6 +67,10 @@ public class Case
     public bool IsSensitiveContent { get; set; }
     public bool IsVerified { get; set; }
     public string? AnonymizationStatus { get; set; }
+    
+    // Curation
+    public CurationStatus CurationStatus { get; set; } = CurationStatus.Pending;
+    public DateTime? CurationTimestamp { get; set; }
 
     // Metadata
     public DateTime CreatedAt { get; set; }

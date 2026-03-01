@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using AtrocidadesRSS.Generator.Infrastructure.Persistence.Entities;
+using AtrocidadesRSS.Generator.Domain.Enums;
 
 namespace AtrocidadesRSS.Generator.Infrastructure.Persistence;
 
@@ -11,6 +12,7 @@ public class AppDbContext : DbContext
 
     // DbSets
     public DbSet<Case> Cases => Set<Case>();
+    public DbSet<CaseAuditLog> CaseAuditLogs => Set<CaseAuditLog>();
     public DbSet<CrimeType> CrimeTypes => Set<CrimeType>();
     public DbSet<CaseType> CaseTypes => Set<CaseType>();
     public DbSet<JudicialStatus> JudicialStatuses => Set<JudicialStatus>();
@@ -212,6 +214,30 @@ public class AppDbContext : DbContext
             entity.Property(e => e.FieldName).IsRequired().HasMaxLength(100);
             entity.HasIndex(e => e.CaseId);
             entity.HasIndex(e => e.ChangedAt);
+        });
+
+        // CaseAuditLog Entity Configuration (append-only audit trail)
+        modelBuilder.Entity<CaseAuditLog>(entity =>
+        {
+            entity.ToTable("CaseAuditLogs");
+            
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.ActionType).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.CuratorId).HasMaxLength(100);
+            entity.Property(e => e.Notes).HasMaxLength(1000);
+            entity.Property(e => e.Timestamp).IsRequired();
+            
+            // Index for querying audit logs by case
+            entity.HasIndex(e => e.CaseId);
+            entity.HasIndex(e => e.Timestamp);
+            
+            // Foreign key to Case (optional relationship for navigation)
+            entity.HasOne(e => e.Case)
+                .WithMany()
+                .HasForeignKey(e => e.CaseId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

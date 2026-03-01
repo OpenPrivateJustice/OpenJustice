@@ -1,5 +1,7 @@
 using AtrocidadesRSS.Generator.Configuration;
 using AtrocidadesRSS.Generator.Services.Cases;
+using AtrocidadesRSS.Generator.Services.Curation;
+using AtrocidadesRSS.Generator.Services.History;
 using AtrocidadesRSS.Generator.Validation.Cases;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -70,6 +72,19 @@ public static class ServiceCollectionExtensions
         // Register services
         services.AddScoped<ICaseReferenceCodeGenerator, CaseReferenceCodeGenerator>();
         services.AddScoped<ICaseWorkflowService, CaseWorkflowService>();
+        services.AddScoped<ICaseAuditLogService, CaseAuditLogService>();
+        services.AddScoped<ICurationService, CurationService>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Add curation services for case workflow governance.
+    /// </summary>
+    public static IServiceCollection AddCurationServices(this IServiceCollection services)
+    {
+        services.AddScoped<ICaseAuditLogService, CaseAuditLogService>();
+        services.AddScoped<ICurationService, CurationService>();
 
         return services;
     }
