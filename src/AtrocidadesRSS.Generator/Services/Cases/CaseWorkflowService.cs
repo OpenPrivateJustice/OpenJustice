@@ -38,6 +38,11 @@ public interface ICaseWorkflowService
     /// Validates that a foreign key ID exists in the database.
     /// </summary>
     Task<bool> ValidateForeignKeyAsync(int crimeTypeId, int caseTypeId, int judicialStatusId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets all cases with optional filtering.
+    /// </summary>
+    Task<List<Case>> GetAllCasesAsync(CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -286,5 +291,16 @@ public class CaseWorkflowService : ICaseWorkflowService
             .AnyAsync(js => js.Id == judicialStatusId, cancellationToken);
         
         return judicialStatusExists;
+    }
+
+    /// <inheritdoc/>
+    public async Task<List<Case>> GetAllCasesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Cases
+            .Include(c => c.CrimeType)
+            .Include(c => c.CaseType)
+            .Include(c => c.JudicialStatus)
+            .OrderByDescending(c => c.LastUpdated)
+            .ToListAsync(cancellationToken);
     }
 }

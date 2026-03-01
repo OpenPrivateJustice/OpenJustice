@@ -85,6 +85,19 @@ public class CasesController : ControllerBase
     }
 
     /// <summary>
+    /// Gets all cases.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of all cases.</returns>
+    [HttpGet]
+    [ProducesResponseType(typeof(List<Case>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    {
+        var cases = await _caseWorkflowService.GetAllCasesAsync(cancellationToken);
+        return Ok(cases);
+    }
+
+    /// <summary>
     /// Gets a case by ID.
     /// </summary>
     /// <param name="id">The case ID.</param>
