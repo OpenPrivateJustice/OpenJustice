@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 3 of 5 (Generator History)
-Plan: 03-01 complete
+Plan: 03-02 complete
 Status: Plan executed
-Last activity: March 1, 2026 — Plan 03-01 completed
+Last activity: March 1, 2026 — Plan 03-02 completed
 
-Progress: [▓▓▓▓▓▓▓▓▓▓] 60%
+Progress: [▓▓▓▓▓▓▓▓▓▓] 80%
 
 ## Performance Metrics
 
@@ -29,7 +29,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 60%
 |-------|-------|-------|----------|
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
-| 3. Generator History | 1/1 | 9 min | 9.0 min |
+| 3. Generator History | 2/2 | 21 min | 10.5 min |
 | 4. Reader Core | - | - | - |
 | 5. Reader History UI | - | - | - |
 
@@ -42,6 +42,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 60%
 - Plan 02-04: Discovery ingestion + curator review - 2 min
 - Plan 02-05: Generator core finalization - 10 min
 - Plan 03-01: Generator history system - 9 min
+- Plan 03-02: Generator history UI - 12 min
 
 *Updated after each plan completion*
 
@@ -108,7 +109,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 1, 2026
-Stopped at: Completed 03-01-PLAN.md execution
+Stopped at: Completed 03-02-PLAN.md execution
 Resume file: None
 
 ## Requirements Status (DB)
@@ -157,3 +158,5 @@ Resume file: None
 - [x] GEN-18: Case field history append-only tracking
 - [x] GEN-19: Case history API endpoints
 - [x] GEN-20: Change confidence per history entry
+- [x] GEN-21: Generator UI exposes history timeline for each case
+- [x] GEN-22: Diff view compares two selected versions with confidence scores
