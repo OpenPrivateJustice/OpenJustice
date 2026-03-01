@@ -91,7 +91,7 @@
 - [ ] **DB-13**: Índices para filtragem por estado/localização
 - [ ] **DB-14**: Índices para filtragem por data do crime
 - [ ] **DB-15**: Índices para filtragem por status judicial
-- [ ] **DB-16**: Índices compostos para queries combinadas
+- [x] **DB-16**: Índices compostos para queries combinadas
 
 #### Integridade & Manutenção
 - [ ] **DB-17**: Constraints de integridade referencial entre tabelas
@@ -104,12 +104,12 @@
 ### Configuração (CFG)
 
 #### App Settings
-- [ ] **CFG-01**: appsettings.json para configuração de conexão PostgreSQL
-- [ ] **CFG-02**: appsettings.json para configuração de paths de arquivos
-- [ ] **CFG-03**: appsettings.json para configuração de torrent (tracker, ports)
-- [ ] **CFG-04**: Suporte a appsettings.Development.json
-- [ ] **CFG-05**: Validação de configurações obrigatórias no startup
-- [ ] **CFG-06**: Documentação de todas as opções de configuração
+- [x] **CFG-01**: appsettings.json para configuração de conexão PostgreSQL
+- [x] **CFG-02**: appsettings.json para configuração de paths de arquivos
+- [x] **CFG-03**: appsettings.json para configuração de torrent (tracker, ports)
+- [x] **CFG-04**: Suporte a appsettings.Development.json
+- [x] **CFG-05**: Validação de configurações obrigatórias no startup
+- [x] **CFG-06**: Documentação de todas as opções de configuração
 
 ---
 
@@ -218,19 +218,19 @@
 | DB-13 | Phase 1 | Pending |
 | DB-14 | Phase 1 | Pending |
 | DB-15 | Phase 1 | Pending |
-| DB-16 | Phase 1 | Pending |
+| DB-16 | Phase 1 | Complete |
 | DB-17 | Phase 1 | Pending |
 | DB-18 | Phase 1 | Pending |
 | DB-19 | Phase 1 | Pending |
 | DB-20 | Phase 1 | Pending |
 | DB-21 | Phase 1 | Pending |
 | DB-22 | Phase 1 | Pending |
-| CFG-01 | Phase 1 | Pending |
-| CFG-02 | Phase 1 | Pending |
-| CFG-03 | Phase 1 | Pending |
-| CFG-04 | Phase 1 | Pending |
-| CFG-05 | Phase 1 | Pending |
-| CFG-06 | Phase 1 | Pending |
+| CFG-01 | Phase 1 | Complete |
+| CFG-02 | Phase 1 | Complete |
+| CFG-03 | Phase 1 | Complete |
+| CFG-04 | Phase 1 | Complete |
+| CFG-05 | Phase 1 | Complete |
+| CFG-06 | Phase 1 | Complete |
 
 *Traceability section auto-populated by roadmap creation*
 
