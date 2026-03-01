@@ -1,0 +1,330 @@
+@page "/cases/{CaseId:int}/history"
+@inject IGeneratorApiClient ApiClient
+@inject NavigationManager Navigation
+
+<PageTitle>Histórico do Caso - AtrocidadesRSS</PageTitle>
+
+<div class="container">
+    <nav aria-label="Breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/cases">Casos</a></li>
+            <li class="breadcrumb-item"><a href="/cases/edit/@CaseId">Editar Caso</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Histórico</li>
+        </ol>
+    </nav>
+
+    @if (isLoading)
+    {
+        <div class="text-center my-5">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+        </div>
+    }
+    else if (loadError != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Erro</h4>
+            <p>@loadError</p>
+            <hr>
+            <button class="btn btn-outline-danger" @onclick="LoadHistory">Tentar novamente</button>
+        </div>
+    }
+    else if (!HasHistory)
+    {
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Nenhum histórico encontrado</h4>
+            <p>Este caso ainda não possui histórico de alterações.</p>
+            <hr>
+            <a href="/cases/edit/@CaseId" class="btn btn-primary">Voltar ao caso</a>
+        </div>
+    }
+    else
+    {
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="h3">Histórico do Caso <small class="text-muted">#@CaseId</small></h1>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/cases/edit/@CaseId" class="btn btn-outline-secondary">
+                    <span class="bi bi-arrow-left"></span> Voltar ao Caso
+                </a>
+            </div>
+        </div>
+
+        <!-- Field Filter -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Filtrar por Campo</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="fieldFilter" class="form-label">Campo:</label>
+                        <select id="fieldFilter" class="form-select" @onchange="OnFieldFilterChanged">
+                            <option value="">Todos os campos</option>
+                            @foreach (var field in AvailableFields)
+                            {
+                                <option value="@field" selected="@(SelectedField == field)">
+                                    @FormatFieldName(field) (@GetFieldChangeCount(field) alterações)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-info mb-0">
+                            <strong>Total:</strong> @FilteredHistory.Count alterações
+                            @if (!string.IsNullOrEmpty(SelectedField))
+                            {
+                                <span class="badge bg-primary ms-2">@SelectedField</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Version A/B Diff Selector -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Comparar Versões (Diff)</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="versionA" class="form-label">Versão A (Anterior):</label>
+                        <select id="versionA" class="form-select" @onchange="OnVersionAChanged">
+                            <option value="">Selecione uma versão...</option>
+                            @foreach (var entry in DiffOptions)
+                            {
+                                <option value="@entry.Id" selected="@(SelectedVersionA == entry.Id)">
+                                    @entry.ChangedAtDisplay - @entry.FieldDisplayName (@entry.ConfidenceLevel)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-center d-flex align-items-center justify-content-center">
+                        <span class="bi bi-arrow-right-right display-6 text-muted"></span>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="versionB" class="form-label">Versão B (Posterior):</label>
+                        <select id="versionB" class="form-select" @onchange="OnVersionBChanged">
+                            <option value="">Selecione uma versão...</option>
+                            @foreach (var entry in DiffOptions)
+                            {
+                                <option value="@entry.Id" selected="@(SelectedVersionB == entry.Id)">
+                                    @entry.ChangedAtDisplay - @entry.FieldDisplayName (@entry.ConfidenceLevel)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                @if (SelectedVersionA.HasValue && SelectedVersionB.HasValue && DiffEntryA != null && DiffEntryB != null)
+                {
+                    <div class="mt-4">
+                        <h6>Comparação: @DiffEntryA.FieldDisplayName</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-danger">
+                                    <div class="card-header bg-danger text-white">
+                                        <strong>Versão A (Antes)</strong>
+                                        <span class="badge bg-light text-dark ms-2">@DiffEntryA.ChangedAtDisplay</span>
+                                        <span class="badge @DiffEntryA.ConfidenceBadgeClass ms-1">@DiffEntryA.ConfidenceLevel (@DiffEntryA.ChangeConfidence%)</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="mb-1"><strong>Curador:</strong> @DiffEntryA.CuratorDisplay</p>
+                                        <pre class="bg-light p-3 rounded">@DiffEntryA.OldValueDisplay</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-success">
+                                    <div class="card-header bg-success text-white">
+                                        <strong>Versão B (Depois)</strong>
+                                        <span class="badge bg-light text-dark ms-2">@DiffEntryB.ChangedAtDisplay</span>
+                                        <span class="badge @DiffEntryB.ConfidenceBadgeClass ms-1">@DiffEntryB.ConfidenceLevel (@DiffEntryB.ChangeConfidence%)</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="mb-1"><strong>Curador:</strong> @DiffEntryB.CuratorDisplay</p>
+                                        <pre class="bg-light p-3 rounded">@DiffEntryB.NewValueDisplay</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Linha do Tempo</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var entry in FilteredHistory.OrderByDescending(e => e.ChangedAt))
+                {
+                    <div class="timeline-entry mb-3 pb-3 border-bottom">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="badge bg-secondary me-2">@entry.FieldDisplayName</span>
+                                <span class="badge @entry.ConfidenceBadgeClass">@entry.ConfidenceLevel (@entry.ChangeConfidence%)</span>
+                            </div>
+                            <small class="text-muted">@entry.ChangedAtDisplay por @entry.CuratorDisplay</small>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-5">
+                                <div class="p-2 bg-danger-subtle rounded">
+                                    <small class="text-danger fw-bold">De:</small>
+                                    <pre class="mb-0 small">@entry.OldValueDisplay</pre>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-center d-flex align-items-center justify-content-center">
+                                <span class="bi bi-arrow-right text-muted"></span>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="p-2 bg-success-subtle rounded">
+                                    <small class="text-success fw-bold">Para:</small>
+                                    <pre class="mb-0 small">@entry.NewValueDisplay</pre>
+                                </div>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(entry.ChangeReason))
+                        {
+                            <div class="mt-2">
+                                <small class="text-muted"><strong>Motivo:</strong> @entry.ChangeReason</small>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int CaseId { get; set; }
+
+    private List<CaseFieldHistoryViewModel> allHistory = new();
+    private List<CaseFieldHistoryViewModel> filteredHistory = new();
+    private bool isLoading = true;
+    private string? loadError;
+    private string? selectedField;
+    private int? selectedVersionA;
+    private int? selectedVersionB;
+
+    private List<CaseFieldHistoryViewModel> FilteredHistory => filteredHistory;
+    private bool HasHistory => allHistory.Any();
+    private List<string> AvailableFields => allHistory.Select(h => h.FieldName).Distinct().OrderBy(f => f).ToList();
+    private List<CaseFieldHistoryViewModel> DiffOptions => filteredHistory.OrderByDescending(e => e.ChangedAt).ToList();
+
+    private CaseFieldHistoryViewModel? DiffEntryA => selectedVersionA.HasValue 
+        ? allHistory.FirstOrDefault(e => e.Id == selectedVersionA.Value) 
+        : null;
+    private CaseFieldHistoryViewModel? DiffEntryB => selectedVersionB.HasValue 
+        ? allHistory.FirstOrDefault(e => e.Id == selectedVersionB.Value) 
+        : null;
+
+    private string? SelectedField
+    {
+        get => selectedField;
+        set
+        {
+            selectedField = value;
+            ApplyFilter();
+        }
+    }
+
+    private int? SelectedVersionA
+    {
+        get => selectedVersionA;
+        set => selectedVersionA = value;
+    }
+
+    private int? SelectedVersionB
+    {
+        get => selectedVersionB;
+        set => selectedVersionB = value;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadHistory();
+    }
+
+    private async Task LoadHistory()
+    {
+        isLoading = true;
+        loadError = null;
+
+        try
+        {
+            allHistory = await ApiClient.GetCaseHistoryAsync(CaseId);
+            ApplyFilter();
+        }
+        catch (Exception ex)
+        {
+            loadError = $"Erro ao carregar histórico: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void ApplyFilter()
+    {
+        if (string.IsNullOrEmpty(selectedField))
+        {
+            filteredHistory = allHistory;
+        }
+        else
+        {
+            filteredHistory = allHistory.Where(h => h.FieldName == selectedField).ToList();
+        }
+        
+        // Reset diff selections when filter changes
+        selectedVersionA = null;
+        selectedVersionB = null;
+    }
+
+    private int GetFieldChangeCount(string fieldName)
+    {
+        return allHistory.Count(h => h.FieldName == fieldName);
+    }
+
+    private void OnFieldFilterChanged(ChangeEventArgs e)
+    {
+        SelectedField = e.Value?.ToString();
+    }
+
+    private void OnVersionAChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var id))
+            selectedVersionA = id;
+        else
+            selectedVersionA = null;
+    }
+
+    private void OnVersionBChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var id))
+            selectedVersionB = id;
+        else
+            selectedVersionB = null;
+    }
+
+    private static string FormatFieldName(string fieldName)
+    {
+        if (string.IsNullOrEmpty(fieldName))
+            return fieldName;
+
+        // Convert PascalCase to Title Case with spaces
+        var result = string.Concat(fieldName.Select((c, i) =>
+            i > 0 && char.IsUpper(c) ? " " + c : c.ToString()));
+
+        return char.ToUpper(result[0]) + result[1..];
+    }
+}

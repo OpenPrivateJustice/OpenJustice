@@ -1,0 +1,90 @@
+/* CaseHistory.razor styles */
+
+.timeline-entry {
+    position: relative;
+    padding-left: 20px;
+}
+
+.timeline-entry::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-entry::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #6c757d;
+}
+
+.timeline-entry:last-child::before {
+    background: linear-gradient(to bottom, #dee2e6 50%, transparent 50%);
+}
+
+.timeline-entry pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: inherit;
+    font-size: 0.875rem;
+}
+
+/* Diff card styling */
+.card.border-danger {
+    border-width: 2px;
+}
+
+.card.border-success {
+    border-width: 2px;
+}
+
+/* Badge colors */
+.badge.bg-success {
+    color: white;
+}
+
+.badge.bg-warning {
+    color: black;
+}
+
+/* Loading state */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Filter section */
+.form-select:focus,
+.form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .timeline-entry {
+        padding-left: 15px;
+    }
+    
+    .timeline-entry::after {
+        width: 8px;
+        height: 8px;
+        left: -3px;
+    }
+    
+    .card-body .row > div {
+        margin-bottom: 1rem;
+    }
+    
+    .card-body .row > div:last-child {
+        margin-bottom: 0;
+    }
+}
