@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 
 ## Current Position
 
-Phase: 4 of 5 (Reader Core)
-Plan: 3 of 4
+Phase: 5 of 5 (Reader History UI & Polish)
+Plan: 1 of 3
 Status: In Progress
-Last activity: March 1, 2026 — Completed 04-03-PLAN.md (Search Experience)
+Last activity: March 1, 2026 — Executing 05-01 (History Data Foundation)
 
 Progress: [▓▓▓▓▓▓▓▓▓▓] 85%
 
@@ -49,6 +49,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 85%
 
 *Updated after each plan completion*
 | Phase 04-reader-core P02 | 5 | 3 tasks | 8 files |
+| Phase 5 P1 | 2 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,9 @@ Key decisions from Phase 4 Plan 1:
 - Added navigation entries for Sync, Search, Cases pages
 - [Phase 04-reader-core]: Implemented sync pipeline with HTTP download fallback for browser WASM, in-memory SQL store
 - [Phase 04-reader-core]: Implemented search with fuzzy name matching (Levenshtein distance), composable filters, sorting, and pagination
+- [Phase 5]: Additive history parsing preserves existing case import stability
+- [Phase 5]: Service resilience: returns empty collections instead of throwing on missing history
+- [Phase 5]: Index-based diff selection ensures deterministic/stable A/B output
 
 ### Pending Todos
 

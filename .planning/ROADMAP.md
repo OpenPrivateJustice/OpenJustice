@@ -147,7 +147,7 @@ Plans:
 | 2. Generator Core | 5/5 | Complete | 02-01, 02-02, 02-03, 02-04, 02-05 |
 | 3. Generator History System | 2/2 | Complete | 03-01, 03-02 |
 | 4. Reader Core | 3/4 | Complete    | 2026-03-01 |
-| 5. Reader History UI & Polish | 0/1 | Not started | - |
+| 5. Reader History UI & Polish | 1/3 | In Progress|  |
 
 ---
 

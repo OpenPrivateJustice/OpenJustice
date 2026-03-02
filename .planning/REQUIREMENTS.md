@@ -38,9 +38,9 @@
 
 #### SPA Blazor WebAssembly
 - [ ] **RDR-01**: Aplicação SPA Blazor executável localmente no navegador
-- [ ] **RDR-02**: Download da base de dados completa via torrent
-- [ ] **RDR-03**: Verificação de novas versões via torrent
-- [ ] **RDR-04**: Carregamento de banco SQL local
+- [x] **RDR-02**: Download da base de dados completa via torrent
+- [x] **RDR-03**: Verificação de novas versões via torrent
+- [x] **RDR-04**: Carregamento de banco SQL local
 - [ ] **RDR-05**: Configuração via appsettings.json (torrent tracker, etc.)
 
 #### Interface de Busca
@@ -54,16 +54,16 @@
 - [ ] **RDR-13**: Ordenação por diferentes campos
 
 #### Visualização de Casos
-- [ ] **RDR-14**: Visualização detalhada de cada caso com todos os campos
-- [ ] **RDR-15**: Tratamento de conteúdo sensível (IsSensitiveContent boolean)
-- [ ] **RDR-16**: Warning para conteúdo sensível antes de exibir
-- [ ] **RDR-17**: Exibição de fontes e links originais
-- [ ] **RDR-18**: Exibição de evidências (links para fotos/dados)
-- [ ] **RDR-19**: Exibição de informações jurídicas (nº processo, status, etc.)
-- [ ] **RDR-20**: Exibição de metadados (data registro, verificado, tags)
+- [x] **RDR-14**: Visualização detalhada de cada caso com todos os campos
+- [x] **RDR-15**: Tratamento de conteúdo sensível (IsSensitiveContent boolean)
+- [x] **RDR-16**: Warning para conteúdo sensível antes de exibir
+- [x] **RDR-17**: Exibição de fontes e links originais
+- [x] **RDR-18**: Exibição de evidências (links para fotos/dados)
+- [x] **RDR-19**: Exibição de informações jurídicas (nº processo, status, etc.)
+- [x] **RDR-20**: Exibição de metadados (data registro, verificado, tags)
 - [ ] **RDR-21**: Exibição de nível de confiança (0-100%) para cada campo
-- [ ] **RDR-22**: Timeline de histórico de alterações por campo
-- [ ] **RDR-23**: Diff visual entre versões de cada campo
+- [x] **RDR-22**: Timeline de histórico de alterações por campo
+- [x] **RDR-23**: Diff visual entre versões de cada campo
 - [ ] **RDR-24**: Interface responsiva (mobile/desktop)
 
 #### UI/UX
@@ -177,9 +177,9 @@
 | GEN-21 | Phase 3 | Pending |
 | GEN-22 | Phase 3 | Pending |
 | RDR-01 | Phase 4 | Pending |
-| RDR-02 | Phase 4 | Pending |
-| RDR-03 | Phase 4 | Pending |
-| RDR-04 | Phase 4 | Pending |
+| RDR-02 | Phase 4 | Complete |
+| RDR-03 | Phase 4 | Complete |
+| RDR-04 | Phase 4 | Complete |
 | RDR-05 | Phase 4 | Pending |
 | RDR-06 | Phase 4 | Pending |
 | RDR-07 | Phase 4 | Pending |
@@ -189,16 +189,16 @@
 | RDR-11 | Phase 4 | Pending |
 | RDR-12 | Phase 4 | Pending |
 | RDR-13 | Phase 4 | Pending |
-| RDR-14 | Phase 4 | Pending |
-| RDR-15 | Phase 4 | Pending |
-| RDR-16 | Phase 4 | Pending |
-| RDR-17 | Phase 4 | Pending |
-| RDR-18 | Phase 4 | Pending |
-| RDR-19 | Phase 4 | Pending |
-| RDR-20 | Phase 4 | Pending |
+| RDR-14 | Phase 4 | Complete |
+| RDR-15 | Phase 4 | Complete |
+| RDR-16 | Phase 4 | Complete |
+| RDR-17 | Phase 4 | Complete |
+| RDR-18 | Phase 4 | Complete |
+| RDR-19 | Phase 4 | Complete |
+| RDR-20 | Phase 4 | Complete |
 | RDR-21 | Phase 5 | Pending |
-| RDR-22 | Phase 5 | Pending |
-| RDR-23 | Phase 5 | Pending |
+| RDR-22 | Phase 5 | Complete |
+| RDR-23 | Phase 5 | Complete |
 | RDR-24 | Phase 5 | Pending |
 | RDR-25 | Phase 5 | Pending |
 | RDR-26 | Phase 5 | Pending |
