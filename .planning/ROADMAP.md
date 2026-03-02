@@ -244,7 +244,7 @@ Plans:
 3. 401 responses handled (token refresh or redirect to login)
 4. Timeline and diff UI display actual Generator history data
 
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 10-01-PLAN.md — Add authenticated Generator history API client and configuration (COMPLETED)
@@ -267,7 +267,7 @@ Plans:
 | 7. Configuration System & Database Indexes | 0/0 | Complete    | 2026-03-02 |
 | 8. Wire Torrent Import Pipeline | 1/1 | Complete | 2026-03-02 |
 | 9. Fix History Capture on Create | 1/1 | Complete | 2026-03-02 |
-| 10. Wire Reader to Generator History API | 2/2 | Complete | 2026-03-02 |
+| 10. Wire Reader to Generator History API | 2/2 | Complete    | 2026-03-02 |
 
 ---
 
