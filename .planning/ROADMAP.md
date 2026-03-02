@@ -46,11 +46,28 @@
 4. Composite indexes created on (CrimeTypeId, JudicialStatusId) and (CrimeLocationState, CrimeDate)
 5. Configuration documented in README or separate docs file
 
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
-- [ ] 07-01-PLAN.md — Configuration files, startup validation, and config documentation
-- [ ] 07-02-PLAN.md — Composite index model/migration alignment for DB-16
+- [x] 07-01-PLAN.md — Configuration files, startup validation, and config documentation (COMPLETE)
+- [x] 07-02-PLAN.md — Composite index model/migration alignment for DB-16 (COMPLETE)
+
+### Phase 8: Wire Torrent Import Pipeline
+**Goal:** Wire Generator export to Reader import for torrent-based snapshot distribution
+
+**Depends on:** Phase 4 (Reader Core)
+
+**Requirements:** GEN-15 (enhanced for Reader compatibility)
+
+**Success Criteria** (what must be TRUE):
+1. Generator snapshot export produces SQL compatible with Reader import
+2. Export includes --inserts flag for INSERT-based SQL output
+3. Contract tests verify SQL format compatibility
+
+**Plans:** 1/1 plans complete
+
+Plans:
+- [x] 08-01-PLAN.md — Generator snapshot export hardened for Reader SQL compatibility (COMPLETE)
 
 **Gap Closure:** Closes orphaned CFG-01 through CFG-06 requirements, upgrades DB-16 from partial to complete
 
@@ -236,7 +253,7 @@ Plans:
 | 4. Reader Core | 3/4 | Complete    | 2026-03-01 |
 | 5. Reader History UI & Polish | 3/3 | Complete    | 2026-03-02 |
 | 6. Create Missing VERIFICATION.md Files | 0/0 | Complete    | 2026-03-02 |
-| 7. Configuration System & Database Indexes | 0/0 | Pending | - |
+| 7. Configuration System & Database Indexes | 0/0 | Complete    | 2026-03-02 |
 | 8. Wire Torrent Import Pipeline | 0/0 | Pending | - |
 | 9. Fix History Capture on Create | 0/0 | Pending | - |
 | 10. Wire Reader to Generator History API | 0/0 | Pending | - |

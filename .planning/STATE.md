@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated March 1, 2026)
 
 **Core value:** Decentralized database of Brazilian historical crimes with full history tracking and confidence scores
-**Current focus:** Phase 7: Configuration System & Database Indexes (PENDING)
+**Current focus:** Phase 8: Wire Torrent Import Pipeline (IN PROGRESS)
 
 ## Current Position
 
-Phase: 7 of 10 (Configuration System & Database Indexes)
-Plan: 2 of 2
+Phase: 8 of 10 (Wire Torrent Import Pipeline)
+Plan: 1 of 1
 Status: Completed
-Last activity: March 2, 2026 — Completed 07-02 (Composite indexes aligned for Cases queries)
+Last activity: March 2, 2026 — Completed 08-01 (Generator snapshot export hardened for Reader SQL compatibility)
 
-Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░] 80%
+Progress: [▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 85%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
-- Average duration: 7.8 min
-- Total execution time: 1.28 hours
+- Total plans completed: 14
+- Average duration: 7.7 min
+- Total execution time: 1.30 hours
 
 **By Phase:**
 
@@ -30,6 +30,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░] 80%
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
 | 6. VERIFICATION.md Gap Closure | 1/1 | 5 min | 5.0 min |
 | 7. Configuration System | 2/2 | 5 min | 2.5 min |
+| 8. Wire Torrent Import Pipeline | 1/1 | 5 min | 5.0 min |
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | 2/2 | 21 min | 10.5 min |
 | 4. Reader Core | 3/4 | 17 min | 5.7 min |
@@ -52,6 +53,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░] 80%
 - Plan 05-03: Cross-page UI polish - 5 min
 - Plan 07-01: Generator configuration complete - 3 min
 - Plan 07-02: Composite index alignment - 1 min
+- Plan 08-01: Generator SQL export hardened for Reader compatibility - 5 min
 
 *Updated after each plan completion*
 | Phase 04-reader-core P02 | 5 | 3 tasks | 8 files |
@@ -122,6 +124,8 @@ Key decisions from Phase 4 Plan 1:
 - [Phase 5]: Index-based diff selection ensures deterministic/stable A/B output
 - [Phase 07]: Wired AddAtrocidadesRssConfiguration into Generator.Web Program.cs with ValidateOnStart()
 - [Phase 07]: Created comprehensive docs/configuration.md mapping all runtime config keys
+- [Phase 08]: Added --inserts pg_dump flag for INSERT-based SQL output compatible with Reader import
+- [Phase 08]: Added contract tests to ensure export format remains Reader-compatible
 
 ### Pending Todos
 
@@ -130,7 +134,8 @@ Key decisions from Phase 4 Plan 1:
 - Phase 3 complete - Generator history system implemented
 - Phase 4 complete - Reader Core search experience complete
 - Phase 5 complete - Reader History UI & Polish (all 3 plans done)
-- Phase 7 in progress - Configuration System & Database Indexes
+- Phase 7 complete - Configuration System & Database Indexes
+- Phase 8 complete - Wire Torrent Import Pipeline (Plan 1 done)
 
 ### Requirements Status (Configuration)
 
@@ -147,8 +152,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: March 1, 2026
-Stopped at: Completed 05-02-PLAN.md execution
+Last session: March 2, 2026
+Stopped at: Completed 08-01-PLAN.md execution (Generator SQL export hardened for Reader compatibility)
 Resume file: None
 
 ## Requirements Status (DB)
