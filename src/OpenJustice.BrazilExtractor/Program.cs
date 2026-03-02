@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using OpenJustice.BrazilExtractor;
 using OpenJustice.BrazilExtractor.Configuration;
 using OpenJustice.BrazilExtractor.Services.Browser;
+using OpenJustice.BrazilExtractor.Services.Downloads;
 using OpenJustice.BrazilExtractor.Services.Jobs;
 using OpenJustice.BrazilExtractor.Services.Tjgo;
 
@@ -23,6 +24,9 @@ builder.Services.AddSingleton<IPlaywrightBrowserFactory, PlaywrightBrowserFactor
 // Register TJGO services
 builder.Services.AddScoped<ITjgoSearchService, TjgoSearchService>();
 builder.Services.AddScoped<ITjgoSearchJob, TjgoSearchJob>();
+
+// Register PDF download service
+builder.Services.AddSingleton<IPdfDownloadService, PdfDownloadService>();
 
 // Register the worker service
 builder.Services.AddHostedService<Worker>();
