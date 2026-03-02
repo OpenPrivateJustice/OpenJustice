@@ -14,14 +14,30 @@ public class BrazilExtractorOptions
     public string TjgoUrl { get; set; } = string.Empty;
 
     /// <summary>
+    /// Full URL for the ConsultaPublicacao page.
+    /// </summary>
+    [Required]
+    public string ConsultaPublicacaoUrl { get; set; } = string.Empty;
+
+    /// <summary>
     /// Number of days to look back for case searches.
     /// </summary>
     public int DateWindowDays { get; set; } = 30;
 
     /// <summary>
+    /// Start date for the query date window. If set, queries will use this specific date.
+    /// </summary>
+    public DateTime? QueryDateWindowStartDate { get; set; }
+
+    /// <summary>
     /// Enable criminal case mode (different search parameters).
     /// </summary>
-    public bool CriminalMode { get; set; } = false;
+    public bool CriminalMode { get; set; } = true;
+
+    /// <summary>
+    /// Run browser in headless mode.
+    /// </summary>
+    public bool HeadlessMode { get; set; } = true;
 
     /// <summary>
     /// Profile name for extraction (e.g., "daily", "full").
