@@ -59,6 +59,8 @@ public class TjgoSearchService : ITjgoSearchService
         // Ensure criminal filter profile is set
         query.CriminalFilter ??= CriminalFilterProfile.GetProfile(query.CriminalMode);
         
+        var queryStartTime = DateTime.UtcNow;
+        
         _logger.LogInformation("Executing TJGO search for date {Date} (Criminal: {Criminal})",
             query.FormattedDate, query.CriminalMode);
         
@@ -156,13 +158,16 @@ public class TjgoSearchService : ITjgoSearchService
             _logger.LogInformation("PDF link extraction: {Count} total candidates, {Unique} unique after dedup, capped={WasCapped}",
                 pdfLinks.TotalSeen, pdfLinks.Unique.Count, pdfLinks.WasCapped);
 
+            var queryEndTime = DateTime.UtcNow;
+            
             return TjgoSearchResult.SuccessfulWithPdfLinks(
                 resultUrl,
                 recordCount,
                 pdfLinks.Unique,
                 pdfLinks.TotalSeen,
                 _options.MaxResultsPerQuery,
-                query);
+                query,
+                pageIndex: 0);
         }
         catch (PlaywrightException ex)
         {

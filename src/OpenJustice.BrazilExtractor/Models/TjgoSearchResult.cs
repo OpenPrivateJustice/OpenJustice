@@ -1,3 +1,4 @@
+using OpenJustice.BrazilExtractor.Services.Downloads;
 using OpenJustice.BrazilExtractor.Services.Tjgo;
 
 namespace OpenJustice.BrazilExtractor.Models;
@@ -74,10 +75,33 @@ public class TjgoSearchResult
     public int MaxResultsPerQuery { get; set; }
 
     /// <summary>
+    /// Timestamp when this query execution started (UTC).
+    /// Used for verifying query-level cadence (EXTR-07).
+    /// </summary>
+    public DateTime QueryExecutionStartUtc { get; set; }
+
+    /// <summary>
+    /// Timestamp when this query execution completed (UTC).
+    /// Used for verifying query-level cadence (EXTR-07).
+    /// </summary>
+    public DateTime QueryExecutionEndUtc { get; set; }
+
+    /// <summary>
+    /// The page index this result represents (0 for first page, 1 for pagination, etc.).
+    /// </summary>
+    public int PageIndex { get; set; }
+
+    /// <summary>
+    /// Download result containing file paths and statistics.
+    /// </summary>
+    public PdfDownloadBatchResult? DownloadResult { get; set; }
+
+    /// <summary>
     /// Creates a successful result.
     /// </summary>
     public static TjgoSearchResult Successful(string resultUrl, int recordCount = 0, TjgoSearchQuery? query = null)
     {
+        var now = DateTime.UtcNow;
         return new TjgoSearchResult
         {
             Success = true,
@@ -90,7 +114,10 @@ public class TjgoSearchResult
             TotalLinksSeen = 0,
             UniqueLinksRetained = 0,
             WasCapped = false,
-            MaxResultsPerQuery = 0
+            MaxResultsPerQuery = 0,
+            QueryExecutionStartUtc = now,
+            QueryExecutionEndUtc = now,
+            PageIndex = 0
         };
     }
 
@@ -103,9 +130,11 @@ public class TjgoSearchResult
         IReadOnlyList<TjgoPublicationPdfLink> pdfLinks,
         int totalLinksSeen,
         int maxResultsPerQuery,
-        TjgoSearchQuery? query = null)
+        TjgoSearchQuery? query = null,
+        int pageIndex = 0)
     {
         var wasCapped = pdfLinks.Count >= maxResultsPerQuery;
+        var now = DateTime.UtcNow;
         
         return new TjgoSearchResult
         {
@@ -119,7 +148,10 @@ public class TjgoSearchResult
             TotalLinksSeen = totalLinksSeen,
             UniqueLinksRetained = pdfLinks.Count,
             WasCapped = wasCapped,
-            MaxResultsPerQuery = maxResultsPerQuery
+            MaxResultsPerQuery = maxResultsPerQuery,
+            QueryExecutionStartUtc = now,
+            QueryExecutionEndUtc = now,
+            PageIndex = pageIndex
         };
     }
 
@@ -128,6 +160,7 @@ public class TjgoSearchResult
     /// </summary>
     public static TjgoSearchResult Failed(string errorMessage, TjgoSearchQuery? query = null)
     {
+        var now = DateTime.UtcNow;
         return new TjgoSearchResult
         {
             Success = false,
@@ -139,7 +172,10 @@ public class TjgoSearchResult
             TotalLinksSeen = 0,
             UniqueLinksRetained = 0,
             WasCapped = false,
-            MaxResultsPerQuery = 0
+            MaxResultsPerQuery = 0,
+            QueryExecutionStartUtc = now,
+            QueryExecutionEndUtc = now,
+            PageIndex = 0
         };
     }
 }
