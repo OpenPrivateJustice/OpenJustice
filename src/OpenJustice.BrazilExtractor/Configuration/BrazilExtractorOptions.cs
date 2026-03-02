@@ -21,7 +21,10 @@ public class BrazilExtractorOptions
 
     /// <summary>
     /// Number of days to look back for case searches.
+    /// [DEPRECATED] This setting is no longer used. The extractor always performs single-day queries.
+    /// Use QueryDateWindowStartDate to specify which date to query.
     /// </summary>
+    [Obsolete("DateWindowDays is deprecated. The extractor now performs single-day queries only.")]
     public int DateWindowDays { get; set; } = 30;
 
     /// <summary>

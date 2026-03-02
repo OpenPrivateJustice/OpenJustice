@@ -27,10 +27,8 @@ public class BrazilExtractorOptionsValidator : IValidateOptions<BrazilExtractorO
             errors.Add("BrazilExtractor:DownloadPath is required.");
         }
 
-        if (options.DateWindowDays < 1)
-        {
-            errors.Add("BrazilExtractor:DateWindowDays must be at least 1.");
-        }
+        // DateWindowDays is deprecated - no longer validated
+        // The extractor now performs single-day queries only via QueryDateWindowStartDate
 
         if (options.MaxResultsPerQuery < 1)
         {
