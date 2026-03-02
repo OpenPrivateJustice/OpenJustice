@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated March 1, 2026)
 
 **Core value:** Decentralized database of Brazilian historical crimes with full history tracking and confidence scores
-**Current focus:** Phase 8: Wire Torrent Import Pipeline (IN PROGRESS)
+**Current focus:** Phase 9: Fix History Capture on Create (IN PROGRESS)
 
 ## Current Position
 
-Phase: 8 of 10 (Wire Torrent Import Pipeline)
+Phase: 9 of 10 (Fix History Capture on Create)
 Plan: 1 of 1
 Status: Completed
-Last activity: March 2, 2026 — Completed 08-01 (Generator snapshot export hardened for Reader SQL compatibility)
+Last activity: March 2, 2026 — Completed 09-01 (Initial field history capture on case creation)
 
-Progress: [▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 85%
+Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 90%
 
 ## Performance Metrics
 
@@ -31,6 +31,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 85%
 | 6. VERIFICATION.md Gap Closure | 1/1 | 5 min | 5.0 min |
 | 7. Configuration System | 2/2 | 5 min | 2.5 min |
 | 8. Wire Torrent Import Pipeline | 1/1 | 5 min | 5.0 min |
+| 9. Fix History Capture on Create | 1/1 | 1 min | 1.0 min |
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | 2/2 | 21 min | 10.5 min |
 | 4. Reader Core | 3/4 | 17 min | 5.7 min |
@@ -54,6 +55,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 85%
 - Plan 07-01: Generator configuration complete - 3 min
 - Plan 07-02: Composite index alignment - 1 min
 - Plan 08-01: Generator SQL export hardened for Reader compatibility - 5 min
+- Plan 09-01: Initial field history capture on case creation - 1 min
 
 *Updated after each plan completion*
 | Phase 04-reader-core P02 | 5 | 3 tasks | 8 files |

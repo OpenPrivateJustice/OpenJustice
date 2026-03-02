@@ -227,7 +227,7 @@ Plans:
 **Plans:** 1 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — Wire create flow to append initial history + add regression tests
+- [x] 09-01-PLAN.md — Wire create flow to append initial history + add regression tests (COMPLETE)
 
 **Gap Closure:** Closes integration gap (case creation → history capture), flow gap "Curator creates case"
 
@@ -259,8 +259,8 @@ Plans:
 | 5. Reader History UI & Polish | 3/3 | Complete    | 2026-03-02 |
 | 6. Create Missing VERIFICATION.md Files | 0/0 | Complete    | 2026-03-02 |
 | 7. Configuration System & Database Indexes | 0/0 | Complete    | 2026-03-02 |
-| 8. Wire Torrent Import Pipeline | 0/0 | Pending | - |
-| 9. Fix History Capture on Create | 0/0 | Pending | - |
+| 8. Wire Torrent Import Pipeline | 1/1 | Complete | 2026-03-02 |
+| 9. Fix History Capture on Create | 1/1 | Complete | 2026-03-02 |
 | 10. Wire Reader to Generator History API | 0/0 | Pending | - |
 
 ---
