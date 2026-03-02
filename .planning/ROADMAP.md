@@ -46,6 +46,12 @@
 4. Composite indexes created on (CrimeTypeId, JudicialStatusId) and (CrimeLocationState, CrimeDate)
 5. Configuration documented in README or separate docs file
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Configuration files, startup validation, and config documentation
+- [ ] 07-02-PLAN.md — Composite index model/migration alignment for DB-16
+
 **Gap Closure:** Closes orphaned CFG-01 through CFG-06 requirements, upgrades DB-16 from partial to complete
 
 ### Phase 1: Database & Configuration Foundation
