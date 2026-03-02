@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Extensions.Options;
 
 namespace OpenJustice.BrazilExtractor.Configuration;
@@ -44,6 +45,39 @@ public class BrazilExtractorOptionsValidator : IValidateOptions<BrazilExtractorO
         if (string.IsNullOrWhiteSpace(options.Profile))
         {
             errors.Add("BrazilExtractor:Profile is required.");
+        }
+
+        // OCR configuration validation
+        if (string.IsNullOrWhiteSpace(options.OcrOutputPath))
+        {
+            errors.Add("BrazilExtractor:OcrOutputPath is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(options.TessdataPath))
+        {
+            errors.Add("BrazilExtractor:TessdataPath is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(options.OcrLanguage))
+        {
+            errors.Add("BrazilExtractor:OcrLanguage is required.");
+        }
+        else
+        {
+            // Validate supported languages (Tesseract 5 supports: por, eng, spa, etc.)
+            var supportedLanguages = new[] { "por", "eng", "spa", "fra", "deu", "ita" };
+            if (!supportedLanguages.Contains(options.OcrLanguage.ToLowerInvariant()))
+            {
+                errors.Add($"BrazilExtractor:OcrLanguage '{options.OcrLanguage}' is not in the supported list: {string.Join(", ", supportedLanguages)}.");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.TesseractExecutablePath))
+        {
+            if (!File.Exists(options.TesseractExecutablePath))
+            {
+                errors.Add($"BrazilExtractor:TesseractExecutablePath '{options.TesseractExecutablePath}' does not exist.");
+            }
         }
 
         return errors.Count > 0

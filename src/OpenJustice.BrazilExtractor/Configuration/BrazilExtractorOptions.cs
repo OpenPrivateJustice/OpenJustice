@@ -64,4 +64,31 @@ public class BrazilExtractorOptions
     /// Enable detailed logging for debugging.
     /// </summary>
     public bool DebugMode { get; set; } = false;
+
+    /// <summary>
+    /// Base directory for OCR output files (extracted text).
+    /// </summary>
+    [Required]
+    public string OcrOutputPath { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Path to the tessdata directory containing Tesseract language data.
+    /// </summary>
+    [Required]
+    public string TessdataPath { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Language for OCR (default: Portuguese - "por").
+    /// </summary>
+    public string OcrLanguage { get; set; } = "por";
+
+    /// <summary>
+    /// Path to the Tesseract executable (if not in PATH).
+    /// </summary>
+    public string? TesseractExecutablePath { get; set; }
+
+    /// <summary>
+    /// Path for OCR failure log file.
+    /// </summary>
+    public string OcrFailureLogPath { get; set; } = "./ocr_failures.log";
 }
