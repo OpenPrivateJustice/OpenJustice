@@ -91,7 +91,7 @@
 - [ ] **DB-13**: Índices para filtragem por estado/localização
 - [ ] **DB-14**: Índices para filtragem por data do crime
 - [ ] **DB-15**: Índices para filtragem por status judicial
-- [ ] **DB-16**: Índices compostos para queries combinadas
+- [x] **DB-16**: Índices compostos para queries combinadas
 
 #### Integridade & Manutenção
 - [ ] **DB-17**: Constraints de integridade referencial entre tabelas
@@ -218,7 +218,7 @@
 | DB-13 | Phase 1 | Pending |
 | DB-14 | Phase 1 | Pending |
 | DB-15 | Phase 1 | Pending |
-| DB-16 | Phase 7 | Pending |
+| DB-16 | Phase 7 | Completed |
 | DB-17 | Phase 1 | Pending |
 | DB-18 | Phase 1 | Pending |
 | DB-19 | Phase 1 | Pending |
