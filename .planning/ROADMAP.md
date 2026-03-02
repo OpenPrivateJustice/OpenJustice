@@ -15,7 +15,7 @@ v2.0 delivers a deterministic TJGO extraction pipeline that can run locally, cap
 - Integer phases (11, 12, 13): Planned milestone work
 - Decimal phases (11.1, 12.1): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 11: Extractor Foundation and TJGO Search** - Stand up the worker, configuration, and criminal/date-filtered TJGO query execution. (1/3 plans complete)
+- [x] **Phase 11: Extractor Foundation and TJGO Search** - Stand up the worker, configuration, and criminal/date-filtered TJGO query execution. (3/3 plans complete)
 - [ ] **Phase 12: PDF Acquisition Pipeline** - Persist result PDFs with deterministic limits and throttled request cadence.
 - [ ] **Phase 13: OCR Text Extraction and Quality Signals** - Convert PDFs to Portuguese text artifacts and expose extraction failures for review.
 
@@ -33,8 +33,8 @@ v2.0 delivers a deterministic TJGO extraction pipeline that can run locally, cap
 **Plans**: 3 plans
 Plans:
 - [x] 11-01-PLAN.md - Scaffold BrazilExtractor worker project with fail-fast configuration boundary. (Complete: 2026-03-02)
-- [ ] 11-02-PLAN.md - Implement Playwright Chromium TJGO navigation and same-day search execution.
-- [ ] 11-03-PLAN.md - Apply criminal filter strategy and add TJGO smoke contract tests.
+- [x] 11-02-PLAN.md - Implement Playwright Chromium TJGO navigation and same-day search execution. (Complete: 2026-03-02)
+- [x] 11-03-PLAN.md - Apply criminal filter strategy and add TJGO smoke contract tests. (Complete: 2026-03-02)
 
 ### Phase 12: PDF Acquisition Pipeline
 **Goal**: The extractor reliably captures and stores TJGO publication PDFs for each query in a reproducible, rate-limited way.
@@ -61,6 +61,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 11. Extractor Foundation and TJGO Search | 2/3 | In Progress|  |
+| 11. Extractor Foundation and TJGO Search | 3/3 | Complete   | 2026-03-02 |
 | 12. PDF Acquisition Pipeline | 0/TBD | Not started | - |
 | 13. OCR Text Extraction and Quality Signals | 0/TBD | Not started | - |

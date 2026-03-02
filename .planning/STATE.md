@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 11 of 13 (Extractor Foundation and TJGO Search)
-Plan: 2 of TBD in current phase
-Status: In Progress
-Last activity: 2026-03-02 - Completed 11-02 TJGO search implementation
+Plan: 3 of 3 in current phase
+Status: Complete
+Last activity: 2026-03-02 - Completed 11-03 criminal filter and smoke tests
 
-Progress: [░░░░░░░░░░░░░░░░░░░░░] 5%
+Progress: [████████████████████░░░░░] 10% (Phase 11 complete)
 
 ## Performance Metrics
 
@@ -28,11 +28,12 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░] 5%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | v1.0 (1-10) | 21/21 | 155 min | 7.4 min |
-| v2.0 (11-13) | 0/TBD | - | - |
+| v2.0 (11-13) | 3/TBD | 16 min | 5.3 min |
 
 **Recent Trend:**
 - Last completed sequence: Phase 8 -> Phase 9 -> Phase 10
 - Trend: Stable
+| Phase 11-extractor-foundation-and-tjgo-search P03 | 5 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -45,10 +46,12 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░] 5%
 - [11-01] ValidateOnStart() ensures fail-fast before any service instantiation
 - [11-02] Singleton browser factory + scoped search services pattern for proper lifecycle management
 - [11-02] Single-day queries enforce same-date DataInicial and DataFinal values
+- [11-03] Portal has no native criminal toggle - implemented filter profile strategy with query params and post-result indicators
+- [11-03] Smoke tests validate selector stability without actual form submission to avoid rate limits
 
 ### Pending Todos
 
-- Start planning for Phase 11 (`/gsd-plan-phase 11`).
+- Start Phase 12 planning for PDF acquisition pipeline
 
 ### Blockers/Concerns
 
@@ -57,5 +60,5 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░] 5%
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 11-02-PLAN.md (TJGO search with Playwright Chromium)
+Stopped at: Completed 11-03-PLAN.md (criminal filter and smoke tests)
 Resume file: None
