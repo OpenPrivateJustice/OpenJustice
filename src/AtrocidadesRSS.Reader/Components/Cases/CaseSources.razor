@@ -64,7 +64,7 @@
                                         </svg>
                                     </a>
                                 }
-                                <span class="badge bg-light text-dark ms-2" title="Confiança">
+                                <span class="badge @GetConfidenceBadgeClass(source.ConfidenceScore) ms-2" title="Confiança">
                                     @source.ConfidenceScore%
                                 </span>
                             </div>
@@ -79,6 +79,16 @@
 @code {
     [Parameter]
     public IReadOnlyList<CaseSourceViewModel> Sources { get; set; } = Array.Empty<CaseSourceViewModel>();
+
+    private string GetConfidenceBadgeClass(int confidence)
+    {
+        return confidence switch
+        {
+            >= 80 => "bg-success",
+            >= 50 => "bg-warning text-dark",
+            _ => "bg-danger"
+        };
+    }
 }
 
 <style>

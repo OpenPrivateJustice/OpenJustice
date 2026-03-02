@@ -72,7 +72,7 @@
                                         Arquivo
                                     </span>
                                 }
-                                <span class="badge bg-light text-dark ms-2" title="Confiança">
+                                <span class="badge @GetConfidenceBadgeClass(item.ConfidenceScore) ms-2" title="Confiança">
                                     @item.ConfidenceScore%
                                 </span>
                             </div>
@@ -99,6 +99,16 @@
             "laudo" or "report" => "bg-success",
             "testemunho" or "testimony" => "bg-secondary",
             _ => "bg-secondary"
+        };
+    }
+
+    private string GetConfidenceBadgeClass(int confidence)
+    {
+        return confidence switch
+        {
+            >= 80 => "bg-success",
+            >= 50 => "bg-warning text-dark",
+            _ => "bg-danger"
         };
     }
 }

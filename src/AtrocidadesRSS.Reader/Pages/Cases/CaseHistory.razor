@@ -1,0 +1,422 @@
+@page "/cases/{CaseId:int}/history"
+
+@inject ICaseHistoryService CaseHistoryService
+@inject ICaseDetailsService CaseDetailsService
+@inject NavigationManager Navigation
+
+<PageTitle>Histórico do Caso - Atrocidades RSS</PageTitle>
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="Navegação" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/search">Busca</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/cases/@CaseId">Caso</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Histórico</li>
+        </ol>
+    </nav>
+
+    <!-- Back Navigation -->
+    <nav aria-label="Navegação" class="mb-3">
+        <a href="/cases/@CaseId" class="btn btn-outline-secondary btn-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                 class="bi bi-arrow-left me-1" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+            Voltar aos detalhes
+        </a>
+    </nav>
+
+    @if (IsLoading)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p class="mt-2 text-muted">Carregando histórico do caso...</p>
+        </div>
+    }
+    else if (Case == null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Caso não encontrado</h4>
+            <p>O caso solicitado não foi encontrado no banco de dados local.</p>
+            <hr>
+            <a href="/search" class="btn btn-outline-primary">Voltar à busca</a>
+        </div>
+    }
+    else
+    {
+        <div class="case-history">
+            <!-- Header -->
+            <div class="case-history-header mb-4">
+                <h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" 
+                         class="bi bi-clock-history me-2" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 1.34 15.2L.26 15.4a.25.25 0 0 0 .1.15l3.4 2.16a.25.25 0 0 0 .35-.15l.8-1.2a.25.25 0 0 0-.05-.35L8.3 12.44l-2.47 1.53a.25.25 0 0 0 .05.35l2.8 1.8a.25.25 0 0 0 .35-.05l3.4-2.16a.25.25 0 0 0-.1-.15l-1.07-1.28a7.03 7.03 0 0 0-3.36-1.82z"/>
+                        <path d="M1.05 8.17a.25.25 0 0 0-.1.15l-1.4 4.38a.25.25 0 0 0 .35.25l4.39-1.41a.25.25 0 0 0 .15-.1l-3.4-2.19z"/>
+                    </svg>
+                    Histórico do Caso
+                </h1>
+                <p class="text-muted mb-0">
+                    <strong>@Case.ReferenceCode</strong>
+                    @if (!string.IsNullOrEmpty(Case.VictimName))
+                    {
+                        <span> - @Case.VictimName</span>
+                    }
+                </p>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="history-filters card mb-4">
+                <div class="card-body">
+                    <div class="row align-items-end">
+                        <div class="col-md-4">
+                            <label for="fieldFilter" class="form-label">Filtrar por campo:</label>
+                            <select id="fieldFilter" class="form-select" @bind="SelectedField">
+                                <option value="">Todos os campos</option>
+                                @foreach (var field in AvailableFields)
+                                {
+                                    <option value="@field">@FormatFieldName(field)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Total de alterações:</label>
+                            <p class="form-control-plaintext mb-0">
+                                <strong>@(string.IsNullOrEmpty(SelectedField) ? Timeline.Count : Timeline.Count(h => h.FieldName == SelectedField))</strong> registro(s)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- A/B Diff Controls -->
+            @if (!string.IsNullOrEmpty(SelectedField) && GetFilteredFieldTimeline().Count >= 2)
+            {
+                <div class="diff-controls card mb-4 border-info">
+                    <div class="card-header bg-info bg-opacity-10">
+                        <h5 class="mb-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" 
+                                 class="bi bi-columns-gap me-2" viewBox="0 0 16 16">
+                                <path d="M6 1v3H1V1h5zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm14 12v3h-5v-3h5zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5zM6 8v7H1V8h5zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H1zm14-6v7h-5V1h5zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1h-5z"/>
+                            </svg>
+                            Comparar Versões (Diff)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-end">
+                            <div class="col-md-3">
+                                <label for="versionA" class="form-label">Versão A (mais antigo):</label>
+                                <select id="versionA" class="form-select" @bind="SelectedVersionA">
+                                    <option value="-1">Selecione...</option>
+                                    @for (int i = 0; i < GetFilteredFieldTimeline().Count; i++)
+                                    {
+                                        <option value="@i">
+                                            @(GetFilteredFieldTimeline()[i].ChangedAtDisplay)
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="versionB" class="form-label">Versão B (mais recente):</label>
+                                <select id="versionB" class="form-select" @bind="SelectedVersionB">
+                                    <option value="-1">Selecione...</option>
+                                    @for (int i = 0; i < GetFilteredFieldTimeline().Count; i++)
+                                    {
+                                        <option value="@i">
+                                            @(GetFilteredFieldTimeline()[i].ChangedAtDisplay)
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary" @onclick="LoadDiff" disabled="@(!CanCompare)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                                         class="bi bi-arrow-left-right me-1" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                    </svg>
+                                    Comparar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diff Display -->
+                @if (DiffSelection?.IsValid == true)
+                {
+                    <div class="diff-display card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                Comparação: @DiffSelection.FieldDisplayName
+                                <span class="text-muted fs-6">
+                                    (@DiffSelection.VersionA?.ChangedAtDisplay → @DiffSelection.VersionB?.ChangedAtDisplay)
+                                </span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Version A (Older) -->
+                                <div class="col-md-6">
+                                    <div class="diff-version diff-version-a">
+                                        <h6 class="text-muted mb-3">
+                                            <span class="badge bg-secondary">A</span>
+                                            Versão Anterior
+                                        </h6>
+                                        <div class="version-content">
+                                            <div class="mb-2">
+                                                <strong>Valor:</strong>
+                                                <span class="@(DiffSelection.VersionA?.OldValue != DiffSelection.VersionB?.OldValue ? "text-danger fw-bold" : "")">
+                                                    @DiffSelection.VersionA?.OldValueDisplay
+                                                </span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Alterado em:</strong>
+                                                @DiffSelection.VersionA?.ChangedAtDisplay
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Por:</strong>
+                                                @DiffSelection.VersionA?.CuratorDisplay
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(DiffSelection.VersionA?.ChangeReason))
+                                            {
+                                                <div class="mb-2">
+                                                    <strong>Motivo:</strong>
+                                                    @DiffSelection.VersionA?.ChangeReason
+                                                </div>
+                                            }
+                                            <div>
+                                                <strong>Confiança:</strong>
+                                                <span class="badge @GetConfidenceBadgeClass(DiffSelection.VersionA?.ChangeConfidence ?? 0)">
+                                                    @DiffSelection.VersionA?.ChangeConfidence%
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Version B (Newer) -->
+                                <div class="col-md-6">
+                                    <div class="diff-version diff-version-b">
+                                        <h6 class="text-muted mb-3">
+                                            <span class="badge bg-primary">B</span>
+                                            Versão Atual
+                                        </h6>
+                                        <div class="version-content">
+                                            <div class="mb-2">
+                                                <strong>Valor:</strong>
+                                                <span class="@(DiffSelection.VersionA?.NewValue != DiffSelection.VersionB?.NewValue ? "text-success fw-bold" : "")">
+                                                    @DiffSelection.VersionB?.NewValueDisplay
+                                                </span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Alterado em:</strong>
+                                                @DiffSelection.VersionB?.ChangedAtDisplay
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Por:</strong>
+                                                @DiffSelection.VersionB?.CuratorDisplay
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(DiffSelection.VersionB?.ChangeReason))
+                                            {
+                                                <div class="mb-2">
+                                                    <strong>Motivo:</strong>
+                                                    @DiffSelection.VersionB?.ChangeReason
+                                                </div>
+                                            }
+                                            <div>
+                                                <strong>Confiança:</strong>
+                                                <span class="badge @GetConfidenceBadgeClass(DiffSelection.VersionB?.ChangeConfidence ?? 0)">
+                                                    @DiffSelection.VersionB?.ChangeConfidence%
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+            <!-- Timeline Display -->
+            @if (FilteredTimeline.Count == 0)
+            {
+                <div class="empty-state text-center py-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" 
+                         class="bi bi-clock text-muted mb-3" viewBox="0 0 16 16">
+                        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                    </svg>
+                    <h4 class="text-muted">Nenhum histórico encontrado</h4>
+                    <p class="text-muted">
+                        @if (string.IsNullOrEmpty(SelectedField))
+                        {
+                            <span>Este caso ainda não possui registros de alteração.</span>
+                        }
+                        else
+                        {
+                            <span>Este campo não possui alterações registradas.</span>
+                        }
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="timeline">
+                    @foreach (var entry in FilteredTimeline)
+                    {
+                        <div class="timeline-entry card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="timeline-content">
+                                        <div class="timeline-header mb-2">
+                                            <span class="badge bg-secondary me-2">@entry.FieldDisplayName</span>
+                                            <span class="text-muted small">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" 
+                                                     class="bi bi-clock me-1" viewBox="0 0 16 16">
+                                                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                                                </svg>
+                                                @entry.ChangedAtDisplay
+                                            </span>
+                                            <span class="text-muted small ms-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" 
+                                                     class="bi bi-person me-1" viewBox="0 0 16 16">
+                                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                                                </svg>
+                                                @entry.CuratorDisplay
+                                            </span>
+                                        </div>
+                                        <div class="timeline-values">
+                                            <div class="value-row mb-1">
+                                                <span class="value-label text-muted">De:</span>
+                                                <span class="value-old">@entry.OldValueDisplay</span>
+                                            </div>
+                                            <div class="value-row">
+                                                <span class="value-label text-muted">Para:</span>
+                                                <span class="value-new">@entry.NewValueDisplay</span>
+                                            </div>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(entry.ChangeReason))
+                                        {
+                                            <div class="mt-2">
+                                                <span class="text-muted small">Motivo:</span>
+                                                <span class="text-muted">@entry.ChangeReason</span>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="timeline-badge">
+                                        <span class="badge @entry.ConfidenceBadgeClass" title="Confiança: @entry.ChangeConfidence%">
+                                            @entry.ChangeConfidence%
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int CaseId { get; set; }
+
+    private CaseDetailViewModel? Case { get; set; }
+    private List<CaseFieldHistoryViewModel> Timeline { get; set; } = new();
+    private List<string> AvailableFields { get; set; } = new();
+    private string SelectedField { get; set; } = "";
+    private int SelectedVersionA { get; set; } = -1;
+    private int SelectedVersionB { get; set; } = -1;
+    private FieldDiffSelection? DiffSelection { get; set; }
+    private bool IsLoading { get; set; } = true;
+
+    private List<CaseFieldHistoryViewModel> FilteredTimeline =>
+        string.IsNullOrEmpty(SelectedField)
+            ? Timeline
+            : Timeline.Where(t => t.FieldName == SelectedField).ToList();
+
+    private bool CanCompare => SelectedVersionA >= 0 && SelectedVersionB >= 0 && SelectedVersionA != SelectedVersionB;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        IsLoading = true;
+        DiffSelection = null;
+        
+        try
+        {
+            // Load case details
+            Case = await CaseDetailsService.GetCaseDetailsAsync(CaseId);
+            
+            // Load timeline
+            Timeline = (await CaseHistoryService.GetFullTimelineAsync(CaseId)).ToList();
+            
+            // Load available fields
+            AvailableFields = (await CaseHistoryService.GetAvailableFieldsAsync(CaseId)).ToList();
+        }
+        catch (Exception ex)
+        {
+            // Log error in production
+            Case = null;
+            Timeline = new List<CaseFieldHistoryViewModel>();
+            AvailableFields = new List<string>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private List<CaseFieldHistoryViewModel> GetFilteredFieldTimeline()
+    {
+        return string.IsNullOrEmpty(SelectedField)
+            ? new List<CaseFieldHistoryViewModel>()
+            : Timeline.Where(t => t.FieldName == SelectedField).ToList();
+    }
+
+    private async Task LoadDiff()
+    {
+        if (!CanCompare) return;
+
+        // Ensure A is older (higher index) and B is newer (lower index)
+        var indexA = Math.Max(SelectedVersionA, SelectedVersionB);
+        var indexB = Math.Min(SelectedVersionA, SelectedVersionB);
+
+        DiffSelection = await CaseHistoryService.GetDiffSelectionAsync(
+            CaseId, SelectedField, indexA, indexB);
+    }
+
+    private string FormatFieldName(string fieldName)
+    {
+        if (string.IsNullOrEmpty(fieldName))
+            return fieldName;
+
+        // Convert PascalCase to Title Case with spaces
+        var result = string.Concat(fieldName.Select((c, i) =>
+            i > 0 && char.IsUpper(c) ? " " + c : c.ToString()));
+
+        return char.ToUpper(result[0]) + result[1..];
+    }
+
+    private string GetConfidenceBadgeClass(int confidence)
+    {
+        return confidence switch
+        {
+            >= 80 => "bg-success",
+            >= 50 => "bg-warning",
+            _ => "bg-danger"
+        };
+    }
+}
