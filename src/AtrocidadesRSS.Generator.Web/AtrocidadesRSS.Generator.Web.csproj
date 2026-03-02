@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AtrocidadesRSS.Generator\AtrocidadesRSS.Generator.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.1" />
   </ItemGroup>
 
   <PropertyGroup>

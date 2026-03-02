@@ -21,6 +21,7 @@ public class AppDbContext : DbContext
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<CaseTag> CaseTags => Set<CaseTag>();
     public DbSet<CaseFieldHistory> CaseFieldHistories => Set<CaseFieldHistory>();
+    public DbSet<DiscoveredCase> DiscoveredCases => Set<DiscoveredCase>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

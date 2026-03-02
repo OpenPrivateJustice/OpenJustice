@@ -1,12 +1,18 @@
 using AtrocidadesRSS.Generator;
+using AtrocidadesRSS.Generator.Configuration;
 using AtrocidadesRSS.Generator.Web.Components;
 using AtrocidadesRSS.Generator.Web.Services;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add AtrocidadesRSS configuration with fail-fast validation
 builder.Services.AddAtrocidadesRssConfiguration(builder.Configuration);
-builder.Services.ValidateOnStart();
+
+// Add options validation
+builder.Services.AddOptions<GeneratorOptions>()
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
