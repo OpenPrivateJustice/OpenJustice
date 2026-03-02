@@ -463,10 +463,11 @@ public class SqliteCaseStore : ILocalCaseStore
     /// </summary>
     private static LocalCase? ParseCaseInsertStatement(string statement)
     {
-        // Pattern: INSERT INTO cases (...) VALUES (...);
+        // Pattern: INSERT INTO cases/Cases/"Cases" (...) VALUES (...);
+        // Supports: cases, Cases, "Cases", [Cases] - matching Generator naming contract
         var match = Regex.Match(
             statement,
-            @"INSERT\s+INTO\s+cases\s*\(([^)]+)\)\s*VALUES\s*\(([^)]+)\)",
+            @"INSERT\s+INTO\s+(""?cases""?|""Cases""|\[Cases\]|cases)\s*\(([^)]+)\)\s*VALUES\s*\(([^)]+)\)",
             RegexOptions.IgnoreCase);
 
         if (!match.Success)
@@ -474,7 +475,7 @@ public class SqliteCaseStore : ILocalCaseStore
             // Try without column list (assumes all columns in order)
             match = Regex.Match(
                 statement,
-                @"INSERT\s+INTO\s+cases\s+VALUES\s*\(([^)]+)\)",
+                @"INSERT\s+INTO\s+(""?cases""?|""Cases""|\[Cases\]|cases)\s+VALUES\s*\(([^)]+)\)",
                 RegexOptions.IgnoreCase);
             
             if (!match.Success)
@@ -521,10 +522,11 @@ public class SqliteCaseStore : ILocalCaseStore
     /// </summary>
     private static LocalCaseFieldHistory? ParseCaseFieldHistoryStatement(string statement)
     {
-        // Pattern: INSERT INTO case_field_history (...) VALUES (...);
+        // Pattern: INSERT INTO case_field_history/CaseFieldHistory/"CaseFieldHistory" (...) VALUES (...);
+        // Supports: case_field_history, CaseFieldHistory, "CaseFieldHistory", [CaseFieldHistory]
         var match = Regex.Match(
             statement,
-            @"INSERT\s+INTO\s+case_field_history\s*\(([^)]+)\)\s*VALUES\s*\(([^)]+)\)",
+            @"INSERT\s+INTO\s+(""?case_field_history""?|""CaseFieldHistory""|\[CaseFieldHistory\]|case_field_history)\s*\(([^)]+)\)\s*VALUES\s*\(([^)]+)\)",
             RegexOptions.IgnoreCase);
 
         if (!match.Success)
@@ -532,7 +534,7 @@ public class SqliteCaseStore : ILocalCaseStore
             // Try without column list (assumes all columns in order)
             match = Regex.Match(
                 statement,
-                @"INSERT\s+INTO\s+case_field_history\s+VALUES\s*\(([^)]+)\)",
+                @"INSERT\s+INTO\s+(""?case_field_history""?|""CaseFieldHistory""|\[CaseFieldHistory\]|case_field_history)\s+VALUES\s*\(([^)]+)\)",
                 RegexOptions.IgnoreCase);
             
             if (!match.Success)

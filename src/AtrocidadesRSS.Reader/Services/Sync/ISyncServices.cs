@@ -77,6 +77,11 @@ public interface ITorrentSyncService
     /// Resets the sync status to idle.
     /// </summary>
     void ResetStatus();
+    
+    /// <summary>
+    /// Gets the downloaded SQL content for import.
+    /// </summary>
+    byte[]? GetDownloadedSqlContent();
 }
 
 /// <summary>

@@ -1,3 +1,4 @@
+using System.Text;
 using System.IO.Compression;
 using Microsoft.Extensions.Options;
 using AtrocidadesRSS.Reader.Configuration;
@@ -18,6 +19,9 @@ public class TorrentSyncService : ITorrentSyncService
     private readonly ILocalCaseStore _caseStore;
 
     private SyncStatus _currentStatus;
+    
+    // Store downloaded SQL content for import
+    private byte[]? _downloadedSqlContent;
 
     public TorrentSyncService(
         HttpClient httpClient,
@@ -54,7 +58,13 @@ public class TorrentSyncService : ITorrentSyncService
             ErrorMessage = null,
             LastAction = null
         };
+        _downloadedSqlContent = null;
     }
+
+    /// <summary>
+    /// Gets the downloaded SQL content for import.
+    /// </summary>
+    public byte[]? GetDownloadedSqlContent() => _downloadedSqlContent;
 
     /// <inheritdoc/>
     public async Task<SyncResult> SyncAsync(IProgress<double>? progress = null, CancellationToken cancellationToken = default)
@@ -124,7 +134,37 @@ public class TorrentSyncService : ITorrentSyncService
                     ErrorMessage: downloadResult.ErrorMessage);
             }
 
-            // Step 3: Save the new local version
+            // Step 3: Import the downloaded SQL into local store
+            if (_downloadedSqlContent != null && _downloadedSqlContent.Length > 0)
+            {
+                UpdateStatus(SyncState.Downloading, "Importing snapshot...");
+                
+                var sqlContent = Encoding.UTF8.GetString(_downloadedSqlContent);
+                var importResult = await _caseStore.ImportSnapshotAsync(sqlContent, cancellationToken: cancellationToken);
+                
+                if (!importResult.Success)
+                {
+                    var importError = importResult.ErrorMessage ?? "Unknown import error";
+                    UpdateStatus(SyncState.Error, $"Import failed: {importError}");
+                    
+                    return new SyncResult(
+                        Success: false,
+                        Action: "import",
+                        DownloadedVersion: versionResult.RemoteVersion,
+                        LocalFilePath: downloadResult.LocalFilePath,
+                        ErrorMessage: $"Download succeeded but import failed: {importError}");
+                }
+                
+                _logger.LogInformation(
+                    "Import complete: {Records} records imported",
+                    importResult.RecordsImported);
+            }
+            else
+            {
+                _logger.LogWarning("No SQL content available for import");
+            }
+
+            // Step 4: Save the new local version only after successful import
             await _versionService.SaveLocalVersionAsync(versionResult.RemoteVersion, cancellationToken);
             
             _currentStatus = _currentStatus with { LocalVersion = versionResult.RemoteVersion };
@@ -216,7 +256,9 @@ public class TorrentSyncService : ITorrentSyncService
             // Decompress if gzipped
             var finalData = await TryDecompressGzipAsync(memoryStream.ToArray());
             
-            // In a full implementation, save to IndexedDB via JS interop
+            // Store for import (in production, would persist to IndexedDB via JS interop)
+            _downloadedSqlContent = finalData;
+            
             var localPath = $"snapshots/v{_versionService.GetLocalVersion()}.sql";
             
             _logger.LogInformation(
