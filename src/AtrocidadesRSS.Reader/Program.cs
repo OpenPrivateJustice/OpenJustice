@@ -20,8 +20,12 @@ builder.Services.AddOptions<ReaderOptions>()
     .Bind(builder.Configuration.GetSection("Torrent"))
     .Bind(builder.Configuration.GetSection("Snapshot"))
     .Bind(builder.Configuration.GetSection("LocalDb"))
+    .Bind(builder.Configuration.GetSection("GeneratorHistoryApi"))
     .ValidateDataAnnotations()
     .ValidateOnStart();
+
+// Configure HttpClient for Generator History API
+builder.Services.AddHttpClient(nameof(GeneratorHistoryApiClient));
 
 // Register options validator
 builder.Services.AddSingleton<IValidateOptions<ReaderOptions>, ReaderOptionsValidator>();
@@ -41,6 +45,9 @@ builder.Services.AddSingleton<ICaseDetailsService, CaseDetailsService>();
 
 // Register case history service
 builder.Services.AddSingleton<ICaseHistoryService, CaseHistoryService>();
+
+// Register Generator history API client
+builder.Services.AddSingleton<IGeneratorHistoryApiClient, GeneratorHistoryApiClient>();
 
 // Validate configuration at startup - this will fail fast if required values are missing
 var optionsValidation = builder.Services.BuildServiceProvider().GetService<IOptions<ReaderOptions>>();

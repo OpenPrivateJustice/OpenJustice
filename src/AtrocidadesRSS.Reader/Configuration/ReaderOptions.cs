@@ -23,6 +23,11 @@ public class ReaderOptions
     /// Local database file settings for offline access.
     /// </summary>
     public LocalDbOptions LocalDb { get; set; } = new();
+
+    /// <summary>
+    /// Generator history API configuration for fetching case history from the Generator service.
+    /// </summary>
+    public GeneratorHistoryApiOptions GeneratorHistoryApi { get; set; } = new();
 }
 
 /// <summary>
@@ -117,6 +122,36 @@ public class LocalDbOptions
 }
 
 /// <summary>
+/// Generator history API configuration for fetching case history from Generator service.
+/// </summary>
+public class GeneratorHistoryApiOptions
+{
+    /// <summary>
+    /// Base URL of the Generator history API (e.g., "https://generator.example.com").
+    /// </summary>
+    [Required(ErrorMessage = "GeneratorHistoryApi:BaseUrl is required")]
+    public string BaseUrl { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Access token for authenticating to the Generator history API.
+    /// </summary>
+    [Required(ErrorMessage = "GeneratorHistoryApi:AccessToken is required")]
+    public string AccessToken { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Login URL to redirect to when authentication fails (401 Unauthorized).
+    /// </summary>
+    [Required(ErrorMessage = "GeneratorHistoryApi:LoginUrl is required")]
+    public string LoginUrl { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Request timeout in seconds (default: 30).
+    /// </summary>
+    [Range(1, 300, ErrorMessage = "GeneratorHistoryApi:RequestTimeoutSeconds must be between 1 and 300")]
+    public int RequestTimeoutSeconds { get; set; } = 30;
+}
+
+/// <summary>
 /// Validates ReaderOptions at startup.
 /// </summary>
 public class ReaderOptionsValidator : IValidateOptions<ReaderOptions>
@@ -163,6 +198,29 @@ public class ReaderOptionsValidator : IValidateOptions<ReaderOptions>
             if (string.IsNullOrWhiteSpace(options.LocalDb.DatabasePath))
             {
                 errors.Add("LocalDb:DatabasePath is required");
+            }
+        }
+
+        // Validate Generator history API configuration
+        if (options.GeneratorHistoryApi == null)
+        {
+            errors.Add("GeneratorHistoryApi configuration is required");
+        }
+        else
+        {
+            if (string.IsNullOrWhiteSpace(options.GeneratorHistoryApi.BaseUrl))
+            {
+                errors.Add("GeneratorHistoryApi:BaseUrl is required");
+            }
+
+            if (string.IsNullOrWhiteSpace(options.GeneratorHistoryApi.AccessToken))
+            {
+                errors.Add("GeneratorHistoryApi:AccessToken is required");
+            }
+
+            if (string.IsNullOrWhiteSpace(options.GeneratorHistoryApi.LoginUrl))
+            {
+                errors.Add("GeneratorHistoryApi:LoginUrl is required");
             }
         }
 
