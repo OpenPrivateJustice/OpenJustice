@@ -23,6 +23,22 @@ public record LocalCase(
 );
 
 /// <summary>
+/// Represents a case field history entry.
+/// </summary>
+public record LocalCaseFieldHistory(
+    int Id,
+    int CaseId,
+    string FieldName,
+    string? OldValue,
+    string? NewValue,
+    DateTime ChangedAt,
+    string? CuratorId,
+    string? ChangeReason,
+    int ChangeConfidence,
+    DateTime CreatedAt
+);
+
+/// <summary>
 /// Search filter for querying local cases.
 /// </summary>
 public record CaseSearchFilter(
@@ -142,6 +158,38 @@ public interface ILocalCaseStore
     /// Clears all data from the local store.
     /// </summary>
     Task ClearAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets all history entries for a case, ordered by ChangedAt descending (newest first).
+    /// </summary>
+    /// <param name="caseId">The case ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of history entries for the case.</returns>
+    Task<IReadOnlyList<LocalCaseFieldHistory>> GetCaseHistoryAsync(
+        int caseId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets history entries for a specific field of a case.
+    /// </summary>
+    /// <param name="caseId">The case ID.</param>
+    /// <param name="fieldName">The field name.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of history entries for the field.</returns>
+    Task<IReadOnlyList<LocalCaseFieldHistory>> GetFieldHistoryAsync(
+        int caseId,
+        string fieldName,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets all unique field names that have history entries for a case.
+    /// </summary>
+    /// <param name="caseId">The case ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of field names.</returns>
+    Task<IReadOnlyList<string>> GetHistoryFieldNamesAsync(
+        int caseId,
+        CancellationToken cancellationToken = default);
 }
 
 /// <summary>

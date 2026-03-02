@@ -13,6 +13,7 @@ public class SqliteCaseStore : ILocalCaseStore
     
     // In-memory storage (in production, would use sql.js or IndexedDB)
     private readonly List<LocalCase> _cases = new();
+    private readonly List<LocalCaseFieldHistory> _fieldHistory = new();
     private readonly object _lock = new();
     
     private ImportStatus _importStatus = new(
@@ -78,6 +79,7 @@ public class SqliteCaseStore : ILocalCaseStore
             lock (_lock)
             {
                 _cases.Clear();
+                _fieldHistory.Clear();
             }
 
             var totalStatements = statements.Count;
@@ -89,12 +91,25 @@ public class SqliteCaseStore : ILocalCaseStore
 
                 try
                 {
-                    var caseData = ParseInsertStatement(statement);
+                    // Try to parse as Case first
+                    var caseData = ParseCaseInsertStatement(statement);
                     if (caseData != null)
                     {
                         lock (_lock)
                         {
                             _cases.Add(caseData);
+                        }
+                        importedCount++;
+                        continue;
+                    }
+
+                    // Try to parse as CaseFieldHistory
+                    var historyData = ParseCaseFieldHistoryStatement(statement);
+                    if (historyData != null)
+                    {
+                        lock (_lock)
+                        {
+                            _fieldHistory.Add(historyData);
                         }
                         importedCount++;
                     }
@@ -335,6 +350,7 @@ public class SqliteCaseStore : ILocalCaseStore
         lock (_lock)
         {
             _cases.Clear();
+            _fieldHistory.Clear();
             _currentVersion = null;
             _lastUpdated = null;
         }
@@ -342,6 +358,58 @@ public class SqliteCaseStore : ILocalCaseStore
         _logger.LogInformation("Local case store cleared");
         
         return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task<IReadOnlyList<LocalCaseFieldHistory>> GetCaseHistoryAsync(
+        int caseId,
+        CancellationToken cancellationToken = default)
+    {
+        lock (_lock)
+        {
+            var history = _fieldHistory
+                .Where(h => h.CaseId == caseId)
+                .OrderByDescending(h => h.ChangedAt)
+                .ToList();
+
+            return Task.FromResult<IReadOnlyList<LocalCaseFieldHistory>>(history);
+        }
+    }
+
+    /// <inheritdoc/>
+    public Task<IReadOnlyList<LocalCaseFieldHistory>> GetFieldHistoryAsync(
+        int caseId,
+        string fieldName,
+        CancellationToken cancellationToken = default)
+    {
+        lock (_lock)
+        {
+            var history = _fieldHistory
+                .Where(h => h.CaseId == caseId && 
+                           h.FieldName.Equals(fieldName, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(h => h.ChangedAt)
+                .ToList();
+
+            return Task.FromResult<IReadOnlyList<LocalCaseFieldHistory>>(history);
+        }
+    }
+
+    /// <inheritdoc/>
+    public Task<IReadOnlyList<string>> GetHistoryFieldNamesAsync(
+        int caseId,
+        CancellationToken cancellationToken = default)
+    {
+        lock (_lock)
+        {
+            var fieldNames = _fieldHistory
+                .Where(h => h.CaseId == caseId)
+                .Select(h => h.FieldName)
+                .Distinct()
+                .OrderBy(f => f)
+                .ToList();
+
+            return Task.FromResult<IReadOnlyList<string>>(fieldNames);
+        }
     }
 
     #region Private Helper Methods
@@ -393,7 +461,7 @@ public class SqliteCaseStore : ILocalCaseStore
     /// <summary>
     /// Parses an INSERT statement into a LocalCase record.
     /// </summary>
-    private static LocalCase? ParseInsertStatement(string statement)
+    private static LocalCase? ParseCaseInsertStatement(string statement)
     {
         // Pattern: INSERT INTO cases (...) VALUES (...);
         var match = Regex.Match(
@@ -440,6 +508,59 @@ public class SqliteCaseStore : ILocalCaseStore
                 IsSensitiveContent: GetBoolValue(values, 13),
                 CreatedAt: GetDateTimeValue(values, 14) ?? DateTime.UtcNow,
                 UpdatedAt: GetDateTimeValue(values, 15) ?? DateTime.UtcNow
+            );
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Parses an INSERT statement for case_field_history table.
+    /// </summary>
+    private static LocalCaseFieldHistory? ParseCaseFieldHistoryStatement(string statement)
+    {
+        // Pattern: INSERT INTO case_field_history (...) VALUES (...);
+        var match = Regex.Match(
+            statement,
+            @"INSERT\s+INTO\s+case_field_history\s*\(([^)]+)\)\s*VALUES\s*\(([^)]+)\)",
+            RegexOptions.IgnoreCase);
+
+        if (!match.Success)
+        {
+            // Try without column list (assumes all columns in order)
+            match = Regex.Match(
+                statement,
+                @"INSERT\s+INTO\s+case_field_history\s+VALUES\s*\(([^)]+)\)",
+                RegexOptions.IgnoreCase);
+            
+            if (!match.Success)
+            {
+                return null;
+            }
+        }
+
+        try
+        {
+            // Parse column values
+            var valuesString = match.Groups[2].Value;
+            var values = ParseValues(valuesString);
+
+            // Map values to LocalCaseFieldHistory
+            // Column order based on generator schema: id, case_id, field_name, old_value, new_value, 
+            // changed_at, curator_id, change_reason, change_confidence, created_at
+            return new LocalCaseFieldHistory(
+                Id: GetIntValue(values, 0),
+                CaseId: GetIntValue(values, 1),
+                FieldName: GetStringValue(values, 2) ?? "Unknown",
+                OldValue: GetStringValue(values, 3),
+                NewValue: GetStringValue(values, 4),
+                ChangedAt: GetDateTimeValue(values, 5) ?? DateTime.UtcNow,
+                CuratorId: GetStringValue(values, 6),
+                ChangeReason: GetStringValue(values, 7),
+                ChangeConfidence: GetIntValue(values, 8, 50),
+                CreatedAt: GetDateTimeValue(values, 9) ?? DateTime.UtcNow
             );
         }
         catch
