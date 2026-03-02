@@ -244,6 +244,12 @@ Plans:
 3. 401 responses handled (token refresh or redirect to login)
 4. Timeline and diff UI display actual Generator history data
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 10-01-PLAN.md — Add authenticated Generator history API client and configuration
+- [ ] 10-02-PLAN.md — Refactor Reader history service/pages to consume live Generator data
+
 **Gap Closure:** Closes integration gap (Phase 3 → Phase 4 history consumption), flow gap "Reader case view → confidence + timeline"
 
 ---
@@ -261,7 +267,7 @@ Plans:
 | 7. Configuration System & Database Indexes | 0/0 | Complete    | 2026-03-02 |
 | 8. Wire Torrent Import Pipeline | 1/1 | Complete | 2026-03-02 |
 | 9. Fix History Capture on Create | 1/1 | Complete | 2026-03-02 |
-| 10. Wire Reader to Generator History API | 0/0 | Pending | - |
+| 10. Wire Reader to Generator History API | 0/2 | Pending | - |
 
 ---
 
