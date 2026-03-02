@@ -46,7 +46,7 @@ Plans:
   3. Operator can find all downloaded PDFs persisted locally with unique file names and no accidental overwrite collisions.
 **Plans**: 2 plans
 Plans:
-- [ ] 12-01-PLAN.md - Capture deterministic PDF links from TJGO result pages with typed extraction contracts.
+- [x] 12-01-PLAN.md - Capture deterministic PDF links from TJGO result pages with typed extraction contracts. (Complete: 2026-03-02)
 - [ ] 12-02-PLAN.md - Download harvested PDFs with query-level cadence and collision-safe local persistence.
 
 ### Phase 13: OCR Text Extraction and Quality Signals
@@ -65,5 +65,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 11. Extractor Foundation and TJGO Search | 3/3 | Complete    | 2026-03-02 |
-| 12. PDF Acquisition Pipeline | 0/2 | Not started | - |
+| 12. PDF Acquisition Pipeline | 1/2 | In Progress | 2026-03-02 |
 | 13. OCR Text Extraction and Quality Signals | 0/TBD | Not started | - |
