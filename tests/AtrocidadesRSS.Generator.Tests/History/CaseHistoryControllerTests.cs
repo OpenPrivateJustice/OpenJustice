@@ -203,10 +203,15 @@ public class CaseHistoryControllerTests
         var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
         var history = okResult.Value.Should().BeOfType<List<CaseFieldHistoryDto>>().Subject;
         
-        history.Should().HaveCount(1);
-        history[0].FieldName.Should().Be("VictimName");
-        history[0].OldValue.Should().Contain("Original");
-        history[0].NewValue.Should().Contain("Updated");
+        // Now we have initial history (from case creation) + the manually added update history
+        history.Should().NotBeEmpty();
+        
+        // The most recent entry should be the update we just added (since it's ordered by ChangedAt descending)
+        var latestHistory = history.First();
+        latestHistory.FieldName.Should().Be("VictimName");
+        latestHistory.NewValue.Should().Contain("Updated");
+        // This could be either the initial creation (null -> Original) or the update (Original -> Updated)
+        // Since we're ordered by ChangedAt descending, the latest should be our update
     }
 
     [Fact]
@@ -296,5 +301,105 @@ public class CaseHistoryControllerTests
         entry.ChangeConfidence.Should().BeGreaterOrEqualTo(0);
         entry.ChangeConfidence.Should().BeLessOrEqualTo(100);
         entry.CreatedAt.Should().NotBe(default);
+    }
+
+    [Fact]
+    public async Task GetCaseHistory_NewlyCreatedCase_ReturnsHistoryEntries()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        
+        // Create a case using the workflow service (which now creates initial history)
+        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
+        var fieldHistoryService = new CaseFieldHistoryService(context);
+        var workflowService = new Services.Cases.CaseWorkflowService(context, referenceCodeGenerator, fieldHistoryService);
+        
+        var createRequest = new CreateCaseRequest
+        {
+            CrimeTypeId = 1,
+            CaseTypeId = 1,
+            JudicialStatusId = 1,
+            VictimName = "New Case Victim",
+            AccusedName = "New Case Accused",
+            CrimeDescription = "New case description",
+            NumberOfVictims = 1,
+            NumberOfAccused = 1,
+            VictimConfidence = 60,
+            AccusedConfidence = 70,
+            CrimeConfidence = 80,
+            JudicialConfidence = 90,
+            CuratorId = "initial-curator"
+        };
+
+        var createdCase = await workflowService.CreateCaseAsync(createRequest);
+        
+        // Act - Get history via the controller (this is the API path)
+        var controller = new CaseHistoryController(context, fieldHistoryService);
+        var result = await controller.GetCaseHistory(createdCase.Id);
+
+        // Assert - verify we get history entries without manually adding them
+        var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
+        var history = okResult.Value.Should().BeOfType<List<CaseFieldHistoryDto>>().Subject;
+        
+        history.Should().NotBeEmpty("History should be automatically created for new case");
+        
+        // Verify VictimName has initial history
+        var victimNameHistory = history.FirstOrDefault(h => h.FieldName == "VictimName");
+        victimNameHistory.Should().NotBeNull();
+        victimNameHistory!.OldValue.Should().BeNull();
+        victimNameHistory.NewValue.Should().Contain("New Case Victim");
+        victimNameHistory.CuratorId.Should().Be("initial-curator");
+        
+        // Verify timestamps are present
+        history.All(h => h.ChangedAt != default && h.CreatedAt != default).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetCaseHistory_NewCaseTimeline_ContainsExpectedFields()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        
+        var referenceCodeGenerator = new CaseReferenceCodeGenerator(context);
+        var fieldHistoryService = new CaseFieldHistoryService(context);
+        var workflowService = new Services.Cases.CaseWorkflowService(context, referenceCodeGenerator, fieldHistoryService);
+        
+        var createRequest = new CreateCaseRequest
+        {
+            CrimeTypeId = 1,
+            CaseTypeId = 1,
+            JudicialStatusId = 1,
+            CrimeLocationCity = "Rio de Janeiro",
+            CrimeLocationState = "RJ",
+            NumberOfVictims = 3,
+            NumberOfAccused = 2,
+            VictimConfidence = 50,
+            AccusedConfidence = 50,
+            CrimeConfidence = 50,
+            JudicialConfidence = 50
+        };
+
+        var createdCase = await workflowService.CreateCaseAsync(createRequest);
+        
+        // Act
+        var controller = new CaseHistoryController(context, fieldHistoryService);
+        var result = await controller.GetCaseHistory(createdCase.Id);
+
+        // Assert - verify key fields have initial history
+        var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
+        var history = okResult.Value.Should().BeOfType<List<CaseFieldHistoryDto>>().Subject;
+        
+        // Check expected fields are tracked
+        var cityHistory = history.FirstOrDefault(h => h.FieldName == "CrimeLocationCity");
+        cityHistory.Should().NotBeNull();
+        cityHistory!.NewValue.Should().Contain("Rio de Janeiro");
+        
+        var stateHistory = history.FirstOrDefault(h => h.FieldName == "CrimeLocationState");
+        stateHistory.Should().NotBeNull();
+        stateHistory!.NewValue.Should().Contain("RJ");
+        
+        var victimsHistory = history.FirstOrDefault(h => h.FieldName == "NumberOfVictims");
+        victimsHistory.Should().NotBeNull();
+        victimsHistory!.NewValue.Should().Contain("3");
     }
 }

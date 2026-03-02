@@ -340,4 +340,89 @@ public class CaseWorkflowServiceTests
         case1.ReferenceCode.Should().MatchRegex(@"^ATRO-2026-0001$");
         case2.ReferenceCode.Should().MatchRegex(@"^ATRO-2026-0002$");
     }
+
+    [Fact]
+    public async Task CreateCaseAsync_CreatesInitialFieldHistory()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = CreateService(context);
+
+        var request = new CreateCaseRequest
+        {
+            CrimeTypeId = 1,
+            CaseTypeId = 1,
+            JudicialStatusId = 1,
+            VictimName = "Test Victim Name",
+            AccusedName = "Test Accused Name",
+            CrimeDescription = "Test Crime Description",
+            NumberOfVictims = 1,
+            NumberOfAccused = 1,
+            VictimConfidence = 75,
+            AccusedConfidence = 80,
+            CrimeConfidence = 85,
+            JudicialConfidence = 90,
+            CuratorId = "curator-001"
+        };
+
+        // Act
+        var createdCase = await service.CreateCaseAsync(request);
+
+        // Assert - verify history was created for the new case
+        var historyService = new CaseFieldHistoryService(context);
+        var historyEntries = await historyService.GetHistoryForCaseAsync(createdCase.Id);
+
+        historyEntries.Should().NotBeEmpty("History should be created for newly created case");
+        
+        // Verify we have entries for key tracked fields
+        var victimNameHistory = historyEntries.FirstOrDefault(h => h.FieldName == nameof(Infrastructure.Persistence.Entities.Case.VictimName));
+        victimNameHistory.Should().NotBeNull("VictimName should have history entry");
+        victimNameHistory!.OldValue.Should().BeNull("Old value should be null for initial creation");
+        victimNameHistory.NewValue.Should().Contain("Test Victim Name");
+        victimNameHistory.CuratorId.Should().Be("curator-001");
+        victimNameHistory.ChangeConfidence.Should().Be(75);
+        
+        // Verify timestamps are set
+        victimNameHistory.ChangedAt.Should().NotBe(default);
+        victimNameHistory.CreatedAt.Should().NotBe(default);
+    }
+
+    [Fact]
+    public async Task CreateCaseAsync_HistoryHasNullToValueTransitions()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = CreateService(context);
+
+        var request = new CreateCaseRequest
+        {
+            CrimeTypeId = 1,
+            CaseTypeId = 1,
+            JudicialStatusId = 1,
+            CrimeLocationCity = "São Paulo",
+            CrimeLocationState = "SP",
+            CrimeDescription = "Initial crime description",
+            NumberOfVictims = 2,
+            NumberOfAccused = 1,
+            VictimConfidence = 50,
+            AccusedConfidence = 50,
+            CrimeConfidence = 50,
+            JudicialConfidence = 50
+        };
+
+        // Act
+        var createdCase = await service.CreateCaseAsync(request);
+
+        // Assert - verify all history entries have null old values
+        var historyService = new CaseFieldHistoryService(context);
+        var historyEntries = await historyService.GetHistoryForCaseAsync(createdCase.Id);
+
+        historyEntries.Should().NotBeEmpty();
+        
+        foreach (var entry in historyEntries)
+        {
+            entry.OldValue.Should().BeNull($"Field {entry.FieldName} should have null old value for initial creation");
+            entry.NewValue.Should().NotBeNull($"Field {entry.FieldName} should have non-null new value");
+        }
+    }
 }

@@ -161,6 +161,15 @@ public class CaseWorkflowService : ICaseWorkflowService
         _context.Cases.Add(caseEntity);
         await _context.SaveChangesAsync(cancellationToken);
         
+        // Record initial field history - append-only tracking of all initial values
+        // This captures null -> initial value transitions for tracked fields
+        await _fieldHistoryService.AppendChangesAsync(
+            caseEntity.Id,
+            null, // oldCase is null for new cases (no previous state)
+            caseEntity,
+            request.CuratorId,
+            cancellationToken);
+        
         return caseEntity;
     }
 
