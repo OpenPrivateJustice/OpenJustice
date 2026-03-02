@@ -1,6 +1,8 @@
 @page "/cases/{CaseId:int}"
 @page "/cases/{CaseId:int}/{ReferenceCode}"
 
+@using AtrocidadesRSS.Reader.Services.Cases
+@using AtrocidadesRSS.Reader.Services
 @inject ICaseDetailsService CaseDetailsService
 @inject ICaseHistoryService CaseHistoryService
 @inject NavigationManager Navigation
@@ -183,8 +185,18 @@
             }
             else
             {
-                // Check if case has history entries
-                HasHistory = await CaseHistoryService.HasHistoryAsync(CaseId);
+                // Check if case has history entries using Generator API
+                // If auth fails, we still show the history link (case exists locally)
+                try
+                {
+                    HasHistory = await CaseHistoryService.HasHistoryAsync(CaseId);
+                }
+                catch (GeneratorHistoryApiUnauthorizedException)
+                {
+                    // Auth failed - but case exists locally, so show history link anyway
+                    // User can attempt to access and will see session-expired there
+                    HasHistory = true;
+                }
             }
         }
         catch (Exception ex)

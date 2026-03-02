@@ -1,8 +1,12 @@
 @page "/cases/{CaseId:int}/history"
 
+@using AtrocidadesRSS.Reader.Services.Cases
+@using AtrocidadesRSS.Reader.Services
+@using Microsoft.Extensions.Configuration
 @inject ICaseHistoryService CaseHistoryService
 @inject ICaseDetailsService CaseDetailsService
 @inject NavigationManager Navigation
+@inject IConfiguration Configuration
 
 <PageTitle>Histórico do Caso - Atrocidades RSS</PageTitle>
 
@@ -38,6 +42,18 @@
                 <span class="visually-hidden">Carregando...</span>
             </div>
             <p class="mt-2 text-muted">Carregando histórico do caso...</p>
+        </div>
+    }
+    else if (IsSessionExpired)
+    {
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">Sessão expirada</h4>
+            <p>Seu token de acesso expirou. Por favor, faça login novamente para acessar os dados históricos.</p>
+            <hr>
+            <p class="mb-0">
+                <a href="@LoginUrl" class="btn btn-primary">Fazer login</a>
+                <a href="/search" class="btn btn-outline-secondary ms-2">Voltar à busca</a>
+            </p>
         </div>
     }
     else if (LoadError != null)
@@ -361,6 +377,8 @@
     private bool IsLoadingDiff { get; set; }
     private bool IsLoading { get; set; } = true;
     private string? LoadError { get; set; }
+    private bool IsSessionExpired { get; set; }
+    private string LoginUrl { get; set; } = "/login";
 
     private List<CaseFieldHistoryViewModel> FilteredTimeline =>
         string.IsNullOrEmpty(SelectedField)
@@ -368,6 +386,12 @@
             : Timeline.Where(t => t.FieldName == SelectedField).ToList();
 
     private bool CanCompare => SelectedVersionA >= 0 && SelectedVersionB >= 0 && SelectedVersionA != SelectedVersionB;
+
+    protected override void OnInitialized()
+    {
+        // Get login URL from configuration
+        LoginUrl = Configuration["GeneratorHistoryApi:LoginUrl"] ?? "/login";
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -378,6 +402,7 @@
     {
         IsLoading = true;
         LoadError = null;
+        IsSessionExpired = false;
         DiffSelection = null;
         
         try
@@ -391,12 +416,20 @@
             }
             else
             {
-                // Load timeline
+                // Load timeline from Generator API
                 Timeline = (await CaseHistoryService.GetFullTimelineAsync(CaseId)).ToList();
                 
-                // Load available fields
+                // Load available fields from Generator API
                 AvailableFields = (await CaseHistoryService.GetAvailableFieldsAsync(CaseId)).ToList();
             }
+        }
+        catch (GeneratorHistoryApiUnauthorizedException)
+        {
+            // Explicit session-expired path: show login prompt instead of empty history
+            IsSessionExpired = true;
+            Case = null;
+            Timeline = new List<CaseFieldHistoryViewModel>();
+            AvailableFields = new List<string>();
         }
         catch (Exception ex)
         {
