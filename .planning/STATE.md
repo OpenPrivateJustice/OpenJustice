@@ -5,35 +5,35 @@
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** Decentralized, censorship-resistant database with complete historical transparency.
-**Current focus:** v2.0 BrazilExtractor roadmap execution (Phase 12 in progress)
+**Current focus:** v2.0 BrazilExtractor roadmap execution (Phase 13 in progress)
 
 ## Current Position
 
-Phase: 12 of 13 (PDF Acquisition Pipeline)
-Plan: 2 of 2 in current phase
-Status: Completed
-Last activity: 2026-03-02 - Completed 12-02 PDF acquisition pipeline
+Phase: 13 of 13 (OCR Text Extraction and Quality Signals)
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-03-02 - Completed 13-01 OCR foundation
 
-Progress: [██████████░░░░░░░░░░░] 31% (Phase 12 complete)
+Progress: [████████████░░░░░░░░░] 38% (Phase 13 Plan 1 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 21
+- Total plans completed: 22
 - Average duration: 7.4 min
-- Total execution time: 2.6 hours
+- Total execution time: 2.7 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | v1.0 (1-10) | 21/21 | 155 min | 7.4 min |
-| v2.0 (11-13) | 4/TBD | 21 min | 5.3 min |
+| v2.0 (11-13) | 5/TBD | 29 min | 5.8 min |
 
 **Recent Trend:**
-- Last completed sequence: Phase 11 -> Phase 12
+- Last completed sequence: Phase 12 -> Phase 13
 - Trend: Stable
-| Phase 12-pdf-acquisition-pipeline P01+P02 | 8 | 3 tasks | 8 files |
+| Phase 13-ocr-text-extraction P01 | 8 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -54,10 +54,12 @@ Progress: [██████████░░░░░░░░░░░] 31% 
 - [12-02] Used singleton HttpClient for PDF downloads (proper disposal pattern)
 - [12-02] Filename format: tjgo_{date}_{hash}_{sequence}.pdf for collision safety
 - [12-02] Query cadence enforced at job level, not service level (simpler, more testable)
+- [13-01] Default OCR language set to Portuguese ('por') for legal document processing
+- [13-01] Quality signals: character count, encoding replacement char count, empty output flag
 
 ### Pending Todos
 
-- Start Phase 13 planning for OCR text extraction
+- Complete Phase 13 Plan 02 OCR orchestration integration
 
 ### Blockers/Concerns
 
@@ -66,5 +68,5 @@ Progress: [██████████░░░░░░░░░░░] 31% 
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 12-02-PLAN.md (PDF acquisition pipeline)
+Stopped at: Completed 13-01-PLAN.md (OCR text extraction foundation)
 Resume file: None

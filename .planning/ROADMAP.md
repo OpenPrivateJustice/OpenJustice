@@ -60,7 +60,7 @@ Plans:
   4. Operator can review a clear failure log listing PDFs that OCR could not process successfully.
 **Plans**: 2 plans
 Plans:
-- [ ] 13-01-PLAN.md - Establish Tesseract OCR service foundation with Portuguese quality metadata and fail-fast OCR configuration.
+- [x] 13-01-PLAN.md - Establish Tesseract OCR service foundation with Portuguese quality metadata and fail-fast OCR configuration. (Complete: 2026-03-02)
 - [ ] 13-02-PLAN.md - Wire OCR into the extraction job to produce same-base `.txt` artifacts and persistent OCR failure logs.
 
 ## Progress
@@ -69,4 +69,4 @@ Plans:
 |-------|----------------|--------|-----------|
 | 11. Extractor Foundation and TJGO Search | 3/3 | Complete    | 2026-03-02 |
 | 12. PDF Acquisition Pipeline | 2/2 | Complete    | 2026-03-02 |
-| 13. OCR Text Extraction and Quality Signals | 0/2 | Not started | - |
+| 13. OCR Text Extraction and Quality Signals | 1/2 | In Progress | 2026-03-02 |
