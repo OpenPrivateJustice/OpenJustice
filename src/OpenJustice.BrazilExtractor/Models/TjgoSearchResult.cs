@@ -48,6 +48,32 @@ public class TjgoSearchResult
     public string? DateWindow { get; set; }
 
     /// <summary>
+    /// Captured PDF publication links from the result page.
+    /// Non-null, empty list if no links found.
+    /// </summary>
+    public IReadOnlyList<TjgoPublicationPdfLink> PdfLinks { get; set; } = Array.Empty<TjgoPublicationPdfLink>();
+
+    /// <summary>
+    /// Total number of PDF link candidates seen on the page (before de-duplication).
+    /// </summary>
+    public int TotalLinksSeen { get; set; }
+
+    /// <summary>
+    /// Number of unique links retained after de-duplication.
+    /// </summary>
+    public int UniqueLinksRetained { get; set; }
+
+    /// <summary>
+    /// Whether the result was capped at MaxResultsPerQuery.
+    /// </summary>
+    public bool WasCapped { get; set; }
+
+    /// <summary>
+    /// The configured max results per query limit that was applied.
+    /// </summary>
+    public int MaxResultsPerQuery { get; set; }
+
+    /// <summary>
     /// Creates a successful result.
     /// </summary>
     public static TjgoSearchResult Successful(string resultUrl, int recordCount = 0, TjgoSearchQuery? query = null)
@@ -59,7 +85,41 @@ public class TjgoSearchResult
             RecordCount = recordCount,
             Query = query,
             AppliedFilterProfile = query?.CriminalFilter?.Name,
-            DateWindow = query != null ? $"{query.FormattedDate} to {query.FormattedDate}" : null
+            DateWindow = query != null ? $"{query.FormattedDate} to {query.FormattedDate}" : null,
+            PdfLinks = Array.Empty<TjgoPublicationPdfLink>(),
+            TotalLinksSeen = 0,
+            UniqueLinksRetained = 0,
+            WasCapped = false,
+            MaxResultsPerQuery = 0
+        };
+    }
+
+    /// <summary>
+    /// Creates a successful result with captured PDF links.
+    /// </summary>
+    public static TjgoSearchResult SuccessfulWithPdfLinks(
+        string resultUrl,
+        int recordCount,
+        IReadOnlyList<TjgoPublicationPdfLink> pdfLinks,
+        int totalLinksSeen,
+        int maxResultsPerQuery,
+        TjgoSearchQuery? query = null)
+    {
+        var wasCapped = pdfLinks.Count >= maxResultsPerQuery;
+        
+        return new TjgoSearchResult
+        {
+            Success = true,
+            ResultUrl = resultUrl,
+            RecordCount = recordCount,
+            Query = query,
+            AppliedFilterProfile = query?.CriminalFilter?.Name,
+            DateWindow = query != null ? $"{query.FormattedDate} to {query.FormattedDate}" : null,
+            PdfLinks = pdfLinks,
+            TotalLinksSeen = totalLinksSeen,
+            UniqueLinksRetained = pdfLinks.Count,
+            WasCapped = wasCapped,
+            MaxResultsPerQuery = maxResultsPerQuery
         };
     }
 
@@ -74,7 +134,12 @@ public class TjgoSearchResult
             ErrorMessage = errorMessage,
             Query = query,
             AppliedFilterProfile = query?.CriminalFilter?.Name,
-            DateWindow = query != null ? $"{query.FormattedDate} to {query.FormattedDate}" : null
+            DateWindow = query != null ? $"{query.FormattedDate} to {query.FormattedDate}" : null,
+            PdfLinks = Array.Empty<TjgoPublicationPdfLink>(),
+            TotalLinksSeen = 0,
+            UniqueLinksRetained = 0,
+            WasCapped = false,
+            MaxResultsPerQuery = 0
         };
     }
 }
