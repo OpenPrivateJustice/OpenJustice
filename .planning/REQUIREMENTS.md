@@ -61,20 +61,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| EXTR-01 | Phase 1 | Pending |
-| EXTR-02 | Phase 1 | Pending |
-| EXTR-03 | Phase 1 | Pending |
-| EXTR-04 | Phase 1 | Pending |
-| EXTR-05 | Phase 1 | Pending |
-| EXTR-06 | Phase 1 | Pending |
-| EXTR-07 | Phase 1 | Pending |
-| EXTR-08 | Phase 1 | Pending |
-| EXTR-09 | Phase 2 | Pending |
-| EXTR-10 | Phase 2 | Pending |
-| EXTR-11 | Phase 2 | Pending |
-| EXTR-12 | Phase 2 | Pending |
-| EXTR-13 | Phase 1 | Pending |
-| EXTR-14 | Phase 1 | Pending |
+| EXTR-01 | Phase 11 | Pending |
+| EXTR-02 | Phase 11 | Pending |
+| EXTR-03 | Phase 11 | Pending |
+| EXTR-04 | Phase 11 | Pending |
+| EXTR-05 | Phase 11 | Pending |
+| EXTR-06 | Phase 12 | Pending |
+| EXTR-07 | Phase 12 | Pending |
+| EXTR-08 | Phase 12 | Pending |
+| EXTR-09 | Phase 13 | Pending |
+| EXTR-10 | Phase 13 | Pending |
+| EXTR-11 | Phase 13 | Pending |
+| EXTR-12 | Phase 13 | Pending |
+| EXTR-13 | Phase 11 | Pending |
+| EXTR-14 | Phase 11 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 14 total
