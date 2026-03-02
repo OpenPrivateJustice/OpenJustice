@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 11 of 13 (Extractor Foundation and TJGO Search)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-02 - v2.0 roadmap created (phases 11-13)
+Plan: 1 of TBD in current phase
+Status: In Progress
+Last activity: 2026-03-02 - Completed 11-01 BrazilExtractor foundation
 
-Progress: [░░░░░░░░░░░░░░░░░░░░░] 0%
+Progress: [░░░░░░░░░░░░░░░░░░░░░] 5%
 
 ## Performance Metrics
 
@@ -41,6 +41,8 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░] 0%
 - Keep v2.0 scoped to TJGO extractor foundation, PDF capture, and OCR artifacts only.
 - Maintain deterministic ingestion cadence (15 PDFs/query, 30s interval) before advanced automation.
 - Preserve existing Generator curation gate; no auto-publish behavior in extractor milestone.
+- [11-01] Used IValidateOptions pattern for custom validation rules (more flexible than DataAnnotations)
+- [11-01] ValidateOnStart() ensures fail-fast before any service instantiation
 
 ### Pending Todos
 
@@ -53,5 +55,5 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░] 0%
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Roadmap creation for milestone v2.0 with full requirement mapping
+Stopped at: Completed 11-01-PLAN.md (BrazilExtractor foundation with validated config)
 Resume file: None

@@ -15,7 +15,7 @@ v2.0 delivers a deterministic TJGO extraction pipeline that can run locally, cap
 - Integer phases (11, 12, 13): Planned milestone work
 - Decimal phases (11.1, 12.1): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 11: Extractor Foundation and TJGO Search** - Stand up the worker, configuration, and criminal/date-filtered TJGO query execution.
+- [ ] **Phase 11: Extractor Foundation and TJGO Search** - Stand up the worker, configuration, and criminal/date-filtered TJGO query execution. (1/3 plans complete)
 - [ ] **Phase 12: PDF Acquisition Pipeline** - Persist result PDFs with deterministic limits and throttled request cadence.
 - [ ] **Phase 13: OCR Text Extraction and Quality Signals** - Convert PDFs to Portuguese text artifacts and expose extraction failures for review.
 
@@ -32,7 +32,7 @@ v2.0 delivers a deterministic TJGO extraction pipeline that can run locally, cap
   4. Operator can apply criminal-oriented filtering in the TJGO query flow so civil-only result sets are excluded by default.
 **Plans**: 3 plans
 Plans:
-- [ ] 11-01-PLAN.md - Scaffold BrazilExtractor worker project with fail-fast configuration boundary.
+- [x] 11-01-PLAN.md - Scaffold BrazilExtractor worker project with fail-fast configuration boundary. (Complete: 2026-03-02)
 - [ ] 11-02-PLAN.md - Implement Playwright Chromium TJGO navigation and same-day search execution.
 - [ ] 11-03-PLAN.md - Apply criminal filter strategy and add TJGO smoke contract tests.
 
