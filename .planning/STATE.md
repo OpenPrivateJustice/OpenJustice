@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 5 of 5 (Reader History UI & Polish)
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Completed
-Last activity: March 1, 2026 — Completed 05-02 (Reader History UI)
+Last activity: March 2, 2026 — Completed 05-03 (Cross-page UI polish)
 
 Progress: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
-- Average duration: 8.0 min
-- Total execution time: 1.22 hours
+- Total plans completed: 13
+- Average duration: 7.8 min
+- Total execution time: 1.28 hours
 
 **By Phase:**
 
@@ -31,7 +31,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | 2/2 | 21 min | 10.5 min |
 | 4. Reader Core | 3/4 | 17 min | 5.7 min |
-| 5. Reader History UI | 2/3 | 7 min | 3.5 min |
+| 5. Reader History UI | 3/3 | 12 min | 4.0 min |
 
 **Recent Trend:**
 - Plan 01-01: EF Core domain schema - 5 min
@@ -47,11 +47,13 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
 - Plan 04-02: Reader sync pipeline - 5 min
 - Plan 04-03: Reader search experience - 8 min
 - Plan 05-02: Reader history UI - 3 min
+- Plan 05-03: Cross-page UI polish - 5 min
 
 *Updated after each plan completion*
 | Phase 04-reader-core P02 | 5 | 3 tasks | 8 files |
 | Phase 5 P1 | 2 | 2 tasks | 6 files |
 | Phase 5 P2 | 5 | 3 tasks | 5 files |
+| Phase 5 P3 | 5 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -120,8 +122,8 @@ Key decisions from Phase 4 Plan 1:
 - Phase 1 complete - Database foundation laid
 - Phase 2 complete - Generator core API implemented
 - Phase 3 complete - Generator history system implemented
-- Phase 4 in progress - Reader Core search experience complete (3/4 plans)
-- Phase 5 in progress - Reader History UI & Polish (2/3 plans complete)
+- Phase 4 complete - Reader Core search experience complete
+- Phase 5 complete - Reader History UI & Polish (all 3 plans done)
 
 ### Blockers/Concerns
 
@@ -200,4 +202,7 @@ Resume file: None
 - [x] RDR-21: Reader case history timeline display
 - [x] RDR-22: Reader A/B diff comparison view
 - [x] RDR-23: Reader confidence score visualization
+- [x] RDR-24: Loading states for all async operations (sync, search, details, history)
+- [x] RDR-25: Error handling with actionable messages (retry, navigation options)
+- [x] RDR-26: Responsive layouts for mobile and desktop
 - [x] RDR-27: Reader breadcrumbs and navigation polish
