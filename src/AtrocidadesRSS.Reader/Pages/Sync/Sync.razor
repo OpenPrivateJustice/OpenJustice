@@ -23,19 +23,19 @@
                         <dt class="col-sm-4">Current State:</dt>
                         <dd class="col-sm-8">
                             <span class="badge @GetStateBadgeClass()">
-                                @CurrentStatus.State
+                                @(CurrentStatus?.State.ToString() ?? "Unknown")
                             </span>
                         </dd>
 
                         <dt class="col-sm-4">Local Version:</dt>
-                        <dd class="col-sm-8">@CurrentStatus.LocalVersion ?? "Not installed"</dd>
+                        <dd class="col-sm-8">@(CurrentStatus?.LocalVersion ?? "Not installed")</dd>
 
                         <dt class="col-sm-4">Remote Version:</dt>
-                        <dd class="col-sm-8">@CurrentStatus.RemoteVersion ?? "Unknown"</dd>
+                        <dd class="col-sm-8">@(CurrentStatus?.RemoteVersion ?? "Unknown")</dd>
 
                         <dt class="col-sm-4">Database:</dt>
                         <dd class="col-sm-8">
-                            @if (CaseStore.HasData())
+                            @if (CaseStore?.HasData() == true)
                             {
                                 <span class="text-success">Loaded</span>
                             }
@@ -47,17 +47,17 @@
                     </dl>
                 </div>
                 <div class="col-md-6">
-                    @if (!string.IsNullOrEmpty(CurrentStatus.LastAction))
+                    @if (!string.IsNullOrEmpty(CurrentStatus?.LastAction))
                     {
                         <div class="alert alert-info">
-                            <strong>Last Action:</strong> @CurrentStatus.LastAction
+                            <strong>Last Action:</strong> @CurrentStatus!.LastAction
                         </div>
                     }
 
-                    @if (!string.IsNullOrEmpty(CurrentStatus.ErrorMessage))
+                    @if (!string.IsNullOrEmpty(CurrentStatus?.ErrorMessage))
                     {
                         <div class="alert alert-danger">
-                            <strong>Erro:</strong> @CurrentStatus.ErrorMessage
+                            <strong>Erro:</strong> @CurrentStatus!.ErrorMessage
                             <hr>
                             <p class="mb-0 small">
                                 <button class="btn btn-outline-danger btn-sm" @onclick="RetryLastAction">
@@ -70,7 +70,7 @@
                         </div>
                     }
 
-                    @if (CurrentStatus.State == SyncState.Downloading && CurrentStatus.Progress > 0)
+                    @if (CurrentStatus?.State == SyncState.Downloading && CurrentStatus.Progress > 0)
                     {
                         <div class="mb-3">
                             <label>Download Progress</label>
@@ -83,18 +83,18 @@
                         </div>
                     }
 
-                    @if (CaseStore.GetImportStatus().IsImporting)
+                    @if (CaseStore?.GetImportStatus() is { } importStatus && importStatus.IsImporting)
                     {
                         <div class="mb-3">
                             <label>Import Progress</label>
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated" 
                                      role="progressbar" 
-                                     style="width: @CaseStore.GetImportStatus().Progress%">
-                                    @CaseStore.GetImportStatus().Progress.ToString("F1")%
+                                     style="width: @importStatus.Progress%">
+                                    @importStatus.Progress.ToString("F1")%
                                 </div>
                             </div>
-                            <small class="text-muted">@CaseStore.GetImportStatus().CurrentPhase</small>
+                            <small class="text-muted">@importStatus.CurrentPhase</small>
                         </div>
                     }
                 </div>
@@ -124,7 +124,7 @@
                 </button>
 
                 <button class="btn btn-success" 
-                        disabled="@(IsBusy || IsDownloading || CurrentStatus.State == SyncState.Downloading)"
+                        disabled="@(IsBusy || IsDownloading || CurrentStatus?.State == SyncState.Downloading)"
                         @onclick="DownloadLatest">
                     @if (IsDownloading)
                     {
@@ -138,7 +138,7 @@
                 </button>
 
                 <button class="btn btn-info" 
-                        disabled="@(IsBusy || IsReloading || !CaseStore.HasData())"
+                        disabled="@(IsBusy || IsReloading || CaseStore?.HasData() != true)"
                         @onclick="ReloadDatabase">
                     @if (IsReloading)
                     {
@@ -162,7 +162,7 @@
     </div>
 
     <!-- Database Stats (if loaded) -->
-    @if (CaseStore.HasData())
+    @if (CaseStore?.HasData() == true)
     {
         <div class="card mt-4">
             <div class="card-header">
@@ -225,10 +225,10 @@
 </div>
 
 @code {
-    private SyncStatus CurrentStatus => SyncService.GetStatus();
-    private bool IsBusy => CurrentStatus.State == SyncState.Checking || 
-                          CurrentStatus.State == SyncState.Downloading ||
-                          CaseStore.GetImportStatus().IsImporting;
+    private SyncStatus? CurrentStatus => SyncService?.GetStatus();
+    private bool IsBusy => CurrentStatus?.State == SyncState.Checking || 
+                          CurrentStatus?.State == SyncState.Downloading ||
+                          (CaseStore?.GetImportStatus().IsImporting ?? false);
     
     private bool IsCheckingUpdates { get; set; }
     private bool IsDownloading { get; set; }
@@ -279,6 +279,12 @@
 
     private async Task DownloadLatest()
     {
+        if (SyncService == null || CaseStore == null)
+        {
+            AddLog("error", "Services not initialized");
+            return;
+        }
+
         IsDownloading = true;
         AddLog("info", "Iniciando download...");
         
@@ -322,6 +328,12 @@
 
     private async Task LoadDatabase(string? filePath = null)
     {
+        if (SyncService == null || CaseStore == null)
+        {
+            AddLog("error", "Services not initialized");
+            return;
+        }
+
         AddLog("info", "Loading database from snapshot...");
         
         try
@@ -379,6 +391,12 @@
 
     private async Task ReloadDatabase()
     {
+        if (CaseStore == null)
+        {
+            AddLog("error", "CaseStore not initialized");
+            return;
+        }
+
         IsReloading = true;
         AddLog("info", "Recarregando banco de dados...");
         
@@ -401,13 +419,14 @@
 
     private void ResetStatus()
     {
-        SyncService.ResetStatus();
+        SyncService?.ResetStatus();
         AddLog("info", "Status reset");
         StateHasChanged();
     }
 
     private void RefreshStats()
     {
+        if (CaseStore == null) return;
         _stats = CaseStore.GetStatsAsync().GetAwaiter().GetResult();
     }
 
@@ -416,7 +435,7 @@
         // Reset error and retry based on current state
         var status = CurrentStatus;
         
-        if (status.State == SyncState.Error)
+        if (status?.State == SyncState.Error)
         {
             if (!string.IsNullOrEmpty(status.LastAction) && status.LastAction.Contains("download", StringComparison.OrdinalIgnoreCase))
             {
@@ -461,7 +480,7 @@
         Logger.LogInformation("[{Level}] {Message}", level.ToUpper(), message);
     }
 
-    private string GetStateBadgeClass() => CurrentStatus.State switch
+    private string GetStateBadgeClass() => CurrentStatus?.State switch
     {
         SyncState.Idle => "bg-secondary",
         SyncState.Checking => "bg-info",

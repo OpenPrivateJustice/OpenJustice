@@ -1,6 +1,7 @@
 using System.Text;
 using System.IO.Compression;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using AtrocidadesRSS.Reader.Configuration;
 using AtrocidadesRSS.Reader.Services.Data;
 
@@ -12,7 +13,7 @@ namespace AtrocidadesRSS.Reader.Services.Sync;
 /// </summary>
 public class TorrentSyncService : ITorrentSyncService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ReaderOptions _options;
     private readonly ILogger<TorrentSyncService> _logger;
     private readonly IVersionService _versionService;
@@ -24,13 +25,13 @@ public class TorrentSyncService : ITorrentSyncService
     private byte[]? _downloadedSqlContent;
 
     public TorrentSyncService(
-        HttpClient httpClient,
+        IHttpClientFactory httpClientFactory,
         IOptions<ReaderOptions> options,
         ILogger<TorrentSyncService> logger,
         IVersionService versionService,
         ILocalCaseStore caseStore)
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
         _options = options.Value;
         _logger = logger;
         _versionService = versionService;
@@ -211,7 +212,8 @@ public class TorrentSyncService : ITorrentSyncService
             // In a full implementation, this could integrate with browser torrent clients
             // like WebTorrent.js via JS interop
 
-            using var response = await _httpClient.GetAsync(
+            using var httpClient = _httpClientFactory.CreateClient("GeneratorHistoryApiClient");
+            using var response = await httpClient.GetAsync(
                 downloadUrl,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken);

@@ -15,13 +15,12 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-// Configure Reader options with validation
+// Configure Reader options with validation (only required fields)
 builder.Services.AddOptions<ReaderOptions>()
     .Bind(builder.Configuration.GetSection("Torrent"))
     .Bind(builder.Configuration.GetSection("Snapshot"))
     .Bind(builder.Configuration.GetSection("LocalDb"))
     .Bind(builder.Configuration.GetSection("GeneratorHistoryApi"))
-    .ValidateDataAnnotations()
     .ValidateOnStart();
 
 // Configure HttpClient for Generator History API
@@ -48,12 +47,5 @@ builder.Services.AddSingleton<ICaseHistoryService, CaseHistoryService>();
 
 // Register Generator history API client
 builder.Services.AddSingleton<IGeneratorHistoryApiClient, GeneratorHistoryApiClient>();
-
-// Validate configuration at startup - this will fail fast if required values are missing
-var optionsValidation = builder.Services.BuildServiceProvider().GetService<IOptions<ReaderOptions>>();
-if (optionsValidation?.Value == null)
-{
-    throw new InvalidOperationException("Reader configuration validation failed. Please check appsettings.json for missing required values.");
-}
 
 await builder.Build().RunAsync();

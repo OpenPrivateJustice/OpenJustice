@@ -9,8 +9,32 @@
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
+        <ErrorBoundary>
+            <ChildContent>
+                <article class="content px-4">
+                    @Body
+                </article>
+            </ChildContent>
+            <ErrorContent>
+                <div class="alert alert-danger mt-4">
+                    <h4 class="alert-heading">Ocorreu um erro ao carregar esta página</h4>
+                    <p>Tente recarregar a página ou contate o administrador.</p>
+                    <hr />
+                    <p class="mb-0">
+                        <strong>Detalhes:</strong> @context.Message
+                    </p>
+                    <button class="btn btn-primary mt-2" @onclick="Retry">
+                        Recarregar
+                    </button>
+                </div>
+            </ErrorContent>
+        </ErrorBoundary>
     </main>
 </div>
+
+@code {
+    private void Retry()
+    {
+        StateHasChanged();
+    }
+}

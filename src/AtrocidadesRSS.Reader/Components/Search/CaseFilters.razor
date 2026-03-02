@@ -24,9 +24,12 @@
                     class="form-select"
                     @bind="CrimeType">
                     <option value="">Todos os tipos</option>
-                    @foreach (var type in CrimeTypes)
+                    @if (CrimeTypes != null)
                     {
-                        <option value="@type">@type</option>
+                        @foreach (var type in CrimeTypes)
+                        {
+                            <option value="@type">@type</option>
+                        }
                     }
                 </select>
             </div>
@@ -39,9 +42,12 @@
                     class="form-select"
                     @bind="State">
                     <option value="">Todos os estados</option>
-                    @foreach (var state in States)
+                    @if (States != null)
                     {
-                        <option value="@state">@state</option>
+                        @foreach (var state in States)
+                        {
+                            <option value="@state">@state</option>
+                        }
                     }
                 </select>
             </div>
@@ -54,9 +60,12 @@
                     class="form-select"
                     @bind="JudicialStatus">
                     <option value="">Todos os status</option>
-                    @foreach (var status in JudicialStatuses)
+                    @if (JudicialStatuses != null)
                     {
-                        <option value="@status">@status</option>
+                        @foreach (var status in JudicialStatuses)
+                        {
+                            <option value="@status">@status</option>
+                        }
                     }
                 </select>
             </div>
@@ -151,35 +160,49 @@
 
     private async Task ApplyFilters()
     {
-        await NameTextChanged.InvokeAsync(NameText);
-        await CrimeTypeChanged.InvokeAsync(CrimeType);
-        await StateChanged.InvokeAsync(State);
-        await JudicialStatusChanged.InvokeAsync(JudicialStatus);
-        await PeriodStartChanged.InvokeAsync(PeriodStart);
-        await PeriodEndChanged.InvokeAsync(PeriodEnd);
-        await OnFilterChanged.InvokeAsync();
+        if (NameTextChanged.HasDelegate)
+            await NameTextChanged.InvokeAsync(NameText);
+        if (CrimeTypeChanged.HasDelegate)
+            await CrimeTypeChanged.InvokeAsync(CrimeType);
+        if (StateChanged.HasDelegate)
+            await StateChanged.InvokeAsync(State);
+        if (JudicialStatusChanged.HasDelegate)
+            await JudicialStatusChanged.InvokeAsync(JudicialStatus);
+        if (PeriodStartChanged.HasDelegate)
+            await PeriodStartChanged.InvokeAsync(PeriodStart);
+        if (PeriodEndChanged.HasDelegate)
+            await PeriodEndChanged.InvokeAsync(PeriodEnd);
+        if (OnFilterChanged.HasDelegate)
+            await OnFilterChanged.InvokeAsync();
     }
 
     private async Task ResetFilters()
     {
         NameText = null;
-        await NameTextChanged.InvokeAsync(null);
+        if (NameTextChanged.HasDelegate)
+            await NameTextChanged.InvokeAsync(null);
         
         CrimeType = null;
-        await CrimeTypeChanged.InvokeAsync(null);
+        if (CrimeTypeChanged.HasDelegate)
+            await CrimeTypeChanged.InvokeAsync(null);
         
         State = null;
-        await StateChanged.InvokeAsync(null);
+        if (StateChanged.HasDelegate)
+            await StateChanged.InvokeAsync(null);
         
         JudicialStatus = null;
-        await JudicialStatusChanged.InvokeAsync(null);
+        if (JudicialStatusChanged.HasDelegate)
+            await JudicialStatusChanged.InvokeAsync(null);
         
         PeriodStart = null;
-        await PeriodStartChanged.InvokeAsync(null);
+        if (PeriodStartChanged.HasDelegate)
+            await PeriodStartChanged.InvokeAsync(null);
         
         PeriodEnd = null;
-        await PeriodEndChanged.InvokeAsync(null);
+        if (PeriodEndChanged.HasDelegate)
+            await PeriodEndChanged.InvokeAsync(null);
         
-        await OnFilterChanged.InvokeAsync();
+        if (OnFilterChanged.HasDelegate)
+            await OnFilterChanged.InvokeAsync();
     }
 }

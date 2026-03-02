@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using AtrocidadesRSS.Reader.Configuration;
 
 namespace AtrocidadesRSS.Reader.Services.Sync;
@@ -10,7 +11,7 @@ namespace AtrocidadesRSS.Reader.Services.Sync;
 /// </summary>
 public class VersionService : IVersionService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ReaderOptions _options;
     private readonly ILogger<VersionService> _logger;
     
@@ -21,11 +22,11 @@ public class VersionService : IVersionService
     private record VersionResponse(string Version, string? DownloadUrl, string? ReleaseNotes);
 
     public VersionService(
-        HttpClient httpClient,
+        IHttpClientFactory httpClientFactory,
         IOptions<ReaderOptions> options,
         ILogger<VersionService> logger)
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
         _options = options.Value;
         _logger = logger;
         
@@ -46,8 +47,9 @@ public class VersionService : IVersionService
 
         try
         {
-            // Fetch version info from remote endpoint
-            var response = await _httpClient.GetAsync(
+            // Fetch version info from remote endpoint using HttpClientFactory
+            using var httpClient = _httpClientFactory.CreateClient("GeneratorHistoryApiClient");
+            var response = await httpClient.GetAsync(
                 _options.Snapshot.VersionEndpoint,
                 cancellationToken);
 

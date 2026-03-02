@@ -69,13 +69,11 @@ public class SnapshotOptions
     /// <summary>
     /// Base URL for fetching snapshot versions.
     /// </summary>
-    [Required(ErrorMessage = "Snapshot:VersionEndpoint is required")]
     public string VersionEndpoint { get; set; } = string.Empty;
 
     /// <summary>
     /// Base URL for downloading snapshot files.
     /// </summary>
-    [Required(ErrorMessage = "Snapshot:DownloadBaseUrl is required")]
     public string DownloadBaseUrl { get; set; } = string.Empty;
 
     /// <summary>
@@ -129,19 +127,16 @@ public class GeneratorHistoryApiOptions
     /// <summary>
     /// Base URL of the Generator history API (e.g., "https://generator.example.com").
     /// </summary>
-    [Required(ErrorMessage = "GeneratorHistoryApi:BaseUrl is required")]
     public string BaseUrl { get; set; } = string.Empty;
 
     /// <summary>
     /// Access token for authenticating to the Generator history API.
     /// </summary>
-    [Required(ErrorMessage = "GeneratorHistoryApi:AccessToken is required")]
     public string AccessToken { get; set; } = string.Empty;
 
     /// <summary>
     /// Login URL to redirect to when authentication fails (401 Unauthorized).
     /// </summary>
-    [Required(ErrorMessage = "GeneratorHistoryApi:LoginUrl is required")]
     public string LoginUrl { get; set; } = string.Empty;
 
     /// <summary>
@@ -170,24 +165,6 @@ public class ReaderOptionsValidator : IValidateOptions<ReaderOptions>
             errors.Add("At least one torrent tracker URL is required");
         }
 
-        // Validate snapshot configuration
-        if (options.Snapshot == null)
-        {
-            errors.Add("Snapshot configuration is required");
-        }
-        else
-        {
-            if (string.IsNullOrWhiteSpace(options.Snapshot.VersionEndpoint))
-            {
-                errors.Add("Snapshot:VersionEndpoint is required");
-            }
-
-            if (string.IsNullOrWhiteSpace(options.Snapshot.DownloadBaseUrl))
-            {
-                errors.Add("Snapshot:DownloadBaseUrl is required");
-            }
-        }
-
         // Validate local database configuration
         if (options.LocalDb == null)
         {
@@ -201,28 +178,8 @@ public class ReaderOptionsValidator : IValidateOptions<ReaderOptions>
             }
         }
 
-        // Validate Generator history API configuration
-        if (options.GeneratorHistoryApi == null)
-        {
-            errors.Add("GeneratorHistoryApi configuration is required");
-        }
-        else
-        {
-            if (string.IsNullOrWhiteSpace(options.GeneratorHistoryApi.BaseUrl))
-            {
-                errors.Add("GeneratorHistoryApi:BaseUrl is required");
-            }
-
-            if (string.IsNullOrWhiteSpace(options.GeneratorHistoryApi.AccessToken))
-            {
-                errors.Add("GeneratorHistoryApi:AccessToken is required");
-            }
-
-            if (string.IsNullOrWhiteSpace(options.GeneratorHistoryApi.LoginUrl))
-            {
-                errors.Add("GeneratorHistoryApi:LoginUrl is required");
-            }
-        }
+        // Snapshot and GeneratorHistoryApi are optional for client-side apps
+        // They can use default/empty values when API is not available
 
         if (errors.Count > 0)
         {
