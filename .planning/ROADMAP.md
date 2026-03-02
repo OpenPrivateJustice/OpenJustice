@@ -30,7 +30,11 @@ v2.0 delivers a deterministic TJGO extraction pipeline that can run locally, cap
   2. Operator can run a search job that opens TJGO `ConsultaPublicacao` via Playwright Chromium and reaches the publication results workflow end-to-end.
   3. Operator can execute a single-day query where start date equals end date and receive results for that exact date window.
   4. Operator can apply criminal-oriented filtering in the TJGO query flow so civil-only result sets are excluded by default.
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 11-01-PLAN.md - Scaffold BrazilExtractor worker project with fail-fast configuration boundary.
+- [ ] 11-02-PLAN.md - Implement Playwright Chromium TJGO navigation and same-day search execution.
+- [ ] 11-03-PLAN.md - Apply criminal filter strategy and add TJGO smoke contract tests.
 
 ### Phase 12: PDF Acquisition Pipeline
 **Goal**: The extractor reliably captures and stores TJGO publication PDFs for each query in a reproducible, rate-limited way.
@@ -57,6 +61,6 @@ v2.0 delivers a deterministic TJGO extraction pipeline that can run locally, cap
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 11. Extractor Foundation and TJGO Search | 0/TBD | Not started | - |
+| 11. Extractor Foundation and TJGO Search | 0/3 | Not started | - |
 | 12. PDF Acquisition Pipeline | 0/TBD | Not started | - |
 | 13. OCR Text Extraction and Quality Signals | 0/TBD | Not started | - |
