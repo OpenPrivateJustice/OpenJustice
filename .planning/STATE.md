@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 
 ## Current Position
 
-Phase: 9 of 10 (Fix History Capture on Create)
-Plan: 1 of 1
+Phase: 10 of 10 (Wire Reader to Generator History API)
+Plan: 1 of 2
 Status: Completed
-Last activity: March 2, 2026 — Completed 09-01 (Initial field history capture on case creation)
+Last activity: March 2, 2026 — Completed 10-01 (Reader-side API integration foundation with auth)
 
 Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 90%
 
@@ -32,6 +32,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 90%
 | 7. Configuration System | 2/2 | 5 min | 2.5 min |
 | 8. Wire Torrent Import Pipeline | 1/1 | 5 min | 5.0 min |
 | 9. Fix History Capture on Create | 1/1 | 1 min | 1.0 min |
+| 10. Wire Reader to Generator History API | 1/2 | 4 min | 4.0 min |
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | 2/2 | 21 min | 10.5 min |
 | 4. Reader Core | 3/4 | 17 min | 5.7 min |
@@ -56,6 +57,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 90%
 - Plan 07-02: Composite index alignment - 1 min
 - Plan 08-01: Generator SQL export hardened for Reader compatibility - 5 min
 - Plan 09-01: Initial field history capture on case creation - 1 min
+- Plan 10-01: Reader-side API integration foundation with auth - 4 min
 
 *Updated after each plan completion*
 | Phase 04-reader-core P02 | 5 | 3 tasks | 8 files |
@@ -128,6 +130,9 @@ Key decisions from Phase 4 Plan 1:
 - [Phase 07]: Created comprehensive docs/configuration.md mapping all runtime config keys
 - [Phase 08]: Added --inserts pg_dump flag for INSERT-based SQL output compatible with Reader import
 - [Phase 08]: Added contract tests to ensure export format remains Reader-compatible
+- [Phase 10-01]: Added GeneratorHistoryApiOptions with fail-fast validation for BaseUrl, AccessToken, LoginUrl
+- [Phase 10-01]: Created IGeneratorHistoryApiClient with Bearer token auth and explicit 401 handling
+- [Phase 10-01]: Used IHttpClientFactory for proper connection pooling in Blazor WASM
 
 ### Pending Todos
 
@@ -138,6 +143,7 @@ Key decisions from Phase 4 Plan 1:
 - Phase 5 complete - Reader History UI & Polish (all 3 plans done)
 - Phase 7 complete - Configuration System & Database Indexes
 - Phase 8 complete - Wire Torrent Import Pipeline (Plan 1 done)
+- Phase 10 in progress - Wire Reader to Generator History API (Plan 1 of 2 done)
 
 ### Requirements Status (Configuration)
 
@@ -155,7 +161,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 2, 2026
-Stopped at: Completed 08-01-PLAN.md execution (Generator SQL export hardened for Reader compatibility)
+Stopped at: Completed 10-01-PLAN.md execution (Reader-side API integration foundation with auth)
 Resume file: None
 
 ## Requirements Status (DB)
