@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using OpenJustice.BrazilExtractor.Configuration;
 using OpenJustice.BrazilExtractor.Models;
 using OpenJustice.BrazilExtractor.Services.Downloads;
+using OpenJustice.BrazilExtractor.Services.Ocr;
 using OpenJustice.BrazilExtractor.Services.Tjgo;
 
 namespace OpenJustice.BrazilExtractor.Services.Jobs;
@@ -10,12 +11,13 @@ namespace OpenJustice.BrazilExtractor.Services.Jobs;
 /// <summary>
 /// TJGO search job that executes the search workflow.
 /// Orchestrates from worker loop to TJGO service, enforces query-level cadence,
-/// and integrates PDF downloads.
+/// and integrates PDF downloads and OCR text extraction.
 /// </summary>
 public class TjgoSearchJob : ITjgoSearchJob
 {
     private readonly ITjgoSearchService _searchService;
     private readonly IPdfDownloadService _downloadService;
+    private readonly IOcrExtractionService _ocrService;
     private readonly BrazilExtractorOptions _options;
     private readonly ILogger<TjgoSearchJob> _logger;
 
@@ -26,11 +28,13 @@ public class TjgoSearchJob : ITjgoSearchJob
     public TjgoSearchJob(
         ITjgoSearchService searchService,
         IPdfDownloadService downloadService,
+        IOcrExtractionService ocrService,
         IOptions<BrazilExtractorOptions> options,
         ILogger<TjgoSearchJob> logger)
     {
         _searchService = searchService;
         _downloadService = downloadService;
+        _ocrService = ocrService;
         _options = options.Value;
         _logger = logger;
     }
@@ -116,6 +120,50 @@ public class TjgoSearchJob : ITjgoSearchJob
                             failure.HttpStatusCode?.ToString() ?? "N/A");
                     }
                 }
+
+                // OCR text extraction stage (EXTR-10, EXTR-12)
+                // Process only successfully downloaded files
+                if (downloadResult.SucceededCount > 0)
+                {
+                    _logger.LogInformation(
+                        "Starting OCR text extraction for {Count} downloaded PDFs",
+                        downloadResult.SucceededCount);
+
+                    var ocrResult = await _ocrService.ExtractTextAsync(
+                        downloadResult.SucceededFiles,
+                        cancellationToken);
+
+                    // Attach OCR result to search result
+                    result.OcrResult = ocrResult;
+
+                    // Log OCR telemetry
+                    _logger.LogInformation(
+                        "OCR extraction completed - Attempted: {Attempted}, Succeeded: {Succeeded}, Failed: {Failed}, TotalPages: {Pages}, TotalChars: {Chars}",
+                        ocrResult.TotalCount,
+                        ocrResult.SucceededCount,
+                        ocrResult.FailedCount,
+                        ocrResult.TotalPages,
+                        ocrResult.TotalCharacters);
+
+                    if (ocrResult.SucceededCount > 0)
+                    {
+                        _logger.LogInformation(
+                            "OCR output saved to: {OcrPath}",
+                            _options.OcrOutputPath);
+                    }
+
+                    if (ocrResult.FailedCount > 0)
+                    {
+                        _logger.LogWarning(
+                            "OCR failures: {Failed}/{Attempted} PDFs could not be processed",
+                            ocrResult.FailedCount,
+                            ocrResult.TotalCount);
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation("No files downloaded, skipping OCR stage");
+                }
             }
             else
             {
@@ -178,6 +226,7 @@ public class TjgoSearchJob : ITjgoSearchJob
     {
         var dateWindow = result.Query?.FormattedDate ?? "N/A";
         var downloadResult = result.DownloadResult;
+        var ocrResult = result.OcrResult;
 
         _logger.LogInformation(
             "=== Acquisition Telemetry ===");
@@ -220,6 +269,22 @@ public class TjgoSearchJob : ITjgoSearchJob
         else
         {
             _logger.LogInformation("Downloads: Skipped (no links captured)");
+        }
+
+        // OCR telemetry (EXTR-10, EXTR-12)
+        if (ocrResult != null)
+        {
+            _logger.LogInformation(
+                "OCR: Attempted: {Attempted}, Succeeded: {Succeeded}, Failed: {Failed}, Pages: {Pages}, Characters: {Chars}",
+                ocrResult.TotalCount,
+                ocrResult.SucceededCount,
+                ocrResult.FailedCount,
+                ocrResult.TotalPages,
+                ocrResult.TotalCharacters);
+        }
+        else
+        {
+            _logger.LogInformation("OCR: Skipped (no downloads)");
         }
 
         _logger.LogInformation("===========================");

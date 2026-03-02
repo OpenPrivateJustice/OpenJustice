@@ -1,4 +1,5 @@
 using OpenJustice.BrazilExtractor.Services.Downloads;
+using OpenJustice.BrazilExtractor.Services.Ocr;
 using OpenJustice.BrazilExtractor.Services.Tjgo;
 
 namespace OpenJustice.BrazilExtractor.Models;
@@ -95,6 +96,11 @@ public class TjgoSearchResult
     /// Download result containing file paths and statistics.
     /// </summary>
     public PdfDownloadBatchResult? DownloadResult { get; set; }
+
+    /// <summary>
+    /// OCR extraction result containing text extraction outcomes and quality metadata.
+    /// </summary>
+    public OcrExtractionBatchResult? OcrResult { get; set; }
 
     /// <summary>
     /// Creates a successful result.

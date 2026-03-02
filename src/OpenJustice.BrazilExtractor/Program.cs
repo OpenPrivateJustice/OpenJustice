@@ -6,6 +6,7 @@ using OpenJustice.BrazilExtractor.Configuration;
 using OpenJustice.BrazilExtractor.Services.Browser;
 using OpenJustice.BrazilExtractor.Services.Downloads;
 using OpenJustice.BrazilExtractor.Services.Jobs;
+using OpenJustice.BrazilExtractor.Services.Ocr;
 using OpenJustice.BrazilExtractor.Services.Tjgo;
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -27,6 +28,9 @@ builder.Services.AddScoped<ITjgoSearchJob, TjgoSearchJob>();
 
 // Register PDF download service
 builder.Services.AddSingleton<IPdfDownloadService, PdfDownloadService>();
+
+// Register OCR extraction service
+builder.Services.AddSingleton<IOcrExtractionService, TesseractOcrExtractionService>();
 
 // Register the worker service
 builder.Services.AddHostedService<Worker>();
