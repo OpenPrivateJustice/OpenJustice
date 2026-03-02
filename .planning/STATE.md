@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 
 ## Current Position
 
-Phase: 6 of 10 (Create Missing VERIFICATION.md Files)
+Phase: 7 of 10 (Configuration System & Database Indexes)
 Plan: 1 of 1
 Status: Completed
-Last activity: March 2, 2026 — Completed 06-06 (Create VERIFICATION.md artifacts for phases 2, 4, 5)
+Last activity: March 2, 2026 — Completed 07-01 (Generator configuration complete, validated, documented)
 
-Progress: [▓▓▓▓▓▓▓▓░░░░░░░░░░] 60%
+Progress: [▓▓▓▓▓▓▓▓▓░░░░░░░░░] 70%
 
 ## Performance Metrics
 
@@ -29,6 +29,7 @@ Progress: [▓▓▓▓▓▓▓▓░░░░░░░░░░] 60%
 |-------|-------|-------|----------|
 | 1. Database & Config | 2/2 | 15 min | 7.5 min |
 | 6. VERIFICATION.md Gap Closure | 1/1 | 5 min | 5.0 min |
+| 7. Configuration System | 1/1 | 3 min | 3.0 min |
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | 2/2 | 21 min | 10.5 min |
 | 4. Reader Core | 3/4 | 17 min | 5.7 min |
@@ -49,6 +50,7 @@ Progress: [▓▓▓▓▓▓▓▓░░░░░░░░░░] 60%
 - Plan 04-03: Reader search experience - 8 min
 - Plan 05-02: Reader history UI - 3 min
 - Plan 05-03: Cross-page UI polish - 5 min
+- Plan 07-01: Generator configuration complete - 3 min
 
 *Updated after each plan completion*
 | Phase 04-reader-core P02 | 5 | 3 tasks | 8 files |
@@ -117,6 +119,8 @@ Key decisions from Phase 4 Plan 1:
 - [Phase 5]: Additive history parsing preserves existing case import stability
 - [Phase 5]: Service resilience: returns empty collections instead of throwing on missing history
 - [Phase 5]: Index-based diff selection ensures deterministic/stable A/B output
+- [Phase 07]: Wired AddAtrocidadesRssConfiguration into Generator.Web Program.cs with ValidateOnStart()
+- [Phase 07]: Created comprehensive docs/configuration.md mapping all runtime config keys
 
 ### Pending Todos
 
@@ -125,6 +129,16 @@ Key decisions from Phase 4 Plan 1:
 - Phase 3 complete - Generator history system implemented
 - Phase 4 complete - Reader Core search experience complete
 - Phase 5 complete - Reader History UI & Polish (all 3 plans done)
+- Phase 7 in progress - Configuration System & Database Indexes
+
+### Requirements Status (Configuration)
+
+- [x] CFG-01: appsettings.json contains database connection config
+- [x] CFG-02: appsettings.json contains file paths config
+- [x] CFG-03: appsettings.json contains torrent settings
+- [x] CFG-04: appsettings.Development.json exists and overrides local values
+- [x] CFG-05: startup validation is fail-fast for missing required settings
+- [x] CFG-06: configuration keys and usage documented in docs/configuration.md
 
 ### Blockers/Concerns
 
