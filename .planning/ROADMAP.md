@@ -224,6 +224,11 @@ Plans:
 3. History API returns complete timeline for newly created cases
 4. Verified: Curator can view history for brand new cases
 
+**Plans:** 1 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — Wire create flow to append initial history + add regression tests
+
 **Gap Closure:** Closes integration gap (case creation → history capture), flow gap "Curator creates case"
 
 ### Phase 10: Wire Reader to Generator History API
