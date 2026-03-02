@@ -72,11 +72,11 @@ public class TjgoSearchJob : ITjgoSearchJob
             // Log query execution timing for cadence verification
             var queryDuration = result.QueryExecutionEndUtc - result.QueryExecutionStartUtc;
             _logger.LogInformation(
-                "TJGO search completed - DateWindow: {DateWindow}, FilterProfile: {Profile}, Records: {Records}, Pages: {PageIndex}, QueryDuration: {Duration:F2}s",
+                "TJGO search completed - DateWindow: {DateWindow}, FilterProfile: {Profile}, Records: {Records}, PagesTraversed: {PagesTraversed}, QueryDuration: {Duration:F2}s",
                 result.DateWindow ?? "N/A",
                 result.AppliedFilterProfile ?? "None",
                 result.RecordCount,
-                result.PageIndex,
+                result.PagesTraversed,
                 queryDuration.TotalSeconds);
 
             // Download captured PDF links (EXTR-08)
@@ -238,8 +238,9 @@ public class TjgoSearchJob : ITjgoSearchJob
             result.RecordCount);
 
         _logger.LogInformation(
-            "Query Executions: 1, Pages Traversed: {Pages}, QueryStart: {QueryStart:HH:mm:ss}Z, QueryEnd: {QueryEnd:HH:mm:ss}Z",
-            result.PageIndex + 1,
+            "Query Executions: 1, Pages Traversed: {PagesTraversed}, Final Page Index: {FinalPageIndex}, QueryStart: {QueryStart:HH:mm:ss}Z, QueryEnd: {QueryEnd:HH:mm:ss}Z",
+            result.PagesTraversed,
+            result.FinalPageIndex,
             result.QueryExecutionStartUtc.ToString("HH:mm:ss"),
             result.QueryExecutionEndUtc.ToString("HH:mm:ss"));
 
