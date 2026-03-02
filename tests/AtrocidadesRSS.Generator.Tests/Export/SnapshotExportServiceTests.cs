@@ -178,6 +178,123 @@ public class SnapshotExportServiceTests
         };
     }
 
+    #region BuildPgDumpArguments Contract Tests
+
+    /// <summary>
+    /// Reader Contract Test: Ensures pg_dump produces INSERT statements (not COPY)
+    /// for Reader SqliteCaseStore SQL parser compatibility.
+    /// </summary>
+    [Fact]
+    public void BuildPgDumpArguments_ContainsInsertsFlag_ForReaderCompatibility()
+    {
+        // Arrange
+        _options.ConnectionString = "Host=localhost;Database=atrocidadesrss;Username=postgres;Password=test";
+        var service = CreateService();
+
+        // Act
+        var args = service.BuildPgDumpArgumentsForTest();
+
+        // Assert - Reader Contract: --inserts flag must be present for SQL parser compatibility
+        args.Should().Contain("--inserts");
+    }
+
+    /// <summary>
+    /// Reader Contract Test: Ensures pg_dump output is compatible with Reader import.
+    /// The INSERT format allows SqliteCaseStore to parse table data.
+    /// </summary>
+    [Fact]
+    public void BuildPgDumpArguments_ContainsCleanAndIfExists_ForIdempotentImport()
+    {
+        // Arrange
+        _options.ConnectionString = "Host=localhost;Database=atrocidadesrss;Username=postgres;Password=test";
+        var service = CreateService();
+
+        // Act
+        var args = service.BuildPgDumpArgumentsForTest();
+
+        // Assert - Ensure clean if-exists for idempotent Reader import
+        args.Should().Contain("--clean");
+        args.Should().Contain("--if-exists");
+    }
+
+    /// <summary>
+    /// Reader Contract Test: Ensures pg_dump excludes owner/privileges for clean import.
+    /// </summary>
+    [Fact]
+    public void BuildPgDumpArguments_ExcludesOwnerAndPrivileges_ForCrossDatabaseImport()
+    {
+        // Arrange
+        _options.ConnectionString = "Host=localhost;Database=atrocidadesrss;Username=postgres;Password=test";
+        var service = CreateService();
+
+        // Act
+        var args = service.BuildPgDumpArgumentsForTest();
+
+        // Assert - Exclude PostgreSQL-specific ownership for cross-db compatibility
+        args.Should().Contain("--no-owner");
+        args.Should().Contain("--no-privileges");
+    }
+
+    /// <summary>
+    /// Reader Contract Test: Verifies connection parameters are included.
+    /// </summary>
+    [Fact]
+    public void BuildPgDumpArguments_ContainsConnectionParameters()
+    {
+        // Arrange
+        _options.ConnectionString = "Host=localhost;Database=atrocidadesrss;Username=postgres;Password=test";
+        var service = CreateService();
+
+        // Act
+        var args = service.BuildPgDumpArgumentsForTest();
+
+        // Assert
+        args.Should().Contain("-h localhost");
+        args.Should().Contain("-d atroci");
+    }
+
+    /// <summary>
+    /// Reader Contract Test: Uses Host configuration when provided.
+    /// </summary>
+    [Fact]
+    public void BuildPgDumpArguments_WithHostConfig_UsesHostParameters()
+    {
+        // Arrange
+        _options.Host = "db.example.com";
+        _options.Database = "atrocidadesrss";
+        _options.Username = "postgres";
+        _options.Password = "secret";
+        _options.ConnectionString = ""; // Clear connection string to force Host usage
+        var service = CreateService();
+
+        // Act
+        var args = service.BuildPgDumpArgumentsForTest();
+
+        // Assert
+        args.Should().Contain("-h db.example.com");
+    }
+
+    /// <summary>
+    /// Contract Test: Verifies file output flag is present.
+    /// </summary>
+    [Fact]
+    public void BuildPgDumpArguments_ContainsFileOutputFlag()
+    {
+        // Arrange
+        _options.ConnectionString = "Host=localhost;Database=atrocidadesrss;Username=postgres;Password=test";
+        var service = CreateService();
+
+        // Act
+        var args = service.BuildPgDumpArgumentsForTest();
+
+        // Assert - -f flag for file output
+        args.Should().Contain("-f");
+    }
+
+    #endregion
+
+    #region IsPgDumpAvailable Tests
+
     [Fact]
     public void IsPgDumpAvailable_WhenPgDumpInOptionsButNotExists_ReturnsFalse()
     {
@@ -222,6 +339,10 @@ public class SnapshotExportServiceTests
         act.Should().NotThrow();
     }
 
+    #endregion
+
+    #region ExportAsync Tests
+
     [Fact]
     public async Task ExportAsync_NoConnectionOrHost_ReturnsErrorAboutPgDump()
     {
@@ -259,6 +380,8 @@ public class SnapshotExportServiceTests
         result.Success.Should().BeFalse();
         result.ErrorMessage.Should().Contain("pg_dump is not available");
     }
+
+    #endregion
 
     private SnapshotExportService CreateService()
     {
