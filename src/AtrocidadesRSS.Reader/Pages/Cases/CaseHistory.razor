@@ -40,6 +40,21 @@
             <p class="mt-2 text-muted">Carregando histórico do caso...</p>
         </div>
     }
+    else if (LoadError != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Erro ao carregar histórico</h4>
+            <p>@LoadError</p>
+            <hr>
+            <p class="mb-0">
+                <a href="/search" class="btn btn-outline-primary">Voltar à busca</a>
+                <a href="/cases/@CaseId" class="btn btn-outline-secondary ms-2">Ver detalhes do caso</a>
+                <button class="btn btn-outline-secondary ms-2" @onclick="ReloadHistory">
+                    Tentar novamente
+                </button>
+            </p>
+        </div>
+    }
     else if (Case == null)
     {
         <div class="alert alert-danger" role="alert">
@@ -74,8 +89,8 @@
             <!-- Filter Controls -->
             <div class="history-filters card mb-4">
                 <div class="card-body">
-                    <div class="row align-items-end">
-                        <div class="col-md-4">
+                    <div class="row align-items-end g-2">
+                        <div class="col-12 col-md-4">
                             <label for="fieldFilter" class="form-label">Filtrar por campo:</label>
                             <select id="fieldFilter" class="form-select" @bind="SelectedField">
                                 <option value="">Todos os campos</option>
@@ -85,7 +100,7 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-4">
                             <label class="form-label">Total de alterações:</label>
                             <p class="form-control-plaintext mb-0">
                                 <strong>@(string.IsNullOrEmpty(SelectedField) ? Timeline.Count : Timeline.Count(h => h.FieldName == SelectedField))</strong> registro(s)
@@ -109,8 +124,8 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div class="row align-items-end">
-                            <div class="col-md-3">
+                        <div class="row align-items-end g-2">
+                            <div class="col-6 col-md-3">
                                 <label for="versionA" class="form-label">Versão A (mais antigo):</label>
                                 <select id="versionA" class="form-select" @bind="SelectedVersionA">
                                     <option value="-1">Selecione...</option>
@@ -122,7 +137,7 @@
                                     }
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-6 col-md-3">
                                 <label for="versionB" class="form-label">Versão B (mais recente):</label>
                                 <select id="versionB" class="form-select" @bind="SelectedVersionB">
                                     <option value="-1">Selecione...</option>
@@ -134,14 +149,21 @@
                                     }
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <button class="btn btn-primary" @onclick="LoadDiff" disabled="@(!CanCompare)">
+                            <div class="col-12 col-md-3">
+                                <button class="btn btn-primary w-100" @onclick="LoadDiff" disabled="@(!CanCompare || IsLoadingDiff)">
+                                @if (IsLoadingDiff)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                }
+                                else
+                                {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
                                          class="bi bi-arrow-left-right me-1" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
                                     </svg>
-                                    Comparar
-                                </button>
+                                }
+                                Comparar
+                            </button>
                             </div>
                         </div>
                     </div>
@@ -162,8 +184,8 @@
                         <div class="card-body">
                             <div class="row">
                                 <!-- Version A (Older) -->
-                                <div class="col-md-6">
-                                    <div class="diff-version diff-version-a">
+                                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                    <div class="diff-version diff-version-a p-3 border rounded">
                                         <h6 class="text-muted mb-3">
                                             <span class="badge bg-secondary">A</span>
                                             Versão Anterior
@@ -200,8 +222,8 @@
                                     </div>
                                 </div>
                                 <!-- Version B (Newer) -->
-                                <div class="col-md-6">
-                                    <div class="diff-version diff-version-b">
+                                <div class="col-12 col-md-6">
+                                    <div class="diff-version diff-version-b p-3 border rounded">
                                         <h6 class="text-muted mb-3">
                                             <span class="badge bg-primary">B</span>
                                             Versão Atual
@@ -336,7 +358,9 @@
     private int SelectedVersionA { get; set; } = -1;
     private int SelectedVersionB { get; set; } = -1;
     private FieldDiffSelection? DiffSelection { get; set; }
+    private bool IsLoadingDiff { get; set; }
     private bool IsLoading { get; set; } = true;
+    private string? LoadError { get; set; }
 
     private List<CaseFieldHistoryViewModel> FilteredTimeline =>
         string.IsNullOrEmpty(SelectedField)
@@ -353,6 +377,7 @@
     private async Task LoadDataAsync()
     {
         IsLoading = true;
+        LoadError = null;
         DiffSelection = null;
         
         try
@@ -360,15 +385,22 @@
             // Load case details
             Case = await CaseDetailsService.GetCaseDetailsAsync(CaseId);
             
-            // Load timeline
-            Timeline = (await CaseHistoryService.GetFullTimelineAsync(CaseId)).ToList();
-            
-            // Load available fields
-            AvailableFields = (await CaseHistoryService.GetAvailableFieldsAsync(CaseId)).ToList();
+            if (Case == null)
+            {
+                LoadError = "Caso não encontrado no banco de dados local. Talvez seja necessário sincronizar os dados primeiro.";
+            }
+            else
+            {
+                // Load timeline
+                Timeline = (await CaseHistoryService.GetFullTimelineAsync(CaseId)).ToList();
+                
+                // Load available fields
+                AvailableFields = (await CaseHistoryService.GetAvailableFieldsAsync(CaseId)).ToList();
+            }
         }
         catch (Exception ex)
         {
-            // Log error in production
+            LoadError = $"Erro ao carregar histórico: {ex.Message}";
             Case = null;
             Timeline = new List<CaseFieldHistoryViewModel>();
             AvailableFields = new List<string>();
@@ -377,6 +409,11 @@
         {
             IsLoading = false;
         }
+    }
+
+    private async Task ReloadHistory()
+    {
+        await LoadDataAsync();
     }
 
     private List<CaseFieldHistoryViewModel> GetFilteredFieldTimeline()
@@ -390,12 +427,21 @@
     {
         if (!CanCompare) return;
 
-        // Ensure A is older (higher index) and B is newer (lower index)
-        var indexA = Math.Max(SelectedVersionA, SelectedVersionB);
-        var indexB = Math.Min(SelectedVersionA, SelectedVersionB);
+        IsLoadingDiff = true;
+        
+        try
+        {
+            // Ensure A is older (higher index) and B is newer (lower index)
+            var indexA = Math.Max(SelectedVersionA, SelectedVersionB);
+            var indexB = Math.Min(SelectedVersionA, SelectedVersionB);
 
-        DiffSelection = await CaseHistoryService.GetDiffSelectionAsync(
-            CaseId, SelectedField, indexA, indexB);
+            DiffSelection = await CaseHistoryService.GetDiffSelectionAsync(
+                CaseId, SelectedField, indexA, indexB);
+        }
+        finally
+        {
+            IsLoadingDiff = false;
+        }
     }
 
     private string FormatFieldName(string fieldName)

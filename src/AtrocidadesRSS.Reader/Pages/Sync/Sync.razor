@@ -57,7 +57,16 @@
                     @if (!string.IsNullOrEmpty(CurrentStatus.ErrorMessage))
                     {
                         <div class="alert alert-danger">
-                            <strong>Error:</strong> @CurrentStatus.ErrorMessage
+                            <strong>Erro:</strong> @CurrentStatus.ErrorMessage
+                            <hr>
+                            <p class="mb-0 small">
+                                <button class="btn btn-outline-danger btn-sm" @onclick="RetryLastAction">
+                                    Tentar novamente
+                                </button>
+                                <a href="/search" class="btn btn-outline-secondary btn-sm ms-2">
+                                    Voltar à busca
+                                </a>
+                            </p>
                         </div>
                     }
 
@@ -96,32 +105,57 @@
     <!-- Actions Panel -->
     <div class="card">
         <div class="card-header">
-            <h5>Actions</h5>
+            <h5>Ações</h5>
         </div>
         <div class="card-body">
-            <div class="d-flex gap-2 flex-wrap">
+            <div class="d-flex gap-2 flex-wrap action-buttons">
                 <button class="btn btn-primary" 
-                        disabled="@(IsBusy)"
+                        disabled="@(IsBusy || IsCheckingUpdates)"
                         @onclick="CheckForUpdates">
-                    <span class="oi oi-magnifying-glass"></span> Check for Updates
+                    @if (IsCheckingUpdates)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    }
+                    else
+                    {
+                        <span class="oi oi-magnifying-glass me-1"></span>
+                    }
+                    Verificar Atualizações
                 </button>
 
                 <button class="btn btn-success" 
-                        disabled="@(IsBusy || CurrentStatus.State == SyncState.Downloading)"
+                        disabled="@(IsBusy || IsDownloading || CurrentStatus.State == SyncState.Downloading)"
                         @onclick="DownloadLatest">
-                    <span class="oi oi-cloud-download"></span> Download Latest Snapshot
+                    @if (IsDownloading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    }
+                    else
+                    {
+                        <span class="oi oi-cloud-download me-1"></span>
+                    }
+                    Baixar Snapshot
                 </button>
 
                 <button class="btn btn-info" 
-                        disabled="@(IsBusy || !CaseStore.HasData())"
+                        disabled="@(IsBusy || IsReloading || !CaseStore.HasData())"
                         @onclick="ReloadDatabase">
-                    <span class="oi oi-reload"></span> Reload Local Database
+                    @if (IsReloading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    }
+                    else
+                    {
+                        <span class="oi oi-reload me-1"></span>
+                    }
+                    Recarregar Banco
                 </button>
 
                 <button class="btn btn-outline-secondary" 
                         disabled="@IsBusy"
                         @onclick="ResetStatus">
-                    <span class="oi oi-reset"></span> Reset
+                    <span class="oi oi-reset me-1"></span>
+                    Resetar
                 </button>
             </div>
         </div>
@@ -195,6 +229,10 @@
     private bool IsBusy => CurrentStatus.State == SyncState.Checking || 
                           CurrentStatus.State == SyncState.Downloading ||
                           CaseStore.GetImportStatus().IsImporting;
+    
+    private bool IsCheckingUpdates { get; set; }
+    private bool IsDownloading { get; set; }
+    private bool IsReloading { get; set; }
     private DatabaseStats? _stats;
     private List<SyncLogEntry> _syncLog = new();
 
@@ -206,54 +244,79 @@
 
     private async Task CheckForUpdates()
     {
-        AddLog("info", "Checking for updates...");
+        IsCheckingUpdates = true;
+        AddLog("info", "Verificando atualizações...");
         
-        var result = await VersionService.CheckVersionAsync();
-        
-        if (!string.IsNullOrEmpty(result.ErrorMessage))
+        try
         {
-            AddLog("error", $"Version check failed: {result.ErrorMessage}");
-            return;
-        }
+            var result = await VersionService.CheckVersionAsync();
+            
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                AddLog("error", $"Falha ao verificar versão: {result.ErrorMessage}");
+                return;
+            }
 
-        if (result.UpdateAvailable)
-        {
-            AddLog("success", $"Update available: v{result.RemoteVersion} (current: v{result.LocalVersion})");
+            if (result.UpdateAvailable)
+            {
+                AddLog("success", $"Atualização disponível: v{result.RemoteVersion} (atual: v{result.LocalVersion})");
+            }
+            else
+            {
+                AddLog("info", $"Já está atualizado: v{result.LocalVersion}");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            AddLog("info", $"Already up to date: v{result.LocalVersion}");
+            AddLog("error", $"Erro ao verificar atualizações: {ex.Message}");
+            Logger.LogError(ex, "Error checking for updates");
+        }
+        finally
+        {
+            IsCheckingUpdates = false;
         }
     }
 
     private async Task DownloadLatest()
     {
-        AddLog("info", "Starting download...");
+        IsDownloading = true;
+        AddLog("info", "Iniciando download...");
         
-        var progress = new Progress<double>(p => 
+        try
         {
-            // Progress is handled by the service status
-            StateHasChanged();
-        });
-
-        var result = await SyncService.SyncAsync(progress);
-        
-        if (result.Success)
-        {
-            AddLog("success", $"Sync complete: v{result.DownloadedVersion}");
-            
-            // Auto-load the database after download
-            if (!string.IsNullOrEmpty(result.LocalFilePath))
+            var progress = new Progress<double>(p => 
             {
-                await LoadDatabase(result.LocalFilePath);
+                // Progress is handled by the service status
+                StateHasChanged();
+            });
+
+            var result = await SyncService.SyncAsync(progress);
+            
+            if (result.Success)
+            {
+                AddLog("success", $"Sincronização concluída: v{result.DownloadedVersion}");
+                
+                // Auto-load the database after download
+                if (!string.IsNullOrEmpty(result.LocalFilePath))
+                {
+                    await LoadDatabase(result.LocalFilePath);
+                }
+            }
+            else
+            {
+                AddLog("error", $"Falha na sincronização: {result.ErrorMessage}");
             }
         }
-        else
+        catch (Exception ex)
         {
-            AddLog("error", $"Sync failed: {result.ErrorMessage}");
+            AddLog("error", $"Erro ao baixar snapshot: {ex.Message}");
+            Logger.LogError(ex, "Error downloading latest snapshot");
         }
-
-        RefreshStats();
+        finally
+        {
+            IsDownloading = false;
+            RefreshStats();
+        }
     }
 
     private async Task LoadDatabase(string? filePath = null)
@@ -295,12 +358,24 @@
 
     private async Task ReloadDatabase()
     {
-        AddLog("info", "Reloading database...");
+        IsReloading = true;
+        AddLog("info", "Recarregando banco de dados...");
         
-        await CaseStore.ClearAsync();
-        await LoadDatabase();
-        
-        AddLog("success", "Database reloaded");
+        try
+        {
+            await CaseStore.ClearAsync();
+            await LoadDatabase();
+            AddLog("success", "Banco de dados recarregado");
+        }
+        catch (Exception ex)
+        {
+            AddLog("error", $"Erro ao recarregar: {ex.Message}");
+            Logger.LogError(ex, "Error reloading database");
+        }
+        finally
+        {
+            IsReloading = false;
+        }
     }
 
     private void ResetStatus()
@@ -313,6 +388,33 @@
     private void RefreshStats()
     {
         _stats = CaseStore.GetStatsAsync().GetAwaiter().GetResult();
+    }
+
+    private void RetryLastAction()
+    {
+        // Reset error and retry based on current state
+        var status = CurrentStatus;
+        
+        if (status.State == SyncState.Error)
+        {
+            if (!string.IsNullOrEmpty(status.LastAction) && status.LastAction.Contains("download", StringComparison.OrdinalIgnoreCase))
+            {
+                // Retry download
+                _ = DownloadLatest();
+            }
+            else if (!string.IsNullOrEmpty(status.LastAction) && status.LastAction.Contains("import", StringComparison.OrdinalIgnoreCase))
+            {
+                // Retry database reload
+                _ = ReloadDatabase();
+            }
+            else
+            {
+                // Default: check for updates
+                _ = CheckForUpdates();
+            }
+        }
+        
+        StateHasChanged();
     }
 
     private void AddLog(string level, string message)

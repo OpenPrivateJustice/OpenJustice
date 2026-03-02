@@ -34,7 +34,19 @@
             <p class="mt-2">Buscando casos...</p>
         </div>
     }
-    else
+    <!-- Error State -->
+    @if (hasError)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Erro na busca</h4>
+            <p>@errorMessage</p>
+            <hr>
+            <button class="btn btn-outline-primary" @onclick="PerformSearch">
+                Tentar novamente
+            </button>
+        </div>
+    }
+    else if (!isLoading)
     {
         <!-- Results -->
         <ResultsTable 
@@ -66,6 +78,8 @@
     private IReadOnlyList<string> states = Array.Empty<string>();
     private IReadOnlyList<string> judicialStatuses = Array.Empty<string>();
     private bool isLoading = true;
+    private bool hasError = false;
+    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,6 +95,8 @@
     private async Task PerformSearch()
     {
         isLoading = true;
+        hasError = false;
+        errorMessage = null;
         
         try
         {
@@ -88,7 +104,8 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Search error: {ex.Message}");
+            hasError = true;
+            errorMessage = $"Erro ao buscar casos: {ex.Message}";
             results = PagedResult<LocalCase>.Empty(query.Page, query.PageSize);
         }
         finally

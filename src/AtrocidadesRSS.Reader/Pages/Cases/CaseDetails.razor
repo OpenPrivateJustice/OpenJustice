@@ -19,24 +19,28 @@
     </nav>
 
     <!-- Back Navigation and History Link -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="/search" class="btn btn-outline-secondary btn-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
-                 class="bi bi-arrow-left me-1" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-            </svg>
-            Voltar à busca
-        </a>
+    <div class="d-flex justify-content-between align-items-center mb-3 gap-2 flex-wrap">
+        <div>
+            <a href="/search" class="btn btn-outline-secondary btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                     class="bi bi-arrow-left me-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                </svg>
+                Voltar </a>
+        à busca
+            </div>
         @if (HasHistory)
         {
-            <a href="/cases/@CaseId/history" class="btn btn-outline-info btn-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
-                     class="bi bi-clock-history me-1" viewBox="0 0 16 16">
-                    <path d="M8.515 1.019A7 7 0 0 0 1.34 15.2L.26 15.4a.25.25 0 0 0 .1.15l3.4 2.16a.25.25 0 0 0 .35-.15l.8-1.2a.25.25 0 0 0-.05-.35L8.3 12.44l-2.47 1.53a.25.25 0 0 0 .05.35l2.8 1.8a.25.25 0 0 0 .35-.05l3.4-2.16a.25.25 0 0 0-.1-.15l-1.07-1.28a7.03 7.03 0 0 0-3.36-1.82z"/>
-                    <path d="M1.05 8.17a.25.25 0 0 0-.1.15l-1.4 4.38a.25.25 0 0 0 .35.25l4.39-1.41a.25.25 0 0 0 .15-.1l-3.4-2.19z"/>
-                </svg>
-                Histórico
-            </a>
+            <div>
+                <a href="/cases/@CaseId/history" class="btn btn-outline-info btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                         class="bi bi-clock-history me-1" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 1.34 15.2L.26 15.4a.25.25 0 0 0 .1.15l3.4 2.16a.25.25 0 0 0 .35-.15l.8-1.2a.25.25 0 0 0-.05-.35L8.3 12.44l-2.47 1.53a.25.25 0 0 0 .05.35l2.8 1.8a.25.25 0 0 0 .35-.05l3.4-2.16a.25.25 0 0 0-.1-.15l-1.07-1.28a7.03 7.03 0 0 0-3.36-1.82z"/>
+                        <path d="M1.05 8.17a.25.25 0 0 0-.1.15l-1.4 4.38a.25.25 0 0 0 .35.25l4.39-1.41a.25.25 0 0 0 .15-.1l-3.4-2.19z"/>
+                    </svg>
+                    Histórico
+                </a>
+            </div>
         }
     </div>
 
@@ -47,6 +51,20 @@
                 <span class="visually-hidden">Carregando...</span>
             </div>
             <p class="mt-2 text-muted">Carregando detalhes do caso...</p>
+        </div>
+    }
+    else if (LoadError != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Erro ao carregar caso</h4>
+            <p>@LoadError</p>
+            <hr>
+            <p class="mb-0">
+                <a href="/search" class="btn btn-outline-primary">Voltar à busca</a>
+                <button class="btn btn-outline-secondary ms-2" @onclick="ReloadCase">
+                    Tentar novamente
+                </button>
+            </p>
         </div>
     }
     else if (Case == null)
@@ -143,6 +161,7 @@
     private CaseDetailViewModel? Case { get; set; }
     private bool IsLoading { get; set; } = true;
     private bool HasHistory { get; set; } = false;
+    private string? LoadError { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -152,16 +171,25 @@
     private async Task LoadCaseAsync()
     {
         IsLoading = true;
+        LoadError = null;
         
         try
         {
             Case = await CaseDetailsService.GetCaseDetailsAsync(CaseId);
-            // Check if case has history entries
-            HasHistory = await CaseHistoryService.HasHistoryAsync(CaseId);
+            
+            if (Case == null)
+            {
+                LoadError = "Caso não encontrado no banco de dados local. Talvez seja necessário sincronizar os dados primeiro.";
+            }
+            else
+            {
+                // Check if case has history entries
+                HasHistory = await CaseHistoryService.HasHistoryAsync(CaseId);
+            }
         }
         catch (Exception ex)
         {
-            // Log error in production
+            LoadError = $"Erro ao carregar os detalhes do caso: {ex.Message}";
             Case = null;
             HasHistory = false;
         }
@@ -169,6 +197,11 @@
         {
             IsLoading = false;
         }
+    }
+
+    private async Task ReloadCase()
+    {
+        await LoadCaseAsync();
     }
 }
 
