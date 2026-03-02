@@ -28,8 +28,14 @@ public class TjgoSearchService : ITjgoSearchService
 
     public async Task<TjgoSearchResult> ExecuteSearchAsync(TjgoSearchQuery query, CancellationToken cancellationToken = default)
     {
+        // Ensure criminal filter profile is set
+        query.CriminalFilter ??= CriminalFilterProfile.GetProfile(query.CriminalMode);
+        
         _logger.LogInformation("Executing TJGO search for date {Date} (Criminal: {Criminal})",
             query.FormattedDate, query.CriminalMode);
+        
+        _logger.LogInformation("Applying criminal filter profile: {Profile}", 
+            query.CriminalFilter.GetDescription());
 
         IBrowser? browser = null;
         IBrowserContext? context = null;
@@ -49,6 +55,28 @@ public class TjgoSearchService : ITjgoSearchService
                 WaitUntil = WaitUntilState.NetworkIdle,
                 Timeout = 30000
             });
+
+            // Apply criminal filter profile query parameters if available
+            if (query.CriminalFilter?.Enabled == true && query.CriminalFilter.QueryParameters.Count > 0)
+            {
+                foreach (var param in query.CriminalFilter.QueryParameters)
+                {
+                    _logger.LogDebug("Applying query parameter: {Key}={Value}", param.Key, param.Value);
+                    try
+                    {
+                        // Try to find and set query parameters on the form
+                        var locator = page.Locator($"[name='{param.Key}']");
+                        if (await locator.CountAsync() > 0)
+                        {
+                            await locator.FillAsync(param.Value);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Could not apply query parameter {Key}", param.Key);
+                    }
+                }
+            }
 
             // Fill date fields with single-day semantics
             // Both DataInicial and DataFinal are set to the same value for single-day queries

@@ -1,3 +1,5 @@
+using OpenJustice.BrazilExtractor.Services.Tjgo;
+
 namespace OpenJustice.BrazilExtractor.Models;
 
 /// <summary>
@@ -16,6 +18,11 @@ public class TjgoSearchQuery
     public bool CriminalMode { get; set; }
 
     /// <summary>
+    /// The criminal filter profile to apply for this query.
+    /// </summary>
+    public CriminalFilterProfile? CriminalFilter { get; set; }
+
+    /// <summary>
     /// Creates a query for a specific single day.
     /// </summary>
     /// <param name="queryDate">The date to search for.</param>
@@ -25,7 +32,8 @@ public class TjgoSearchQuery
         return new TjgoSearchQuery
         {
             QueryDate = queryDate.Date,
-            CriminalMode = criminalMode
+            CriminalMode = criminalMode,
+            CriminalFilter = CriminalFilterProfile.GetProfile(criminalMode)
         };
     }
 
