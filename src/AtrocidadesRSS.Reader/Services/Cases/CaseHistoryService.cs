@@ -1,5 +1,4 @@
 using AtrocidadesRSS.Reader.Models.Cases;
-using AtrocidadesRSS.Reader.Services.Data;
 using Microsoft.Extensions.Logging;
 
 namespace AtrocidadesRSS.Reader.Services.Cases;
@@ -7,18 +6,18 @@ namespace AtrocidadesRSS.Reader.Services.Cases;
 /// <summary>
 /// Service for retrieving and managing case field history.
 /// Provides timeline and diff functionality for UI components.
-/// Read-only and resilient: returns empty collections if no history exists.
+/// Consumes live data from Generator API via IGeneratorHistoryApiClient.
 /// </summary>
 public class CaseHistoryService : ICaseHistoryService
 {
-    private readonly ILocalCaseStore _caseStore;
+    private readonly IGeneratorHistoryApiClient _historyApiClient;
     private readonly ILogger<CaseHistoryService> _logger;
 
     public CaseHistoryService(
-        ILocalCaseStore caseStore,
+        IGeneratorHistoryApiClient historyApiClient,
         ILogger<CaseHistoryService> logger)
     {
-        _caseStore = caseStore;
+        _historyApiClient = historyApiClient;
         _logger = logger;
     }
 
@@ -29,17 +28,25 @@ public class CaseHistoryService : ICaseHistoryService
     {
         _logger.LogDebug("Loading full timeline for case ID: {CaseId}", caseId);
 
-        var history = await _caseStore.GetCaseHistoryAsync(caseId, cancellationToken);
-        
-        if (history.Count == 0)
+        try
         {
-            _logger.LogDebug("No history found for case ID: {CaseId}", caseId);
-            return Array.Empty<CaseFieldHistoryViewModel>();
-        }
+            var history = await _historyApiClient.GetCaseHistoryAsync(caseId, cancellationToken);
+            
+            if (history.Count == 0)
+            {
+                _logger.LogDebug("No history found for case ID: {CaseId}", caseId);
+                return Array.Empty<CaseFieldHistoryViewModel>();
+            }
 
-        // Order by ChangedAt descending (newest first) for deterministic output
-        var orderedHistory = history.OrderByDescending(h => h.ChangedAt).ToList();
-        return CaseFieldHistoryViewModel.FromEntityList(orderedHistory);
+            // Order by ChangedAt descending (newest first) for deterministic output
+            var orderedHistory = history.OrderByDescending(h => h.ChangedAt).ToList();
+            return orderedHistory;
+        }
+        catch (GeneratorHistoryApiUnauthorizedException ex)
+        {
+            _logger.LogWarning(ex, "Unauthorized access to case history for case ID: {CaseId}", caseId);
+            throw;
+        }
     }
 
     /// <inheritdoc/>
@@ -49,28 +56,35 @@ public class CaseHistoryService : ICaseHistoryService
     {
         _logger.LogDebug("Loading timeline grouped by field for case ID: {CaseId}", caseId);
 
-        var history = await _caseStore.GetCaseHistoryAsync(caseId, cancellationToken);
-        
-        if (history.Count == 0)
+        try
         {
-            _logger.LogDebug("No history found for case ID: {CaseId}", caseId);
-            return Array.Empty<FieldHistoryGroup>();
-        }
-
-        // Group by field name and order each group's entries by ChangedAt descending
-        var groups = history
-            .GroupBy(h => h.FieldName)
-            .Select(g => new FieldHistoryGroup
+            var history = await _historyApiClient.GetCaseHistoryAsync(caseId, cancellationToken);
+            
+            if (history.Count == 0)
             {
-                FieldName = g.Key,
-                FieldDisplayName = FormatFieldName(g.Key),
-                Entries = CaseFieldHistoryViewModel.FromEntityList(
-                    g.OrderByDescending(h => h.ChangedAt).ToList())
-            })
-            .OrderBy(g => g.FieldDisplayName)
-            .ToList();
+                _logger.LogDebug("No history found for case ID: {CaseId}", caseId);
+                return Array.Empty<FieldHistoryGroup>();
+            }
 
-        return groups;
+            // Group by field name and order each group's entries by ChangedAt descending
+            var groups = history
+                .GroupBy(h => h.FieldName)
+                .Select(g => new FieldHistoryGroup
+                {
+                    FieldName = g.Key,
+                    FieldDisplayName = FormatFieldName(g.Key),
+                    Entries = g.OrderByDescending(h => h.ChangedAt).ToList()
+                })
+                .OrderBy(g => g.FieldDisplayName)
+                .ToList();
+
+            return groups;
+        }
+        catch (GeneratorHistoryApiUnauthorizedException ex)
+        {
+            _logger.LogWarning(ex, "Unauthorized access to case history for case ID: {CaseId}", caseId);
+            throw;
+        }
     }
 
     /// <inheritdoc/>
@@ -88,18 +102,27 @@ public class CaseHistoryService : ICaseHistoryService
             return Array.Empty<CaseFieldHistoryViewModel>();
         }
 
-        var history = await _caseStore.GetFieldHistoryAsync(caseId, fieldName, cancellationToken);
-        
-        if (history.Count == 0)
+        try
         {
-            _logger.LogDebug("No history found for case ID: {CaseId}, field: {FieldName}", 
-                caseId, fieldName);
-            return Array.Empty<CaseFieldHistoryViewModel>();
-        }
+            var history = await _historyApiClient.GetFieldHistoryAsync(caseId, fieldName, cancellationToken);
+            
+            if (history.Count == 0)
+            {
+                _logger.LogDebug("No history found for case ID: {CaseId}, field: {FieldName}", 
+                    caseId, fieldName);
+                return Array.Empty<CaseFieldHistoryViewModel>();
+            }
 
-        // Order by ChangedAt descending (newest first)
-        var orderedHistory = history.OrderByDescending(h => h.ChangedAt).ToList();
-        return CaseFieldHistoryViewModel.FromEntityList(orderedHistory);
+            // Order by ChangedAt descending (newest first)
+            var orderedHistory = history.OrderByDescending(h => h.ChangedAt).ToList();
+            return orderedHistory;
+        }
+        catch (GeneratorHistoryApiUnauthorizedException ex)
+        {
+            _logger.LogWarning(ex, "Unauthorized access to field history for case ID: {CaseId}, field: {FieldName}", 
+                caseId, fieldName);
+            throw;
+        }
     }
 
     /// <inheritdoc/>
@@ -109,8 +132,17 @@ public class CaseHistoryService : ICaseHistoryService
     {
         _logger.LogDebug("Loading available fields for case ID: {CaseId}", caseId);
 
-        var fieldNames = await _caseStore.GetHistoryFieldNamesAsync(caseId, cancellationToken);
-        return fieldNames;
+        try
+        {
+            var history = await _historyApiClient.GetCaseHistoryAsync(caseId, cancellationToken);
+            var fieldNames = history.Select(h => h.FieldName).Distinct().OrderBy(f => f).ToList();
+            return fieldNames;
+        }
+        catch (GeneratorHistoryApiUnauthorizedException ex)
+        {
+            _logger.LogWarning(ex, "Unauthorized access to case history for case ID: {CaseId}", caseId);
+            throw;
+        }
     }
 
     /// <inheritdoc/>
@@ -130,42 +162,50 @@ public class CaseHistoryService : ICaseHistoryService
             return null;
         }
 
-        // Get history for the field (already ordered newest first)
-        var history = await _caseStore.GetFieldHistoryAsync(caseId, fieldName, cancellationToken);
-        
-        if (history.Count == 0)
+        try
         {
-            _logger.LogDebug("No history found for diff selection: case {CaseId}, field: {FieldName}", 
+            // Get history for the field (already ordered newest first)
+            var history = await _historyApiClient.GetFieldHistoryAsync(caseId, fieldName, cancellationToken);
+            
+            if (history.Count == 0)
+            {
+                _logger.LogDebug("No history found for diff selection: case {CaseId}, field: {FieldName}", 
+                    caseId, fieldName);
+                return null;
+            }
+
+            // Order by ChangedAt descending (newest first) for deterministic index access
+            var viewModels = history.OrderByDescending(h => h.ChangedAt).ToList();
+
+            // Validate indices
+            if (indexA < 0 || indexA >= viewModels.Count || 
+                indexB < 0 || indexB >= viewModels.Count)
+            {
+                _logger.LogWarning("Invalid indices for diff selection: A={IndexA}, B={IndexB}, count={Count}", 
+                    indexA, indexB, viewModels.Count);
+                return null;
+            }
+
+            // Ensure A is older than B (indexA > indexB means A is older since newest first)
+            if (indexA <= indexB)
+            {
+                // Swap to ensure proper A/B ordering
+                (indexA, indexB) = (indexB, indexA);
+            }
+
+            return new FieldDiffSelection
+            {
+                FieldName = fieldName,
+                VersionA = viewModels[indexA],
+                VersionB = viewModels[indexB]
+            };
+        }
+        catch (GeneratorHistoryApiUnauthorizedException ex)
+        {
+            _logger.LogWarning(ex, "Unauthorized access to diff selection for case ID: {CaseId}, field: {FieldName}", 
                 caseId, fieldName);
-            return null;
+            throw;
         }
-
-        // Convert to view models for easier access
-        var viewModels = CaseFieldHistoryViewModel.FromEntityList(
-            history.OrderByDescending(h => h.ChangedAt).ToList());
-
-        // Validate indices
-        if (indexA < 0 || indexA >= viewModels.Count || 
-            indexB < 0 || indexB >= viewModels.Count)
-        {
-            _logger.LogWarning("Invalid indices for diff selection: A={IndexA}, B={IndexB}, count={Count}", 
-                indexA, indexB, viewModels.Count);
-            return null;
-        }
-
-        // Ensure A is older than B (indexA > indexB means A is older since newest first)
-        if (indexA <= indexB)
-        {
-            // Swap to ensure proper A/B ordering
-            (indexA, indexB) = (indexB, indexA);
-        }
-
-        return new FieldDiffSelection
-        {
-            FieldName = fieldName,
-            VersionA = viewModels[indexA],
-            VersionB = viewModels[indexB]
-        };
     }
 
     /// <inheritdoc/>
@@ -173,8 +213,16 @@ public class CaseHistoryService : ICaseHistoryService
         int caseId,
         CancellationToken cancellationToken = default)
     {
-        var history = await _caseStore.GetCaseHistoryAsync(caseId, cancellationToken);
-        return history.Count > 0;
+        try
+        {
+            var history = await _historyApiClient.GetCaseHistoryAsync(caseId, cancellationToken);
+            return history.Count > 0;
+        }
+        catch (GeneratorHistoryApiUnauthorizedException ex)
+        {
+            _logger.LogWarning(ex, "Unauthorized access to check history existence for case ID: {CaseId}", caseId);
+            throw;
+        }
     }
 
     private static string FormatFieldName(string fieldName)
