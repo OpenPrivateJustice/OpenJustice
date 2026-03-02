@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated March 1, 2026)
 
 **Core value:** Decentralized database of Brazilian historical crimes with full history tracking and confidence scores
-**Current focus:** Phase 1: Database & Configuration Foundation
+**Current focus:** Phase 5: Reader History UI & Polish (COMPLETE)
 
 ## Current Position
 
