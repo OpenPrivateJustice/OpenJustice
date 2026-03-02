@@ -39,6 +39,9 @@ builder.Services.AddSingleton<ICaseSearchService, CaseSearchService>();
 // Register case details service
 builder.Services.AddSingleton<ICaseDetailsService, CaseDetailsService>();
 
+// Register case history service
+builder.Services.AddSingleton<ICaseHistoryService, CaseHistoryService>();
+
 // Validate configuration at startup - this will fail fast if required values are missing
 var optionsValidation = builder.Services.BuildServiceProvider().GetService<IOptions<ReaderOptions>>();
 if (optionsValidation?.Value == null)
