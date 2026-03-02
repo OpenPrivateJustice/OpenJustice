@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 5 of 5 (Reader History UI & Polish)
-Plan: 1 of 3
-Status: In Progress
-Last activity: March 1, 2026 — Executing 05-01 (History Data Foundation)
+Plan: 2 of 3
+Status: Completed
+Last activity: March 1, 2026 — Completed 05-02 (Reader History UI)
 
-Progress: [▓▓▓▓▓▓▓▓▓▓] 85%
+Progress: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
-- Average duration: 8.2 min
-- Total execution time: 1.18 hours
+- Total plans completed: 12
+- Average duration: 8.0 min
+- Total execution time: 1.22 hours
 
 **By Phase:**
 
@@ -31,7 +31,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 85%
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | 2/2 | 21 min | 10.5 min |
 | 4. Reader Core | 3/4 | 17 min | 5.7 min |
-| 5. Reader History UI | - | - | - |
+| 5. Reader History UI | 2/3 | 7 min | 3.5 min |
 
 **Recent Trend:**
 - Plan 01-01: EF Core domain schema - 5 min
@@ -46,10 +46,12 @@ Progress: [▓▓▓▓▓▓▓▓▓▓] 85%
 - Plan 04-01: Reader core bootstrap - 4 min
 - Plan 04-02: Reader sync pipeline - 5 min
 - Plan 04-03: Reader search experience - 8 min
+- Plan 05-02: Reader history UI - 3 min
 
 *Updated after each plan completion*
 | Phase 04-reader-core P02 | 5 | 3 tasks | 8 files |
 | Phase 5 P1 | 2 | 2 tasks | 6 files |
+| Phase 5 P2 | 5 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -119,7 +121,7 @@ Key decisions from Phase 4 Plan 1:
 - Phase 2 complete - Generator core API implemented
 - Phase 3 complete - Generator history system implemented
 - Phase 4 in progress - Reader Core search experience complete (3/4 plans)
-- Phase 5 - Reader History UI & Polish
+- Phase 5 in progress - Reader History UI & Polish (2/3 plans complete)
 
 ### Blockers/Concerns
 
@@ -128,7 +130,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 1, 2026
-Stopped at: Completed 04-01-PLAN.md execution
+Stopped at: Completed 05-02-PLAN.md execution
 Resume file: None
 
 ## Requirements Status (DB)
@@ -195,3 +197,7 @@ Resume file: None
 - [x] RDR-11: Sort results
 - [x] RDR-12: Paginate results
 - [x] RDR-13: Combined filter AND conditions
+- [x] RDR-21: Reader case history timeline display
+- [x] RDR-22: Reader A/B diff comparison view
+- [x] RDR-23: Reader confidence score visualization
+- [x] RDR-27: Reader breadcrumbs and navigation polish
