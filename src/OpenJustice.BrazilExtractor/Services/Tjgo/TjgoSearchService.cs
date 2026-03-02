@@ -152,22 +152,32 @@ public class TjgoSearchService : ITjgoSearchService
             _logger.LogInformation("Search completed: hasResults={HasResults}, recordCount={Count}",
                 hasResults, recordCount);
 
-            // Extract PDF links from result page
-            var pdfLinks = await ExtractPdfLinksAsync(page, resultUrl);
+            // ============================================
+            // FULL PAGINATION TRAVERSAL - Task 1
+            // ============================================
+            // Extract PDF links from all result pages by traversing pagination
+            var paginationResult = await ExtractPdfLinksWithPaginationAsync(page, resultUrl, cancellationToken);
 
-            _logger.LogInformation("PDF link extraction: {Count} total candidates, {Unique} unique after dedup, capped={WasCapped}",
-                pdfLinks.TotalSeen, pdfLinks.Unique.Count, pdfLinks.WasCapped);
+            _logger.LogInformation(
+                "PDF link extraction (full pagination): {TotalPages} pages traversed, {TotalSeen} total candidates, {Unique} unique links, capped={WasCapped}",
+                paginationResult.PagesTraversed,
+                paginationResult.TotalSeen,
+                paginationResult.Unique.Count,
+                paginationResult.WasCapped);
 
             var queryEndTime = DateTime.UtcNow;
             
+            // Create result with aggregated multi-page links and pagination telemetry
             return TjgoSearchResult.SuccessfulWithPdfLinks(
                 resultUrl,
                 recordCount,
-                pdfLinks.Unique,
-                pdfLinks.TotalSeen,
+                paginationResult.Unique,
+                paginationResult.TotalSeen,
                 _options.MaxResultsPerQuery,
                 query,
-                pageIndex: 0);
+                pageIndex: 0,
+                pagesTraversed: paginationResult.PagesTraversed,
+                finalPageIndex: paginationResult.FinalPageIndex);
         }
         catch (PlaywrightException ex)
         {
@@ -199,14 +209,221 @@ public class TjgoSearchService : ITjgoSearchService
     }
 
     /// <summary>
-    /// Extracts PDF publication links from the result page.
+    /// Extracts PDF links from all result pages by traversing pagination.
+    /// Implements full pagination loop with robust next-page detection and cadence enforcement.
+    /// </summary>
+    private async Task<PaginationHarvestResult> ExtractPdfLinksWithPaginationAsync(
+        IPage page, 
+        string baseUrl, 
+        CancellationToken cancellationToken)
+    {
+        var allLinks = new List<TjgoPublicationPdfLink>();
+        var seenUrls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        int totalSeen = 0;
+        int pageIndex = 0;
+        int pagesTraversed = 0;
+
+        while (true)
+        {
+            pagesTraversed++;
+            _logger.LogDebug("Processing result page {CurrentPage} (total traversed: {Total})", 
+                pageIndex + 1, pagesTraversed);
+
+            // Extract PDF links from current page
+            var pageResult = await ExtractPdfLinksFromCurrentPageAsync(page, baseUrl, pageIndex, seenUrls);
+            
+            totalSeen += pageResult.NewLinksExtracted;
+            allLinks.AddRange(pageResult.Unique);
+            
+            _logger.LogDebug(
+                "Page {Page}: {NewLinks} new links (cumulative unique: {Unique}, total seen: {Total})",
+                pageIndex + 1, pageResult.NewLinksExtracted, allLinks.Count, totalSeen);
+
+            // Check if we've reached the max results cap
+            if (allLinks.Count >= _options.MaxResultsPerQuery)
+            {
+                _logger.LogDebug("Reached max results cap: {Max}", _options.MaxResultsPerQuery);
+                break;
+            }
+
+            // Try to find and click the next page button
+            var nextPageLocator = await FindNextPageLocatorAsync(page);
+            
+            if (nextPageLocator == null)
+            {
+                _logger.LogDebug("No next page found, pagination complete after {Pages} pages", pagesTraversed);
+                break;
+            }
+
+            // Wait QueryIntervalSeconds before each pagination navigation (EXTR-07)
+            _logger.LogDebug("Waiting {Interval}s before navigating to next page", _options.QueryIntervalSeconds);
+            await Task.Delay(TimeSpan.FromSeconds(_options.QueryIntervalSeconds), cancellationToken);
+
+            // Click the next page button
+            try
+            {
+                await nextPageLocator.ClickAsync();
+                
+                // Wait for page to load after navigation
+                await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+                
+                // Small additional wait for dynamic content
+                await Task.Delay(500, cancellationToken);
+                
+                pageIndex++;
+                _logger.LogDebug("Navigated to page {PageIndex}", pageIndex + 1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to click next page button, ending pagination");
+                break;
+            }
+        }
+
+        return new PaginationHarvestResult
+        {
+            Unique = allLinks,
+            TotalSeen = totalSeen,
+            WasCapped = allLinks.Count >= _options.MaxResultsPerQuery,
+            PagesTraversed = pagesTraversed,
+            FinalPageIndex = pageIndex
+        };
+    }
+
+    /// <summary>
+    /// Finds the next page locator using multiple UI patterns.
+    /// </summary>
+    private async Task<ILocator?> FindNextPageLocatorAsync(IPage page)
+    {
+        // Multiple selector patterns for next-page detection
+        var nextPageSelectors = new[]
+        {
+            // Common next/forward arrow patterns
+            "a[rel='next']",
+            "a.next",
+            "a.nextPage",
+            "a.pagination-next",
+            "a[title*='Próxima']",
+            "a[title*='próxima']",
+            "a[title*='Next']",
+            "a[title*='next']",
+            // Arrow symbols
+            "a:has-text('>')",
+            "a:has-text('>>')",
+            "a:has-text('»')",
+            "a:has-text('›')",
+            // Numbered pagination - look for active page's next sibling
+            ".pagination a:not(.active)",
+            ".paginator a:not(.active)",
+            ".pager a:not(.active)",
+            // Portuguese labels
+            "a:has-text('Próxima')",
+            "a:has-text('Próximo')",
+            "a:has-text('Avançar')",
+            // Generic patterns
+            "nav.pagination a",
+            ".pagination nav a"
+        };
+
+        foreach (var selector in nextPageSelectors)
+        {
+            try
+            {
+                var locator = page.Locator(selector);
+                var count = await locator.CountAsync();
+                
+                if (count > 0)
+                {
+                    // For numbered pagination, find the link after the current page
+                    if (selector.Contains(".pagination") || selector.Contains(".paginator") || selector.Contains(".pager"))
+                    {
+                        // Try to find the next page number link
+                        var currentPageLinks = page.Locator(".pagination .active, .paginator .active, .pager .active");
+                        if (await currentPageLinks.CountAsync() > 0)
+                        {
+                            // Get the next sibling link
+                            var allLinks = page.Locator(selector);
+                            var totalLinks = await allLinks.CountAsync();
+                            for (int i = 0; i < totalLinks; i++)
+                            {
+                                var link = allLinks.Nth(i);
+                                var isActive = await link.EvaluateAsync<bool>("el => el.classList.contains('active')");
+                                if (!isActive)
+                                {
+                                    // Make sure this isn't a "previous" link
+                                    var text = await link.TextContentAsync();
+                                    if (text != null && !text.ToLowerInvariant().Contains("ante"))
+                                    {
+                                        _logger.LogDebug("Found next page via numbered pagination: selector={Selector}", selector);
+                                        return link;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Return the first matching locator
+                    _logger.LogDebug("Found next page: selector={Selector}, count={Count}", selector, count);
+                    return locator.First;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogTrace(ex, "Selector {Selector} not found or error", selector);
+            }
+        }
+
+        // If no explicit next button, try to find page number links
+        try
+        {
+            // Look for numbered pagination (page 2, 3, etc.)
+            var numberedPattern = page.Locator("a[href*='page'], a[href*='pagina'], .pagination a:not([href*='page'])");
+            var count = await numberedPattern.CountAsync();
+            
+            if (count > 1) // More than 1 means there's a page 2+
+            {
+                // Find the first non-active numbered link
+                for (int i = 0; i < count; i++)
+                {
+                    var link = numberedPattern.Nth(i);
+                    var text = await link.TextContentAsync();
+                    if (text != null && int.TryParse(text.Trim(), out int pageNum) && pageNum > 1)
+                    {
+                        _logger.LogDebug("Found next page via numbered link: {PageNum}", pageNum);
+                        return link;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogTrace(ex, "Could not find numbered pagination");
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Extracts PDF links from the current page (single-page extraction without pagination).
     /// </summary>
     private async Task<PdfLinkHarvestResult> ExtractPdfLinksAsync(IPage page, string baseUrl)
     {
-        var links = new List<TjgoPublicationPdfLink>();
         var seenUrls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        return await ExtractPdfLinksFromCurrentPageAsync(page, baseUrl, 0, seenUrls);
+    }
+
+    /// <summary>
+    /// Extracts PDF links from the current page, avoiding duplicates from previous pages.
+    /// </summary>
+    private async Task<PdfLinkHarvestResult> ExtractPdfLinksFromCurrentPageAsync(
+        IPage page, 
+        string baseUrl, 
+        int sourcePageIndex,
+        HashSet<string> previouslySeenUrls)
+    {
+        var links = new List<TjgoPublicationPdfLink>();
         int totalSeen = 0;
-        int sourcePageIndex = 0;
+        int newLinksExtracted = 0;
 
         try
         {
@@ -239,14 +456,15 @@ public class TjgoSearchService : ITjgoSearchService
                             // Normalize URL to absolute
                             var normalizedUrl = NormalizeUrl(href, baseUrl);
                             
-                            // Skip duplicates by normalized URL
-                            if (seenUrls.Contains(normalizedUrl))
+                            // Skip duplicates by normalized URL (across all pages)
+                            if (previouslySeenUrls.Contains(normalizedUrl))
                             {
                                 _logger.LogDebug("Skipping duplicate URL: {Url}", normalizedUrl);
                                 continue;
                             }
 
-                            seenUrls.Add(normalizedUrl);
+                            previouslySeenUrls.Add(normalizedUrl);
+                            newLinksExtracted++;
 
                             // Try to get display text
                             var displayText = await TryGetDisplayTextAsync(element);
@@ -299,10 +517,12 @@ public class TjgoSearchService : ITjgoSearchService
 
                         var normalizedUrl = NormalizeUrl(href, baseUrl);
                         
-                        if (seenUrls.Contains(normalizedUrl))
+                        if (previouslySeenUrls.Contains(normalizedUrl))
                             continue;
 
-                        seenUrls.Add(normalizedUrl);
+                        previouslySeenUrls.Add(normalizedUrl);
+                        newLinksExtracted++;
+                        
                         var displayText = await TryGetDisplayTextAsync(element);
 
                         links.Add(TjgoPublicationPdfLink.Create(
@@ -331,7 +551,8 @@ public class TjgoSearchService : ITjgoSearchService
         {
             Unique = links,
             TotalSeen = totalSeen,
-            WasCapped = links.Count >= _options.MaxResultsPerQuery
+            WasCapped = links.Count >= _options.MaxResultsPerQuery,
+            NewLinksExtracted = newLinksExtracted
         };
     }
 
@@ -497,4 +718,41 @@ internal class PdfLinkHarvestResult
     /// Whether the result was capped at MaxResultsPerQuery.
     /// </summary>
     public bool WasCapped { get; set; }
+
+    /// <summary>
+    /// Number of new links extracted from this page (since last page).
+    /// </summary>
+    public int NewLinksExtracted { get; set; }
+}
+
+/// <summary>
+/// Result of full pagination harvesting operation.
+/// Aggregates links across all traversed pages.
+/// </summary>
+internal class PaginationHarvestResult
+{
+    /// <summary>
+    /// Unique PDF links after de-duplication across all pages.
+    /// </summary>
+    public List<TjgoPublicationPdfLink> Unique { get; set; } = new();
+
+    /// <summary>
+    /// Total number of candidates seen (before de-dup) across all pages.
+    /// </summary>
+    public int TotalSeen { get; set; }
+
+    /// <summary>
+    /// Whether the result was capped at MaxResultsPerQuery.
+    /// </summary>
+    public bool WasCapped { get; set; }
+
+    /// <summary>
+    /// Total number of pages traversed during pagination.
+    /// </summary>
+    public int PagesTraversed { get; set; }
+
+    /// <summary>
+    /// The final page index (0-based) that was reached.
+    /// </summary>
+    public int FinalPageIndex { get; set; }
 }

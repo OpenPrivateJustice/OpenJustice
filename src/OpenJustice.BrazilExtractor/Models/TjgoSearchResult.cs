@@ -93,6 +93,16 @@ public class TjgoSearchResult
     public int PageIndex { get; set; }
 
     /// <summary>
+    /// Total number of pages traversed during full pagination (includes initial page + all subsequent pages).
+    /// </summary>
+    public int PagesTraversed { get; set; }
+
+    /// <summary>
+    /// The final page index (0-based) that was reached during pagination.
+    /// </summary>
+    public int FinalPageIndex { get; set; }
+
+    /// <summary>
     /// Download result containing file paths and statistics.
     /// </summary>
     public PdfDownloadBatchResult? DownloadResult { get; set; }
@@ -137,7 +147,9 @@ public class TjgoSearchResult
         int totalLinksSeen,
         int maxResultsPerQuery,
         TjgoSearchQuery? query = null,
-        int pageIndex = 0)
+        int pageIndex = 0,
+        int pagesTraversed = 1,
+        int finalPageIndex = 0)
     {
         var wasCapped = pdfLinks.Count >= maxResultsPerQuery;
         var now = DateTime.UtcNow;
@@ -157,7 +169,9 @@ public class TjgoSearchResult
             MaxResultsPerQuery = maxResultsPerQuery,
             QueryExecutionStartUtc = now,
             QueryExecutionEndUtc = now,
-            PageIndex = pageIndex
+            PageIndex = pageIndex,
+            PagesTraversed = pagesTraversed,
+            FinalPageIndex = finalPageIndex
         };
     }
 
