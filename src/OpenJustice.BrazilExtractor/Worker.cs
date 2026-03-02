@@ -103,6 +103,34 @@ public class Worker : BackgroundService
                         }
                     }
 
+                    // Log OCR summary (EXTR-10, EXTR-12)
+                    if (result.OcrResult != null)
+                    {
+                        var ocr = result.OcrResult;
+                        _logger.LogInformation(
+                            "=== OCR summary: Attempted: {Attempted}, Succeeded: {Succeeded}, Failed: {Failed}, Pages: {Pages}, Characters: {Chars} ===",
+                            ocr.TotalCount,
+                            ocr.SucceededCount,
+                            ocr.FailedCount,
+                            ocr.TotalPages,
+                            ocr.TotalCharacters);
+
+                        if (ocr.SucceededCount > 0)
+                        {
+                            _logger.LogInformation(
+                                "=== OCR output: .txt files saved alongside PDFs in download directory ===");
+                        }
+
+                        if (ocr.FailedCount > 0)
+                        {
+                            _logger.LogWarning(
+                                "=== OCR failures: {Failed}/{Attempted} PDFs could not be processed, see failure log: {FailureLog} ===",
+                                ocr.FailedCount,
+                                ocr.TotalCount,
+                                _options.OcrFailureLogPath);
+                        }
+                    }
+
                     // Log query timing for cadence verification
                     _logger.LogInformation(
                         "=== Query timing: Start: {Start:HH:mm:ss}Z, End: {End:HH:mm:ss}Z, Duration: {Duration:F2}s ===",

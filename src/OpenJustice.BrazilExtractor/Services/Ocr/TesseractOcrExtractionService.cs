@@ -19,6 +19,7 @@ public class TesseractOcrExtractionService : IOcrExtractionService
     private readonly BrazilExtractorOptions _options;
     private readonly ILogger<TesseractOcrExtractionService> _logger;
     private readonly Regex _replacementCharRegex = new(@"[\uFFFD\u0020\u0000]", RegexOptions.Compiled);
+    private readonly object _failureLogLock = new();
 
     public TesseractOcrExtractionService(
         IOptions<BrazilExtractorOptions> options,
@@ -32,6 +33,10 @@ public class TesseractOcrExtractionService : IOcrExtractionService
         {
             Directory.CreateDirectory(_options.OcrOutputPath);
         }
+
+        // Log the failure log path for operator visibility
+        _logger.LogInformation("OCR output path: {OcrPath}", _options.OcrOutputPath);
+        _logger.LogInformation("OCR failure log path: {FailureLogPath}", _options.OcrFailureLogPath);
     }
 
     /// <inheritdoc />
@@ -69,6 +74,10 @@ public class TesseractOcrExtractionService : IOcrExtractionService
             else
             {
                 result.FailedCount++;
+                
+                // Append to failure log for operator visibility
+                AppendFailureToLog(pdfPath, extractionResult);
+                
                 _logger.LogWarning("OCR failed for {PdfPath}: {Error}",
                     pdfPath, extractionResult.ErrorMessage);
             }
@@ -227,25 +236,52 @@ public class TesseractOcrExtractionService : IOcrExtractionService
     }
 
     /// <summary>
-    /// Saves extracted text to the output directory.
+    /// Saves extracted text to the same directory as the PDF with same base filename.
+    /// Uses Path.ChangeExtension to produce .txt from .pdf
     /// </summary>
     private async Task SaveExtractedTextAsync(string pdfPath, string text)
     {
-        var fileName = Path.GetFileNameWithoutExtension(pdfPath);
-        var outputFileName = $"{fileName}.txt";
+        // Use Path.ChangeExtension to create same-base .txt filename
+        var txtPath = Path.ChangeExtension(pdfPath, ".txt");
+
+        // Write the extracted text to the same directory as the PDF
+        await File.WriteAllTextAsync(txtPath, text, Encoding.UTF8);
         
-        // Create a subdirectory based on date if needed
-        var dateDir = DateTime.Now.ToString("yyyy-MM-dd");
-        var dateOutputPath = Path.Combine(_options.OcrOutputPath, dateDir);
-        if (!Directory.Exists(dateOutputPath))
+        _logger.LogDebug("Saved extracted text to: {OutputPath}", txtPath);
+    }
+
+    /// <summary>
+    /// Appends a failure entry to the OCR failure log file.
+    /// Each entry includes: timestamp, PDF path, language, reason, exception type.
+    /// </summary>
+    private void AppendFailureToLog(string pdfPath, OcrExtractionResult result)
+    {
+        try
         {
-            Directory.CreateDirectory(dateOutputPath);
+            lock (_failureLogLock)
+            {
+                var timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                var reason = result.FailureReason?.ToString() ?? "Unknown";
+                var errorMessage = result.ErrorMessage ?? "No error message";
+                var language = _options.OcrLanguage;
+
+                var logEntry = $"[{timestamp}] PDF: {pdfPath} | Language: {language} | Reason: {reason} | Error: {errorMessage}{Environment.NewLine}";
+
+                // Ensure the log file directory exists
+                var logDir = Path.GetDirectoryName(_options.OcrFailureLogPath);
+                if (!string.IsNullOrEmpty(logDir) && !Directory.Exists(logDir))
+                {
+                    Directory.CreateDirectory(logDir);
+                }
+
+                File.AppendAllText(_options.OcrFailureLogPath, logEntry);
+                _logger.LogDebug("Appended OCR failure to log: {LogPath}", _options.OcrFailureLogPath);
+            }
         }
-
-        var outputPath = Path.Combine(dateOutputPath, outputFileName);
-
-        await File.WriteAllTextAsync(outputPath, text, Encoding.UTF8);
-        _logger.LogDebug("Saved extracted text to: {OutputPath}", outputPath);
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to append OCR failure to log for {PdfPath}", pdfPath);
+        }
     }
 
     /// <summary>
