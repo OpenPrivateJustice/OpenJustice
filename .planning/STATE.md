@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 12 of 13 (PDF Acquisition Pipeline)
-Plan: 1 of 2 in current phase
-Status: In Progress
-Last activity: 2026-03-02 - Completed 12-01 PDF link capture contract
+Plan: 2 of 2 in current phase
+Status: Completed
+Last activity: 2026-03-02 - Completed 12-02 PDF acquisition pipeline
 
-Progress: [████████░░░░░░░░░░░░░░] 15% (Phase 12 started)
+Progress: [██████████░░░░░░░░░░░] 31% (Phase 12 complete)
 
 ## Performance Metrics
 
@@ -33,7 +33,7 @@ Progress: [████████░░░░░░░░░░░░░░] 1
 **Recent Trend:**
 - Last completed sequence: Phase 11 -> Phase 12
 - Trend: Stable
-| Phase 12-pdf-acquisition-pipeline P01 | 5 | 3 tasks | 4 files |
+| Phase 12-pdf-acquisition-pipeline P01+P02 | 8 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -51,10 +51,12 @@ Progress: [████████░░░░░░░░░░░░░░] 1
 - [12-01] Multiple CSS selector patterns for PDF detection (more resilient to portal changes)
 - [12-01] Added fallback generic anchor scan when specific selectors fail
 - [12-01] URL normalization preserves relative links from TJGO portal
+- [12-02] Used singleton HttpClient for PDF downloads (proper disposal pattern)
+- [12-02] Filename format: tjgo_{date}_{hash}_{sequence}.pdf for collision safety
+- [12-02] Query cadence enforced at job level, not service level (simpler, more testable)
 
 ### Pending Todos
 
-- Complete Phase 12-02 for PDF download persistence
 - Start Phase 13 planning for OCR text extraction
 
 ### Blockers/Concerns
@@ -64,5 +66,5 @@ Progress: [████████░░░░░░░░░░░░░░] 1
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 12-01-PLAN.md (PDF link capture contract)
+Stopped at: Completed 12-02-PLAN.md (PDF acquisition pipeline)
 Resume file: None

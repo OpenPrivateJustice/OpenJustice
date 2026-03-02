@@ -16,7 +16,7 @@ v2.0 delivers a deterministic TJGO extraction pipeline that can run locally, cap
 - Decimal phases (11.1, 12.1): Urgent insertions (marked with INSERTED)
 
 - [x] **Phase 11: Extractor Foundation and TJGO Search** - Stand up the worker, configuration, and criminal/date-filtered TJGO query execution. (3/3 plans complete)
-- [ ] **Phase 12: PDF Acquisition Pipeline** - Persist result PDFs with deterministic limits and throttled request cadence.
+- [x] **Phase 12: PDF Acquisition Pipeline** - Persist result PDFs with deterministic limits and throttled request cadence.
 - [ ] **Phase 13: OCR Text Extraction and Quality Signals** - Convert PDFs to Portuguese text artifacts and expose extraction failures for review.
 
 ## Phase Details
@@ -47,7 +47,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 12-01-PLAN.md - Capture deterministic PDF links from TJGO result pages with typed extraction contracts. (Complete: 2026-03-02)
-- [ ] 12-02-PLAN.md - Download harvested PDFs with query-level cadence and collision-safe local persistence.
+- [x] 12-02-PLAN.md - Download harvested PDFs with query-level cadence and collision-safe local persistence. (Complete: 2026-03-02)
 
 ### Phase 13: OCR Text Extraction and Quality Signals
 **Goal**: The extractor produces reviewable Portuguese text artifacts from downloaded PDFs and surfaces OCR quality failures.
@@ -65,5 +65,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 11. Extractor Foundation and TJGO Search | 3/3 | Complete    | 2026-03-02 |
-| 12. PDF Acquisition Pipeline | 1/2 | In Progress | 2026-03-02 |
+| 12. PDF Acquisition Pipeline | 2/2 | Complete    | 2026-03-02 |
 | 13. OCR Text Extraction and Quality Signals | 0/TBD | Not started | - |
