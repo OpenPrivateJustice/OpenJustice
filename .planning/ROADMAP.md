@@ -17,7 +17,7 @@ v2.0 delivers a deterministic TJGO extraction pipeline that can run locally, cap
 
 - [x] **Phase 11: Extractor Foundation and TJGO Search** - Stand up the worker, configuration, and criminal/date-filtered TJGO query execution. (3/3 plans complete)
 - [x] **Phase 12: PDF Acquisition Pipeline** - Persist result PDFs with deterministic limits and throttled request cadence.
-- [ ] **Phase 13: OCR Text Extraction and Quality Signals** - Convert PDFs to Portuguese text artifacts and expose extraction failures for review.
+- [x] **Phase 13: OCR Text Extraction and Quality Signals** - Convert PDFs to Portuguese text artifacts and expose extraction failures for review. (completed 2026-03-02)
 
 ## Phase Details
 
