@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated March 1, 2026)
 ## Current Position
 
 Phase: 10 of 10 (Wire Reader to Generator History API)
-Plan: 1 of 2
+Plan: 2 of 2
 Status: Completed
-Last activity: March 2, 2026 — Completed 10-01 (Reader-side API integration foundation with auth)
+Last activity: March 2, 2026 — Completed 10-02 (Switch Reader history to live Generator API)
 
-Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 90%
+Progress: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
-- Average duration: 7.7 min
-- Total execution time: 1.30 hours
+- Total plans completed: 16
+- Average duration: 7.4 min
+- Total execution time: 1.32 hours
 
 **By Phase:**
 
@@ -32,7 +32,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 90%
 | 7. Configuration System | 2/2 | 5 min | 2.5 min |
 | 8. Wire Torrent Import Pipeline | 1/1 | 5 min | 5.0 min |
 | 9. Fix History Capture on Create | 1/1 | 1 min | 1.0 min |
-| 10. Wire Reader to Generator History API | 1/2 | 4 min | 4.0 min |
+| 10. Wire Reader to Generator History API | 2/2 | 6 min | 3.0 min |
 | 2. Generator Core | 5/5 | 45 min | 9.0 min |
 | 3. Generator History | 2/2 | 21 min | 10.5 min |
 | 4. Reader Core | 3/4 | 17 min | 5.7 min |
@@ -58,6 +58,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 90%
 - Plan 08-01: Generator SQL export hardened for Reader compatibility - 5 min
 - Plan 09-01: Initial field history capture on case creation - 1 min
 - Plan 10-01: Reader-side API integration foundation with auth - 4 min
+- Plan 10-02: Switch Reader history to live Generator API - 2 min
 
 *Updated after each plan completion*
 | Phase 04-reader-core P02 | 5 | 3 tasks | 8 files |
@@ -133,6 +134,9 @@ Key decisions from Phase 4 Plan 1:
 - [Phase 10-01]: Added GeneratorHistoryApiOptions with fail-fast validation for BaseUrl, AccessToken, LoginUrl
 - [Phase 10-01]: Created IGeneratorHistoryApiClient with Bearer token auth and explicit 401 handling
 - [Phase 10-01]: Used IHttpClientFactory for proper connection pooling in Blazor WASM
+- [Phase 10-02]: CaseHistoryService exclusively uses GeneratorHistoryApiClient - no more local SqliteCaseStore history queries
+- [Phase 10-02]: 401 responses show explicit session-expired UI instead of empty history
+- [Phase 10-02]: HasHistory check in CaseDetails shows history link if case exists locally, even if API auth fails
 
 ### Pending Todos
 
@@ -143,7 +147,7 @@ Key decisions from Phase 4 Plan 1:
 - Phase 5 complete - Reader History UI & Polish (all 3 plans done)
 - Phase 7 complete - Configuration System & Database Indexes
 - Phase 8 complete - Wire Torrent Import Pipeline (Plan 1 done)
-- Phase 10 in progress - Wire Reader to Generator History API (Plan 1 of 2 done)
+- Phase 10 complete - Wire Reader to Generator History API (all 2 plans done)
 
 ### Requirements Status (Configuration)
 
@@ -161,7 +165,7 @@ None yet.
 ## Session Continuity
 
 Last session: March 2, 2026
-Stopped at: Completed 10-01-PLAN.md execution (Reader-side API integration foundation with auth)
+Stopped at: Completed 10-02-PLAN.md execution (Switch Reader history to live Generator API)
 Resume file: None
 
 ## Requirements Status (DB)

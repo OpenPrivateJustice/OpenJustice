@@ -248,7 +248,7 @@ Plans:
 
 Plans:
 - [x] 10-01-PLAN.md — Add authenticated Generator history API client and configuration (COMPLETED)
-- [ ] 10-02-PLAN.md — Refactor Reader history service/pages to consume live Generator data
+- [x] 10-02-PLAN.md — Refactor Reader history service/pages to consume live Generator data (COMPLETED)
 
 **Gap Closure:** Closes integration gap (Phase 3 → Phase 4 history consumption), flow gap "Reader case view → confidence + timeline"
 
@@ -267,7 +267,7 @@ Plans:
 | 7. Configuration System & Database Indexes | 0/0 | Complete    | 2026-03-02 |
 | 8. Wire Torrent Import Pipeline | 1/1 | Complete | 2026-03-02 |
 | 9. Fix History Capture on Create | 1/1 | Complete | 2026-03-02 |
-| 10. Wire Reader to Generator History API | 1/2 | In Progress | 2026-03-02 |
+| 10. Wire Reader to Generator History API | 2/2 | Complete | 2026-03-02 |
 
 ---
 
