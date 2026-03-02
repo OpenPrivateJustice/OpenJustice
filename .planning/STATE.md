@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated March 1, 2026)
+See: .planning/PROJECT.md (updated March 2, 2026)
 
 **Core value:** Decentralized database of Brazilian historical crimes with full history tracking and confidence scores
-**Current focus:** Phase 9: Fix History Capture on Create (IN PROGRESS)
+**Current focus:** v2.0 BrazilExtractor - Defining requirements
 
 ## Current Position
 
-Phase: 10 of 10 (Wire Reader to Generator History API)
-Plan: 2 of 2
-Status: Completed
-Last activity: March 2, 2026 — Completed 10-02 (Switch Reader history to live Generator API)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: March 2, 2026 — Milestone v2.0 BrazilExtractor started
 
-Progress: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
+Progress: [░░░░░░░░░░░░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -140,14 +140,8 @@ Key decisions from Phase 4 Plan 1:
 
 ### Pending Todos
 
-- Phase 1 complete - Database foundation laid
-- Phase 2 complete - Generator core API implemented
-- Phase 3 complete - Generator history system implemented
-- Phase 4 complete - Reader Core search experience complete
-- Phase 5 complete - Reader History UI & Polish (all 3 plans done)
-- Phase 7 complete - Configuration System & Database Indexes
-- Phase 8 complete - Wire Torrent Import Pipeline (Plan 1 done)
-- Phase 10 complete - Wire Reader to Generator History API (all 2 plans done)
+- v1.0 complete - Full MVP shipped
+- v2.0 in progress - BrazilExtractor foundation
 
 ### Requirements Status (Configuration)
 
@@ -239,3 +233,13 @@ Resume file: None
 - [x] RDR-25: Error handling with actionable messages (retry, navigation options)
 - [x] RDR-26: Responsive layouts for mobile and desktop
 - [x] RDR-27: Reader breadcrumbs and navigation polish
+
+## Requirements Status (Extractor)
+
+- [ ] EXTR-01: Create OpenJustice.BrazilExtractor project in solution
+- [ ] EXTR-02: Playwright scraping of TJGO publicacao search
+- [ ] EXTR-03: PDF download from search results
+- [ ] EXTR-04: Local OCR text extraction from PDFs
+- [ ] EXTR-05: Text analysis for criminal case identification
+- [ ] EXTR-06: Filter for "trânsito em julgado" cases
+- [ ] EXTR-07: Queue cases for Generator.Web admin evaluation

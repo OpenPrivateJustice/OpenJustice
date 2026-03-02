@@ -10,7 +10,17 @@ A decentralized database of Brazilian historical crimes with full history tracki
 
 ---
 
-## Current State (v1.0 MVP Shipped)
+## Current Milestone: v2.0 BrazilExtractor
+
+**Goal:** Create foundation for automated Brazilian court document extraction and criminal case identification.
+
+**Target features:**
+- Playwright scraping of TJGO publicacao page (projudi.tjgo.jus.br)
+- PDF download from search results (15 per query, 30s interval)
+- Local OCR to extract text from PDFs → .txt files
+- Text analysis to identify criminal cases (crimes hediondos, homicide, traffic accidents as murder)
+- Filter cases with "trânsito em julgado" (final judgment)
+- Queue selected cases for admin evaluation in Generator.Web
 
 **Shipped:** 2026-03-02
 **Components:**
@@ -61,25 +71,22 @@ A decentralized database of Brazilian historical crimes with full history tracki
 - ✓ CFG-01 through CFG-06: Configuration system — v1.0
 - ✓ DB-16: Composite indexes — v1.0
 
-### Active (Next Milestone)
+### Active (v2.0)
 
-- [ ] GEN-01 through GEN-03: Case API validation
-- [ ] GEN-06 through GEN-08: Curation workflow, verified marker, audit log
-- [ ] GEN-12, GEN-13: Evidence upload, tags
-- [ ] GEN-14: Reference code generation (ATRO-YYYY-NNNN)
-- [ ] GEN-16, GEN-17: Snapshot versioning, full config
-- [ ] RDR-01: Blazor WASM executable
-- [ ] RDR-05 through RDR-13: Search, filters, pagination, sorting
-- [ ] RDR-21: Confidence display
-- [ ] RDR-24 through RDR-27: Responsive UI, loading states, error handling
-- [ ] DB-01 through DB-15, DB-17 through DB-22: Database schema completion
+- [ ] EXTR-01: Create OpenJustice.BrazilExtractor project in solution
+- [ ] EXTR-02: Playwright scraping of TJGO publicacao search (projudi.tjgo.jus.br)
+- [ ] EXTR-03: PDF download from search results (15/query, 30s interval)
+- [ ] EXTR-04: Local OCR text extraction from PDFs → .txt files
+- [ ] EXTR-05: Text analysis for criminal case identification (crimes hediondos, homicide, traffic as murder)
+- [ ] EXTR-06: Filter for "trânsito em julgado" (final judgment) cases
+- [ ] EXTR-07: Queue cases for Generator.Web admin evaluation
 
 ### Out of Scope
 
-- API pública no MVP — será implementada em v2
-- Sistema de autenticação — acesso aberto
-- Conteúdo de vídeo completo — feature futura
-- Funcionalidade de seed torrent no MVP — apenas download
+- Other Brazilian courts (TJ/SP, TJ/RJ, TRFs) - future phases
+- Real-time/streaming monitoring - batch processing only
+- Automatic case registration - manual admin approval required
+- Multi-country extractors - Brazil first, then expand
 
 ---
 
@@ -116,4 +123,4 @@ OpenJustice é uma base de dados descentralizada de registros históricos de cri
 
 ---
 
-*Last updated: March 2, 2026 after v1.0 milestone*
+*Last updated: March 2, 2026 after v2.0 milestone started*
