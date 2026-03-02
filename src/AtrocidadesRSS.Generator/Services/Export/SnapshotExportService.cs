@@ -259,6 +259,14 @@ public class SnapshotExportService : ISnapshotExportService
         return false;
     }
 
+    /// <summary>
+    /// Builds the pg_dump arguments for exporting the database.
+    /// Reader Contract: This method produces INSERT-based SQL output (not COPY-only)
+    /// to ensure compatibility with Reader's SqliteCaseStore SQL parser.
+    /// The --inserts flag produces individual INSERT statements that can be
+    /// parsed and imported by the Reader import pipeline.
+    /// </summary>
+    /// <returns>pg_dump command arguments string.</returns>
     private string BuildPgDumpArguments()
     {
         // Build connection string from options or use direct connection string
@@ -279,6 +287,7 @@ public class SnapshotExportService : ISnapshotExportService
         }
 
         // Build pg_dump command arguments
+        // Reader Contract: Using --inserts for INSERT-based SQL output compatible with Reader import
         var sb = new StringBuilder();
         
         // Add connection parameters
@@ -293,10 +302,25 @@ public class SnapshotExportService : ISnapshotExportService
         sb.Append("--no-owner ");
         sb.Append("--no-privileges ");
         
+        // Reader Contract: Explicit INSERT output for SQL parser compatibility
+        // This produces "INSERT INTO tablename VALUES (...)" statements instead of COPY
+        // which allows Reader's SqliteCaseStore to parse and import the data
+        sb.Append("--inserts ");
+        
         // Output format (plain SQL)
         sb.Append("-f "); // file output follows
 
         return sb.ToString().Trim();
+    }
+
+    /// <summary>
+    /// Builds the pg_dump arguments for testing purposes.
+    /// Exposes the argument composition for contract verification.
+    /// </summary>
+    /// <returns>pg_dump command arguments string.</returns>
+    public string BuildPgDumpArgumentsForTest()
+    {
+        return BuildPgDumpArguments();
     }
 
     private async Task<SnapshotExportResult> ExecutePgDumpArgumentsAndFileAsync(string argsWithoutFile, string filePath, CancellationToken cancellationToken)
