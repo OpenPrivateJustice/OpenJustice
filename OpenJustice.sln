@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenJustice.Generator.Web.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenJustice.Reader", "src\OpenJustice.Reader\OpenJustice.Reader.csproj", "{C19FEAFC-0AD2-4183-A98C-187B0B9AE4F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenJustice.BrazilExtractor", "src\OpenJustice.BrazilExtractor\OpenJustice.BrazilExtractor.csproj", "{7C13567B-3811-4E8E-8948-2F271E7BDDBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,18 @@ Global
 		{C19FEAFC-0AD2-4183-A98C-187B0B9AE4F0}.Release|x64.Build.0 = Release|Any CPU
 		{C19FEAFC-0AD2-4183-A98C-187B0B9AE4F0}.Release|x86.ActiveCfg = Release|Any CPU
 		{C19FEAFC-0AD2-4183-A98C-187B0B9AE4F0}.Release|x86.Build.0 = Release|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Debug|x64.Build.0 = Debug|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Debug|x86.Build.0 = Debug|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Release|x64.ActiveCfg = Release|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Release|x64.Build.0 = Release|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Release|x86.ActiveCfg = Release|Any CPU
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,5 +111,6 @@ Global
 		{F1C26FC8-7269-4269-9E83-A95EA373E3E8} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{8371C80A-AB8B-41B2-9170-8A9B3637CB00} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{C19FEAFC-0AD2-4183-A98C-187B0B9AE4F0} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{7C13567B-3811-4E8E-8948-2F271E7BDDBA} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
