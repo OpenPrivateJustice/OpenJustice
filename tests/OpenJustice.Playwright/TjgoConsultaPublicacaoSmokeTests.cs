@@ -31,6 +31,23 @@ public class TjgoConsultaPublicacaoSmokeTests : IAsyncLifetime, IDisposable
         "[name=' Magistrado']"
     };
 
+    // PDF link selectors that the extractor uses to harvest publication PDFs
+    private static readonly string[] PdfLinkSelectors = new[]
+    {
+        "a[href*='.pdf']",
+        "a[href*='/download']",
+        "a[href*='downloadPdf']",
+        "a[href*='downloadArquivo']",
+        "a[href*='exibirPdf']",
+        "a[href*='visualizarPdf']",
+        "a.download",
+        "a[download]",
+        "a[class*='pdf']",
+        "a[class*='download']",
+        "a[title*='PDF']",
+        "a[title*='pdf']"
+    };
+
     public async Task InitializeAsync()
     {
         _playwright = await Microsoft.Playwright.Playwright.CreateAsync();
@@ -206,7 +223,7 @@ public class TjgoConsultaPublicacaoSmokeTests : IAsyncLifetime, IDisposable
         Console.WriteLine($"Page has {allButtons.Count} button elements");
 
         // Check for any element with "crime" or "criminal" in ID/name (for future filter support)
-        var criminalRelated = await _page.Locator("[id*='crime'], [name*='crime'], [id*='criminal'], [name*='criminal']").CountAsync();
+        var criminalRelated = await _page.Locator("[id*='*='crime'], [id*='criminal'], [namecrime'], [name*='criminal']").CountAsync();
         Console.WriteLine($"Found {criminalRelated} criminal-related elements");
     }
 
@@ -251,5 +268,149 @@ public class TjgoConsultaPublicacaoSmokeTests : IAsyncLifetime, IDisposable
         // Note: We don't actually submit to avoid triggering rate limits or bot detection
         // The form preparation is what the extractor does - submission would require
         // handling Turnstile/challenge which is out of scope for smoke tests
+    }
+
+    /// <summary>
+    /// Smoke test to guard PDF-link selectors on result pages.
+    /// This validates the extractor contract for PDF link harvesting.
+    /// Accepts either: (a) at least one PDF/download anchor candidate, or (b) explicit no-results state.
+    /// </summary>
+    [Fact]
+    public async Task TjgoConsultaPublicacao_ShouldDetectPdfLinkSelectors()
+    {
+        // Arrange - navigate to page first
+        await _page!.GotoAsync(_tjgoUrl, new PageGotoOptions
+        {
+            WaitUntil = WaitUntilState.DOMContentLoaded,
+            Timeout = 30000
+        });
+
+        // Use a past date that likely has results (e.g., 7 days ago)
+        var pastDate = DateTime.Today.AddDays(-7);
+        var formattedDate = pastDate.ToString("dd/MM/yyyy");
+
+        // Fill form
+        await _page.Locator("#DataInicial").FillAsync(formattedDate);
+        await _page.Locator("#DataFinal").FillAsync(formattedDate);
+
+        // Try consultation type
+        var tipoConsulta = _page.Locator("#tipoConsulta");
+        if (await tipoConsulta.CountAsync() > 0)
+        {
+            await tipoConsulta.CheckAsync();
+        }
+
+        // Submit the form
+        await _page.Locator("#formLocalizarBotao").ClickAsync();
+
+        // Wait for results page to load (either results or empty state)
+        await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+        
+        // Give the page a moment to render results
+        await Task.Delay(1000);
+
+        var currentUrl = _page.Url;
+        Console.WriteLine($"Result page URL: {currentUrl}");
+
+        // Check for PDF link selectors - try each one
+        int totalPdfLinksFound = 0;
+        string? foundSelector = null;
+        
+        foreach (var selector in PdfLinkSelectors)
+        {
+            try
+            {
+                var elements = _page.Locator(selector);
+                var count = await elements.CountAsync();
+                
+                if (count > 0)
+                {
+                    Console.WriteLine($"Selector '{selector}' found {count} PDF link candidates");
+                    totalPdfLinksFound += count;
+                    
+                    if (foundSelector == null)
+                        foundSelector = selector;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Selector '{selector}' error: {ex.Message}");
+            }
+        }
+
+        // Also do a generic anchor scan as fallback
+        var allAnchors = _page.Locator("a[href]");
+        var totalAnchors = await allAnchors.CountAsync();
+        Console.WriteLine($"Total anchor elements on result page: {totalAnchors}");
+
+        // Check for PDF links in generic anchors
+        int genericPdfLinks = 0;
+        var pdfPatterns = new[] { ".pdf", "/download", "downloadPdf" };
+        
+        for (int i = 0; i < Math.Min(totalAnchors, 100); i++)
+        {
+            try
+            {
+                var href = await allAnchors.Nth(i).GetAttributeAsync("href");
+                if (!string.IsNullOrWhiteSpace(href))
+                {
+                    var hrefLower = href.ToLowerInvariant();
+                    if (pdfPatterns.Any(p => hrefLower.Contains(p)))
+                    {
+                        genericPdfLinks++;
+                    }
+                }
+            }
+            catch
+            {
+                // Skip errors on individual anchors
+            }
+        }
+        
+        if (genericPdfLinks > 0)
+        {
+            Console.WriteLine($"Found {genericPdfLinks} additional PDF links via generic anchor scan");
+            totalPdfLinksFound += genericPdfLinks;
+        }
+
+        // Check for no-results state markers
+        var noResultsSelectors = new[]
+        {
+            ".semResultado",
+            "#semResultado",
+            "[class*='nenhum']",
+            "[class*='empty']",
+            "text=Nenhum registro encontrado",
+            "text=Nenhum resultado"
+        };
+        
+        bool hasNoResultsMarker = false;
+        foreach (var selector in noResultsSelectors)
+        {
+            try
+            {
+                var element = _page.Locator(selector);
+                if (await element.CountAsync() > 0)
+                {
+                    hasNoResultsMarker = true;
+                    Console.WriteLine($"Found no-results marker: {selector}");
+                    break;
+                }
+            }
+            catch
+            {
+                // Try next selector
+            }
+        }
+
+        // Assert: Either we found PDF links OR we have a no-results marker
+        // This validates the contract: extractor can detect result state
+        Assert.True(
+            totalPdfLinksFound > 0 || hasNoResultsMarker,
+            $"Expected either PDF link candidates (>0 found) or no-results marker. " +
+            $"Found: {totalPdfLinksFound} PDF links, no-results marker: {hasNoResultsMarker}");
+
+        Console.WriteLine($"PDF link smoke test result: {totalPdfLinksFound} PDF links found, " +
+            $"no-results marker: {hasNoResultsMarker}");
     }
 }
