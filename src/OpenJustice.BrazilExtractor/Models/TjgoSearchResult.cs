@@ -1,3 +1,5 @@
+using OpenJustice.BrazilExtractor.Services.Tjgo;
+
 namespace OpenJustice.BrazilExtractor.Models;
 
 /// <summary>
@@ -31,6 +33,21 @@ public class TjgoSearchResult
     public TjgoSearchQuery? Query { get; set; }
 
     /// <summary>
+    /// The applied criminal filter profile name (for auditability).
+    /// </summary>
+    public string? AppliedFilterProfile { get; set; }
+
+    /// <summary>
+    /// Number of records excluded by criminal filter (if applicable).
+    /// </summary>
+    public int ExcludedRecordCount { get; set; }
+
+    /// <summary>
+    /// The date window used in the query.
+    /// </summary>
+    public string? DateWindow { get; set; }
+
+    /// <summary>
     /// Creates a successful result.
     /// </summary>
     public static TjgoSearchResult Successful(string resultUrl, int recordCount = 0, TjgoSearchQuery? query = null)
@@ -40,7 +57,9 @@ public class TjgoSearchResult
             Success = true,
             ResultUrl = resultUrl,
             RecordCount = recordCount,
-            Query = query
+            Query = query,
+            AppliedFilterProfile = query?.CriminalFilter?.Name,
+            DateWindow = query != null ? $"{query.FormattedDate} to {query.FormattedDate}" : null
         };
     }
 
@@ -53,7 +72,9 @@ public class TjgoSearchResult
         {
             Success = false,
             ErrorMessage = errorMessage,
-            Query = query
+            Query = query,
+            AppliedFilterProfile = query?.CriminalFilter?.Name,
+            DateWindow = query != null ? $"{query.FormattedDate} to {query.FormattedDate}" : null
         };
     }
 }

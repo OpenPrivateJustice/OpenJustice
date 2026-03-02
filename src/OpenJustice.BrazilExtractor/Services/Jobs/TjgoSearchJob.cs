@@ -48,15 +48,24 @@ public class TjgoSearchJob : ITjgoSearchJob
         if (result.Success)
         {
             _logger.LogInformation(
-                "TJGO search job completed successfully - URL: {Url}, Records: {Records}",
+                "TJGO search job completed - DateWindow: {DateWindow}, FilterProfile: {Profile}, Records: {Records}, Excluded: {Excluded}",
+                result.DateWindow ?? "N/A",
+                result.AppliedFilterProfile ?? "None",
+                result.RecordCount,
+                result.ExcludedRecordCount);
+            
+            _logger.LogDebug(
+                "Search result details - URL: {Url}, Query.Date: {QueryDate}, Query.CriminalMode: {CriminalMode}",
                 result.ResultUrl,
-                result.RecordCount);
+                result.Query?.FormattedDate,
+                result.Query?.CriminalMode);
         }
         else
         {
             _logger.LogWarning(
-                "TJGO search job completed with errors - Error: {Error}",
-                result.ErrorMessage);
+                "TJGO search job completed with errors - Error: {Error}, FilterProfile: {Profile}",
+                result.ErrorMessage,
+                result.AppliedFilterProfile ?? "None");
         }
 
         return result;
