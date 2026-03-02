@@ -10,10 +10,10 @@ Requirements for BrazilExtractor milestone. Each maps to roadmap phases.
 ### Extractor Core
 
 - [ ] **EXTR-01**: Create OpenJustice.BrazilExtractor project in solution (.NET 10 Worker)
-- [ ] **EXTR-02**: Configure Playwright with Chromium for TJGO scraping
-- [ ] **EXTR-03**: Implement TJGO publicacao page navigation and form handling
+- [x] **EXTR-02**: Configure Playwright with Chromium for TJGO scraping
+- [x] **EXTR-03**: Implement TJGO publicacao page navigation and form handling
 - [ ] **EXTR-04**: Support criminal filter to exclude civil cases
-- [ ] **EXTR-05**: Support date range filter (single day: start = end)
+- [x] **EXTR-05**: Support date range filter (single day: start = end)
 
 ### PDF Download
 
@@ -62,10 +62,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | EXTR-01 | Phase 11 | Pending |
-| EXTR-02 | Phase 11 | Pending |
-| EXTR-03 | Phase 11 | Pending |
+| EXTR-02 | Phase 11 | Complete |
+| EXTR-03 | Phase 11 | Complete |
 | EXTR-04 | Phase 11 | Pending |
-| EXTR-05 | Phase 11 | Pending |
+| EXTR-05 | Phase 11 | Complete |
 | EXTR-06 | Phase 12 | Pending |
 | EXTR-07 | Phase 12 | Pending |
 | EXTR-08 | Phase 12 | Pending |

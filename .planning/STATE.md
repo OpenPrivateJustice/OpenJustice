@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 11 of 13 (Extractor Foundation and TJGO Search)
-Plan: 1 of TBD in current phase
+Plan: 2 of TBD in current phase
 Status: In Progress
-Last activity: 2026-03-02 - Completed 11-01 BrazilExtractor foundation
+Last activity: 2026-03-02 - Completed 11-02 TJGO search implementation
 
 Progress: [░░░░░░░░░░░░░░░░░░░░░] 5%
 
@@ -43,6 +43,8 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░] 5%
 - Preserve existing Generator curation gate; no auto-publish behavior in extractor milestone.
 - [11-01] Used IValidateOptions pattern for custom validation rules (more flexible than DataAnnotations)
 - [11-01] ValidateOnStart() ensures fail-fast before any service instantiation
+- [11-02] Singleton browser factory + scoped search services pattern for proper lifecycle management
+- [11-02] Single-day queries enforce same-date DataInicial and DataFinal values
 
 ### Pending Todos
 
@@ -55,5 +57,5 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░] 5%
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 11-01-PLAN.md (BrazilExtractor foundation with validated config)
+Stopped at: Completed 11-02-PLAN.md (TJGO search with Playwright Chromium)
 Resume file: None
