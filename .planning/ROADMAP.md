@@ -44,7 +44,10 @@ Plans:
   1. Operator can run a query and the extractor captures ALL available PDF links from the returned result set (up to 15 per page).
   2. Operator can observe a minimum 30-second interval between QUERY executions (new query or pagination), not between individual PDF downloads.
   3. Operator can find all downloaded PDFs persisted locally with unique file names and no accidental overwrite collisions.
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 12-01-PLAN.md - Capture deterministic PDF links from TJGO result pages with typed extraction contracts.
+- [ ] 12-02-PLAN.md - Download harvested PDFs with query-level cadence and collision-safe local persistence.
 
 ### Phase 13: OCR Text Extraction and Quality Signals
 **Goal**: The extractor produces reviewable Portuguese text artifacts from downloaded PDFs and surfaces OCR quality failures.
@@ -62,5 +65,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 11. Extractor Foundation and TJGO Search | 3/3 | Complete    | 2026-03-02 |
-| 12. PDF Acquisition Pipeline | 0/TBD | Not started | - |
+| 12. PDF Acquisition Pipeline | 0/2 | Not started | - |
 | 13. OCR Text Extraction and Quality Signals | 0/TBD | Not started | - |
