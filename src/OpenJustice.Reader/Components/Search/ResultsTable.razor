@@ -1,0 +1,287 @@
+@using OpenJustice.Reader.Models.Search
+@using OpenJustice.Reader.Services.Data
+
+<div class="card">
+    <div class="card-body">
+        @if (Items.Count == 0)
+        {
+            <div class="text-center py-5">
+                <p class="text-muted mb-0">Nenhum resultado encontrado.</p>
+            </div>
+        }
+        else
+        {
+            <!-- Results Table -->
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="sortable" @onclick='() => OnSortClick("ReferenceCode")'>
+                                Código de Referência
+                                @GetSortIcon("ReferenceCode")
+                            </th>
+                            <th class="sortable" @onclick='() => OnSortClick("CrimeDate")'>
+                                Data do Crime
+                                @GetSortIcon("CrimeDate")
+                            </th>
+                            <th class="sortable" @onclick='() => OnSortClick("CrimeType")'>
+                                Tipo de Crime
+                                @GetSortIcon("CrimeType")
+                            </th>
+                            <th class="sortable" @onclick='() => OnSortClick("VictimName")'>
+                                Vítima
+                                @GetSortIcon("VictimName")
+                            </th>
+                            <th class="sortable" @onclick='() => OnSortClick("AccusedName")'>
+                                Acusado
+                                @GetSortIcon("AccusedName")
+                            </th>
+                            <th class="sortable" @onclick='() => OnSortClick("LocationState")'>
+                                Estado
+                                @GetSortIcon("LocationState")
+                            </th>
+                            <th class="sortable" @onclick='() => OnSortClick("JudicialStatus")'>
+                                Status Judicial
+                                @GetSortIcon("JudicialStatus")
+                            </th>
+                            <th class="sortable" @onclick='() => OnSortClick("ConfidenceScore")'>
+                                Confiança
+                                @GetSortIcon("ConfidenceScore")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Items)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="/cases/@item.Id">@item.ReferenceCode</a>
+                                </td>
+                                <td>
+                                    @(item.CrimeDate?.ToString("dd/MM/yyyy") ?? "-")
+                                </td>
+                                <td>@item.CrimeType</td>
+                                <td>@item.VictimName</td>
+                                <td>@item.AccusedName</td>
+                                <td>@item.LocationState</td>
+                                <td>
+                                    <span class="badge @GetJudicialStatusBadge(item.JudicialStatus)">
+                                        @item.JudicialStatus
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 20px; min-width: 60px;">
+                                        <div class="progress-bar @GetConfidenceBarClass(item.ConfidenceScore)" 
+                                             role="progressbar" 
+                                             style="width: @item.ConfidenceScore%">
+                                            @item.ConfidenceScore%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if (TotalPages > 1)
+            {
+                <nav aria-label="Navegação de resultados" class="mt-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted">
+                                Mostrando @((Page - 1) * PageSize + 1) - @Math.Min(Page * PageSize, TotalCount) 
+                                de @TotalCount resultados
+                            </span>
+                        </div>
+                        <ul class="pagination mb-0">
+                            <li class="page-item @(Page <= 1 ? "disabled" : "")">
+                                <button class="page-link" @onclick="PreviousPage" disabled="@(Page <= 1)">
+                                    Anterior
+                                </button>
+                            </li>
+                            
+                            @for (var i = GetFirstPage(); i <= GetLastPage(); i++)
+                            {
+                                var pageNum = i;
+                                <li class="page-item @(Page == pageNum ? "active" : "")">
+                                    <button class="page-link" @onclick="() => GoToPage(pageNum)">
+                                        @pageNum
+                                    </button>
+                                </li>
+                            }
+                            
+                            <li class="page-item @(Page >= TotalPages ? "disabled" : "")">
+                                <button class="page-link" @onclick="NextPage" disabled="@(Page >= TotalPages)">
+                                    Próxima
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            }
+
+            <!-- Page Size Selector -->
+            <div class="mt-3 d-flex justify-content-end align-items-center">
+                <label for="pageSize" class="me-2 mb-0">Resultados por página:</label>
+                <select id="pageSize" class="form-select form-select-sm" style="width: auto;" 
+                        @onchange="OnPageSizeChangedHandler">
+                    <option value="10" selected="@(PageSize == 10)">10</option>
+                    <option value="20" selected="@(PageSize == 20)">20</option>
+                    <option value="50" selected="@(PageSize == 50)">50</option>
+                    <option value="100" selected="@(PageSize == 100)">100</option>
+                </select>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<LocalCase> Items { get; set; } = Array.Empty<LocalCase>();
+
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    [Parameter]
+    public int PageSize { get; set; } = 20;
+
+    [Parameter]
+    public int TotalCount { get; set; }
+
+    [Parameter]
+    public CaseSortField SortField { get; set; } = CaseSortField.CrimeDate;
+
+    [Parameter]
+    public SortDirection SortDirection { get; set; } = SortDirection.Descending;
+
+    [Parameter]
+    public EventCallback<(CaseSortField, SortDirection)> OnSortChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageSizeChanged { get; set; }
+
+    private int TotalPages => PageSize > 0 ? (int)Math.Ceiling((double)TotalCount / PageSize) : 0;
+
+    private string GetSortIcon(string fieldName)
+    {
+        var currentField = fieldName switch
+        {
+            "ReferenceCode" => CaseSortField.ReferenceCode,
+            "CrimeDate" => CaseSortField.CrimeDate,
+            "CrimeType" => CaseSortField.CrimeType,
+            "VictimName" => CaseSortField.VictimName,
+            "AccusedName" => CaseSortField.AccusedName,
+            "LocationState" => CaseSortField.State,
+            "JudicialStatus" => CaseSortField.JudicialStatus,
+            "ConfidenceScore" => CaseSortField.ConfidenceScore,
+            _ => CaseSortField.CrimeDate
+        };
+
+        if (currentField != SortField)
+            return "";
+
+        return SortDirection == SortDirection.Ascending ? " ▲" : " ▼";
+    }
+
+    private async Task OnSortClick(string fieldName)
+    {
+        var newField = fieldName switch
+        {
+            "ReferenceCode" => CaseSortField.ReferenceCode,
+            "CrimeDate" => CaseSortField.CrimeDate,
+            "CrimeType" => CaseSortField.CrimeType,
+            "VictimName" => CaseSortField.VictimName,
+            "AccusedName" => CaseSortField.AccusedName,
+            "LocationState" => CaseSortField.State,
+            "JudicialStatus" => CaseSortField.JudicialStatus,
+            "ConfidenceScore" => CaseSortField.ConfidenceScore,
+            _ => CaseSortField.CrimeDate
+        };
+
+        var newDirection = newField == SortField
+            ? (SortDirection == SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending)
+            : SortDirection.Descending;
+
+        await OnSortChanged.InvokeAsync((newField, newDirection));
+    }
+
+    private async Task PreviousPage()
+    {
+        if (Page > 1)
+            await OnPageChanged.InvokeAsync(Page - 1);
+    }
+
+    private async Task NextPage()
+    {
+        if (Page < TotalPages)
+            await OnPageChanged.InvokeAsync(Page + 1);
+    }
+
+    private async Task GoToPage(int page)
+    {
+        await OnPageChanged.InvokeAsync(page);
+    }
+
+    private async Task OnPageSizeChangedHandler(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var pageSize))
+        {
+            await OnPageSizeChanged.InvokeAsync(pageSize);
+        }
+    }
+
+    private int GetFirstPage()
+    {
+        if (TotalPages <= 7)
+            return 1;
+        
+        return Math.Max(1, Page - 3);
+    }
+
+    private int GetLastPage()
+    {
+        if (TotalPages <= 7)
+            return TotalPages;
+        
+        return Math.Min(TotalPages, Page + 3);
+    }
+
+    private string GetJudicialStatusBadge(string? status)
+    {
+        return status?.ToLowerInvariant() switch
+        {
+            "em andamento" or "em andamento - aguarda jul" => "bg-warning",
+            "condenado" or "condenada" => "bg-danger",
+            "absolvido" or "absolvida" => "bg-success",
+            "arquivado" => "bg-secondary",
+            _ => "bg-info"
+        };
+    }
+
+    private string GetConfidenceBarClass(int score)
+    {
+        return score switch
+        {
+            >= 80 => "bg-success",
+            >= 60 => "bg-info",
+            >= 40 => "bg-warning",
+            _ => "bg-danger"
+        };
+    }
+}
+
+<style>
+    .sortable {
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .sortable:hover {
+        background-color: #e9ecef;
+    }
+</style>

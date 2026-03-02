@@ -1,0 +1,142 @@
+@page "/search"
+@using OpenJustice.Reader.Services.Search
+@using OpenJustice.Reader.Services.Data
+@using OpenJustice.Reader.Models.Search
+@using OpenJustice.Reader.Components.Search
+@inject ICaseSearchService SearchService
+@inject ILocalCaseStore CaseStore
+
+<PageTitle>Buscar Casos - OpenJustice</PageTitle>
+
+<div class="container-fluid">
+    <h1 class="my-4">Buscar Casos Históricos</h1>
+
+    <!-- Filter Component -->
+    <CaseFilters 
+        NameText="@query.NameText"
+        CrimeType="@query.CrimeType"
+        State="@query.State"
+        JudicialStatus="@query.JudicialStatus"
+        PeriodStart="@query.PeriodStart"
+        PeriodEnd="@query.PeriodEnd"
+        CrimeTypes="crimeTypes"
+        States="states"
+        JudicialStatuses="judicialStatuses"
+        OnFilterChanged="OnFilterChange" />
+
+    <!-- Loading State -->
+    @if (isLoading)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p class="mt-2">Buscando casos...</p>
+        </div>
+    }
+    <!-- Error State -->
+    @if (hasError)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Erro na busca</h4>
+            <p>@errorMessage</p>
+            <hr>
+            <button class="btn btn-outline-primary" @onclick="PerformSearch">
+                Tentar novamente
+            </button>
+        </div>
+    }
+    else if (!isLoading)
+    {
+        <!-- Results -->
+        <ResultsTable 
+            Items="results.Items"
+            Page="results.Page"
+            PageSize="results.PageSize"
+            TotalCount="results.TotalCount"
+            SortField="query.SortField"
+            SortDirection="query.SortDirection"
+            OnSortChanged="OnSortChanged"
+            OnPageChanged="OnPageChanged"
+            OnPageSizeChanged="OnPageSizeChanged" />
+    }
+
+    <!-- Database Status -->
+    @if (!CaseStore.HasData())
+    {
+        <div class="alert alert-warning mt-4">
+            <strong>Atenção:</strong> O banco de dados local está vazio. 
+            <a href="/sync">Clique aqui</a> para sincronizar os dados primeiro.
+        </div>
+    }
+</div>
+
+@code {
+    private CaseSearchQuery query = new();
+    private PagedResult<LocalCase> results = PagedResult<LocalCase>.Empty();
+    private IReadOnlyList<string> crimeTypes = Array.Empty<string>();
+    private IReadOnlyList<string> states = Array.Empty<string>();
+    private IReadOnlyList<string> judicialStatuses = Array.Empty<string>();
+    private bool isLoading = true;
+    private bool hasError = false;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load filter options
+        crimeTypes = await SearchService.GetCrimeTypesAsync();
+        states = await SearchService.GetStatesAsync();
+        judicialStatuses = await SearchService.GetJudicialStatusesAsync();
+
+        // Perform initial search
+        await PerformSearch();
+    }
+
+    private async Task PerformSearch()
+    {
+        isLoading = true;
+        hasError = false;
+        errorMessage = null;
+        
+        try
+        {
+            results = await SearchService.SearchAsync(query);
+        }
+        catch (Exception ex)
+        {
+            hasError = true;
+            errorMessage = $"Erro ao buscar casos: {ex.Message}";
+            results = PagedResult<LocalCase>.Empty(query.Page, query.PageSize);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task OnFilterChange()
+    {
+        // Reset to page 1 when filters change
+        query = query.WithResetPage();
+        await PerformSearch();
+    }
+
+    private async Task OnSortChanged((CaseSortField, SortDirection) sortInfo)
+    {
+        query = query.WithSort(sortInfo.Item1, sortInfo.Item2);
+        await PerformSearch();
+    }
+
+    private async Task OnPageChanged(int page)
+    {
+        query = query.WithPage(page);
+        await PerformSearch();
+    }
+
+    private async Task OnPageSizeChanged(int pageSize)
+    {
+        query.PageSize = pageSize;
+        query.Page = 1;
+        await PerformSearch();
+    }
+}

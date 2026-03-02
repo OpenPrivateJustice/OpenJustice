@@ -19,8 +19,8 @@ tech_stack:
 key_files:
   created: []
   modified:
-    - src/AtrocidadesRSS.Generator/Services/Export/SnapshotExportService.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Export/SnapshotExportServiceTests.cs
+    - src/OpenJustice.Generator/Services/Export/SnapshotExportService.cs
+    - tests/OpenJustice.Generator.Tests/Export/SnapshotExportServiceTests.cs
 decisions:
   - Used --inserts flag instead of --column-inserts for simpler SQL format
   - Added inline Reader Contract documentation for maintainability
@@ -77,8 +77,8 @@ Fixed build errors that were blocking verification:
 
 ## Verification
 
-- Build: `dotnet build src/AtrocidadesRSS.Generator/AtrocidadesRSS.Generator.csproj` ✓
-- Tests: `dotnet test tests/AtrocidadesRSS.Generator.Tests --filter "SnapshotExportServiceTests"` ✓ (11 tests passed)
+- Build: `dotnet build src/OpenJustice.Generator/OpenJustice.Generator.csproj` ✓
+- Tests: `dotnet test tests/OpenJustice.Generator.Tests --filter "SnapshotExportServiceTests"` ✓ (11 tests passed)
 
 ## Requirements Status
 
@@ -92,7 +92,7 @@ Fixed build errors that were blocking verification:
 - **Found during:** Task verification
 - **Issue:** Build failed due to missing DbSet, missing package references, and incorrect ValidateOnStart usage
 - **Fix:** Added missing DbSet, packages, and fixed Program.cs
-- **Files modified:** AppDbContext.cs, AtrocidadesRSS.Generator.csproj, AtrocidadesRSS.Generator.Web.csproj, Program.cs
+- **Files modified:** AppDbContext.cs, OpenJustice.Generator.csproj, OpenJustice.Generator.Web.csproj, Program.cs
 - **Commit:** 027fb58
 
 ## Auth Gates

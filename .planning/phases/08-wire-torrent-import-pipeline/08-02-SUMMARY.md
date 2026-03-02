@@ -23,10 +23,10 @@ tech_stack:
 key_files:
   created: []
   modified:
-    - src/AtrocidadesRSS.Reader/Services/Sync/ISyncServices.cs
-    - src/AtrocidadesRSS.Reader/Services/Sync/TorrentSyncService.cs
-    - src/AtrocidadesRSS.Reader/Services/Data/SqliteCaseStore.cs
-    - src/AtrocidadesRSS.Reader/Pages/Sync/Sync.razor
+    - src/OpenJustice.Reader/Services/Sync/ISyncServices.cs
+    - src/OpenJustice.Reader/Services/Sync/TorrentSyncService.cs
+    - src/OpenJustice.Reader/Services/Data/SqliteCaseStore.cs
+    - src/OpenJustice.Reader/Pages/Sync/Sync.razor
 decisions:
   - "SyncAsync now orchestrates download→import as atomic operation"
   - "SQL parser accepts Generator naming: cases/Cases/\"Cases\" and case_field_history/CaseFieldHistory/\"CaseFieldHistory\""
@@ -94,7 +94,7 @@ None - plan executed exactly as written.
 
 ## Self-Check
 
-- ✅ Build succeeds: `dotnet build src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj`
+- ✅ Build succeeds: `dotnet build src/OpenJustice.Reader/OpenJustice.Reader.csproj`
 - ✅ No demo SQL remaining: Verified via grep
 - ✅ Parser accepts Generator naming: Regex patterns updated
 - ✅ Commit created: beb7e1f

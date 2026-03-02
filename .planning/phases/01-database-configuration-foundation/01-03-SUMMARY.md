@@ -17,11 +17,11 @@ tech_stack:
     - IDesignTimeDbContextFactory pattern
 key_files:
   created:
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Migrations/20260301175321_AddCompositeIndexes.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Migrations/20260301175321_AddCompositeIndexes.Designer.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Migrations/20260301175321_AddCompositeIndexes.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Migrations/20260301175321_AddCompositeIndexes.Designer.cs
   modified:
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/AppDbContext.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/AppDbContextFactory.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/AppDbContext.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/AppDbContextFactory.cs
 decisions:
   - Used composite indexes with explicit HasDatabaseName for clarity
   - Implemented IDesignTimeDbContextFactory for EF Core migration support

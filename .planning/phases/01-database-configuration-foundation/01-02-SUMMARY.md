@@ -27,15 +27,15 @@ tech_stack:
     - Composite index patterns
 key_files:
   created:
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/AppDbContextFactory.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Migrations/20260301164705_InitialDatabaseFoundation.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Migrations/20260301164705_InitialDatabaseFoundation.Designer.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Migrations/AppDbContextModelSnapshot.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Scripts/README.md
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Scripts/ExportSnapshotSql.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Scripts/export-snapshot.sh
+    - src/OpenJustice.Generator/Infrastructure/Persistence/AppDbContextFactory.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Migrations/20260301164705_InitialDatabaseFoundation.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Migrations/20260301164705_InitialDatabaseFoundation.Designer.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Migrations/AppDbContextModelSnapshot.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Scripts/README.md
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Scripts/ExportSnapshotSql.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Scripts/export-snapshot.sh
   modified:
-    - src/AtrocidadesRSS.Generator/AtrocidadesRSS.Generator.csproj (added EF Core packages)
+    - src/OpenJustice.Generator/OpenJustice.Generator.csproj (added EF Core packages)
 decisions:
   - EF Core migrations for schema versioning (instead of raw SQL)
   - Design-time factory pattern for CLI tool support
@@ -89,7 +89,7 @@ Generate the first durable schema migration, performance indices, and SQL snapsh
 ### 3. SQL Snapshot Export (4462a8a)
 - **ExportSnapshotSql.cs** - C# utility for programmatic SQL generation
 - **export-snapshot.sh** - Bash script for CLI usage
-- Generates versioned SQL files (e.g., `atrocidadesrss_v1_20260301.sql`)
+- Generates versioned SQL files (e.g., `openjustice_v1_20260301.sql`)
 
 ## Deviations from Plan
 
@@ -126,17 +126,17 @@ The migration was generated successfully. Due to no PostgreSQL database being av
 
 ### Apply migrations:
 ```bash
-dotnet ef database update --project src/AtrocidadesRSS.Generator
+dotnet ef database update --project src/OpenJustice.Generator
 ```
 
 ### Rollback:
 ```bash
-dotnet ef database update 0 --project src/AtrocidadesRSS.Generator
+dotnet ef database update 0 --project src/OpenJustice.Generator
 ```
 
 ### Generate SQL snapshot:
 ```bash
-dotnet run --project src/AtrocidadesRSS.Generator -- export-snapshot-sql
+dotnet run --project src/OpenJustice.Generator -- export-snapshot-sql
 # or
-./src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Scripts/export-snapshot.sh
+./src/OpenJustice.Generator/Infrastructure/Persistence/Scripts/export-snapshot.sh
 ```

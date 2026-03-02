@@ -28,16 +28,16 @@ tech_stack:
     - EF Core Include() for navigation properties
 key_files:
   created:
-    - src/AtrocidadesRSS.Generator/Controllers/CasesEvidenceController.cs
-    - src/AtrocidadesRSS.Generator/Controllers/CasesTagsController.cs
-    - src/AtrocidadesRSS.Generator/Services/Export/SnapshotExportService.cs
-    - src/AtrocidadesRSS.Generator/Services/Export/SnapshotVersionService.cs
-    - src/AtrocidadesRSS.Generator/Configuration/GeneratorOptions.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Cases/CasesMetadataTests.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Export/SnapshotExportServiceTests.cs
+    - src/OpenJustice.Generator/Controllers/CasesEvidenceController.cs
+    - src/OpenJustice.Generator/Controllers/CasesTagsController.cs
+    - src/OpenJustice.Generator/Services/Export/SnapshotExportService.cs
+    - src/OpenJustice.Generator/Services/Export/SnapshotVersionService.cs
+    - src/OpenJustice.Generator/Configuration/GeneratorOptions.cs
+    - tests/OpenJustice.Generator.Tests/Cases/CasesMetadataTests.cs
+    - tests/OpenJustice.Generator.Tests/Export/SnapshotExportServiceTests.cs
   modified:
-    - src/AtrocidadesRSS.Generator/ServiceCollectionExtensions.cs
-    - src/AtrocidadesRSS.Generator/appsettings.json
+    - src/OpenJustice.Generator/ServiceCollectionExtensions.cs
+    - src/OpenJustice.Generator/appsettings.json
 decisions:
   - "Evidence association uses EF Core relationship updates with duplicate-prevention"
   - "Tag association supports both Tag ID lookup and TagName create-or-find"

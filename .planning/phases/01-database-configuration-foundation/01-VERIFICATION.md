@@ -9,9 +9,9 @@ gaps:
     status: partial
     reason: "Only single-column indexes exist for FK columns (CrimeTypeId, CaseTypeId). No composite indexes for multi-column queries."
     artifacts:
-      - path: "src/AtrocidadesRSS.Generator/Infrastructure/Persistence/AppDbContext.cs"
+      - path: "src/OpenJustice.Generator/Infrastructure/Persistence/AppDbContext.cs"
         issue: "Missing AddIndex calls for composite indexes"
-      - path: "src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Migrations/20260301164705_InitialDatabaseFoundation.cs"
+      - path: "src/OpenJustice.Generator/Infrastructure/Persistence/Migrations/20260301164705_InitialDatabaseFoundation.cs"
         issue: "No CreateIndex with multiple columns"
     missing:
       - "Composite index on (CrimeTypeId, JudicialStatusId) for filtered case queries"
@@ -20,7 +20,7 @@ gaps:
     status: failed
     reason: "No appsettings.json file exists in the project"
     artifacts:
-      - path: "src/AtrocidadesRSS.Generator/appsettings.json"
+      - path: "src/OpenJustice.Generator/appsettings.json"
         issue: "File does not exist"
     missing:
       - "appsettings.json with PostgreSQL connection string (CFG-01)"

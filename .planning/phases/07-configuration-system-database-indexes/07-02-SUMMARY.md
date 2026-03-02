@@ -18,9 +18,9 @@ tech_stack:
 key_files:
   created: []
   modified:
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/AppDbContext.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Migrations/20260301175321_AddCompositeIndexes.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Migrations/AppDbContextModelSnapshot.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/AppDbContext.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Migrations/20260301175321_AddCompositeIndexes.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Migrations/AppDbContextModelSnapshot.cs
 decisions:
   - "Composite indexes use left-to-right column ordering for optimal query planner behavior"
   - "Explicit HasDatabaseName ensures consistent index naming across model, migrations, and database"

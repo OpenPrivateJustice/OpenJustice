@@ -22,9 +22,9 @@ tech_stack:
 key_files:
   created: []
   modified:
-    - src/AtrocidadesRSS.Generator/Services/Cases/CaseWorkflowService.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Cases/CaseWorkflowServiceTests.cs
-    - tests/AtrocidadesRSS.Generator.Tests/History/CaseHistoryControllerTests.cs
+    - src/OpenJustice.Generator/Services/Cases/CaseWorkflowService.cs
+    - tests/OpenJustice.Generator.Tests/Cases/CaseWorkflowServiceTests.cs
+    - tests/OpenJustice.Generator.Tests/History/CaseHistoryControllerTests.cs
 decisions:
   - AppendChangesAsync called with oldCase=null for new cases to capture initial state
   - All tracked fields get null->value history entries on creation

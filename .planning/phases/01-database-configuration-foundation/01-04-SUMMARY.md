@@ -27,12 +27,12 @@ tech_stack:
     - Extension methods for DI registration
 key_files:
   created:
-    - src/AtrocidadesRSS.Generator/appsettings.json
-    - src/AtrocidadesRSS.Generator/appsettings.Development.json
-    - src/AtrocidadesRSS.Generator/Configuration/AppConfiguration.cs
-    - src/AtrocidadesRSS.Generator/ServiceCollectionExtensions.cs
+    - src/OpenJustice.Generator/appsettings.json
+    - src/OpenJustice.Generator/appsettings.Development.json
+    - src/OpenJustice.Generator/Configuration/AppConfiguration.cs
+    - src/OpenJustice.Generator/ServiceCollectionExtensions.cs
   modified:
-    - src/AtrocidadesRSS.Generator/AtrocidadesRSS.Generator.csproj
+    - src/OpenJustice.Generator/OpenJustice.Generator.csproj
 decisions:
   - Used IOptions pattern for strongly-typed configuration binding
   - Created extension methods for easy DI registration
@@ -76,8 +76,8 @@ tasks_completed: 4
 - **AppConfigurationValidator**: Implements IValidateOptions for startup validation
 
 ### ServiceCollectionExtensions.cs
-- **AddAtrocidadesRssConfiguration**: Registers all configuration with DI
-- **ValidateAtrocidadesRssConfiguration**: Triggers validation at startup
+- **AddOpenJusticeConfiguration**: Registers all configuration with DI
+- **ValidateOpenJusticeConfiguration**: Triggers validation at startup
 - Automatic directory creation for configured paths
 
 ## Requirements Status

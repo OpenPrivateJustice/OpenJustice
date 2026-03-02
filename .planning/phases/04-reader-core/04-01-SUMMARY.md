@@ -25,17 +25,17 @@ tech_stack:
     - Fail-fast validation at startup
 key_files:
   created:
-    - src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj
-    - src/AtrocidadesRSS.Reader/Program.cs
-    - src/AtrocidadesRSS.Reader/Configuration/ReaderOptions.cs
-    - src/AtrocidadesRSS.Reader/wwwroot/appsettings.json
-    - src/AtrocidadesRSS.Reader/Layout/NavMenu.razor
-    - src/AtrocidadesRSS.Reader/Pages/Home.razor
-    - src/AtrocidadesRSS.Reader/Pages/Sync/Sync.razor
-    - src/AtrocidadesRSS.Reader/Pages/Search/Search.razor
-    - src/AtrocidadesRSS.Reader/Pages/Cases/Cases.razor
+    - src/OpenJustice.Reader/OpenJustice.Reader.csproj
+    - src/OpenJustice.Reader/Program.cs
+    - src/OpenJustice.Reader/Configuration/ReaderOptions.cs
+    - src/OpenJustice.Reader/wwwroot/appsettings.json
+    - src/OpenJustice.Reader/Layout/NavMenu.razor
+    - src/OpenJustice.Reader/Pages/Home.razor
+    - src/OpenJustice.Reader/Pages/Sync/Sync.razor
+    - src/OpenJustice.Reader/Pages/Search/Search.razor
+    - src/OpenJustice.Reader/Pages/Cases/Cases.razor
   modified:
-    - AtrocidadesRSS.sln
+    - OpenJustice.sln
 decisions:
   - "Followed Generator's IOptions pattern with IValidateOptions for consistency"
   - "Created strongly-typed ReaderOptions mirroring Generator's GeneratorOptions"
@@ -61,8 +61,8 @@ Bootstrap the public Reader application as an independent Blazor WebAssembly SPA
 
 ### Task 1: Create Reader WASM project and wire solution
 
-- Created .NET 10 Blazor WebAssembly project at `src/AtrocidadesRSS.Reader`
-- Added to `AtrocidadesRSS.sln` alongside Generator projects
+- Created .NET 10 Blazor WebAssembly project at `src/OpenJustice.Reader`
+- Added to `OpenJustice.sln` alongside Generator projects
 - Registered core services in `Program.cs` (HttpClient, options binding)
 - Added navigation links for Sync, Search, Cases pages
 - Created placeholder pages for each navigation route
@@ -76,7 +76,7 @@ Bootstrap the public Reader application as an independent Blazor WebAssembly SPA
 
 ## Verification
 
-- Solution builds successfully: `dotnet build AtrocidadesRSS.sln`
+- Solution builds successfully: `dotnet build OpenJustice.sln`
 - Reader project appears in solution: `dotnet sln list`
 - Options validation at startup works correctly
 

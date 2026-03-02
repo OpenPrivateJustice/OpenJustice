@@ -1,4 +1,4 @@
-# AtrocidadesRSS
+# OpenJustice
 
 ## What This Is
 
@@ -107,12 +107,12 @@ A decentralized database of Brazilian historical crimes with full history tracki
 
 ## Visão Geral
 
-AtrocidadesRSS é uma base de dados descentralizada de registros históricos de crimes cometidos no Brasil. O projeto consiste em dois componentes:
+OpenJustice é uma base de dados descentralizada de registros históricos de crimes cometidos no Brasil. O projeto consiste em dois componentes:
 
 1. **Gerador (privado)**: Sistema para alimentar e curar a base de dados oficial
 2. **Leitor (público)**: Aplicação SPA Blazor que permite acesso à base de dados com replicação via torrent
 
-**Princípio fundamental**: Transparência absoluta. O AtrocidadesRSS é um repositório de fatos, sem julgamentos de valor — cabe aos usuários interpretar os dados.
+**Princípio fundamental**: Transparência absoluta. O OpenJustice é um repositório de fatos, sem julgamentos de valor — cabe aos usuários interpretar os dados.
 
 ---
 

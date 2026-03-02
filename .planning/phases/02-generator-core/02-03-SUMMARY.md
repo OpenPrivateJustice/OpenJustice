@@ -11,7 +11,7 @@ dependency_graph:
     - Typed API client
     - Form validation
   affects:
-    - AtrocidadesRSS.Generator API
+    - OpenJustice.Generator API
     - Database via API
 tech_stack:
   added:
@@ -24,18 +24,18 @@ tech_stack:
     - Navigation between list/edit/create pages
 key_files:
   created:
-    - src/AtrocidadesRSS.Generator.Web/AtrocidadesRSS.Generator.Web.csproj
-    - src/AtrocidadesRSS.Generator.Web/Program.cs
-    - src/AtrocidadesRSS.Generator.Web/Pages/Cases/CasesList.razor
-    - src/AtrocidadesRSS.Generator.Web/Pages/Cases/CaseCreate.razor
-    - src/AtrocidadesRSS.Generator.Web/Pages/Cases/CaseEdit.razor
-    - src/AtrocidadesRSS.Generator.Web/Models/Cases/CaseFormModel.cs
-    - src/AtrocidadesRSS.Generator.Web/Services/GeneratorApiClient.cs
-    - tests/AtrocidadesRSS.Generator.Web.Tests/Cases/CaseFormTests.cs
+    - src/OpenJustice.Generator.Web/OpenJustice.Generator.Web.csproj
+    - src/OpenJustice.Generator.Web/Program.cs
+    - src/OpenJustice.Generator.Web/Pages/Cases/CasesList.razor
+    - src/OpenJustice.Generator.Web/Pages/Cases/CaseCreate.razor
+    - src/OpenJustice.Generator.Web/Pages/Cases/CaseEdit.razor
+    - src/OpenJustice.Generator.Web/Models/Cases/CaseFormModel.cs
+    - src/OpenJustice.Generator.Web/Services/GeneratorApiClient.cs
+    - tests/OpenJustice.Generator.Web.Tests/Cases/CaseFormTests.cs
   modified:
-    - src/AtrocidadesRSS.Generator/Controllers/CasesController.cs
-    - src/AtrocidadesRSS.Generator/Services/Cases/CaseWorkflowService.cs
-    - AtrocidadesRSS.sln
+    - src/OpenJustice.Generator/Controllers/CasesController.cs
+    - src/OpenJustice.Generator/Services/Cases/CaseWorkflowService.cs
+    - OpenJustice.sln
 decisions:
   - Used static lookup data for dropdowns instead of API calls for simplicity
   - Blazor Server rendering mode for full .NET integration
@@ -56,7 +56,7 @@ Deliver the private Blazor web UI for manual case insertion and editing on top o
 
 ## What Was Built
 
-### Blazor Web Project (AtrocidadesRSS.Generator.Web)
+### Blazor Web Project (OpenJustice.Generator.Web)
 - New Blazor Web App project using .NET 10
 - Integrated with existing Generator API via HttpClient
 - Bootstrap 5 styling for responsive UI
@@ -101,7 +101,7 @@ Deliver the private Blazor web UI for manual case insertion and editing on top o
 ## Verification
 
 ```
-dotnet test tests/AtrocidadesRSS.Generator.Web.Tests --filter "FullyQualifiedName~CaseFormTests"
+dotnet test tests/OpenJustice.Generator.Web.Tests --filter "FullyQualifiedName~CaseFormTests"
 Passed! - Failed: 0, Passed: 5, Skipped: 0, Total: 5
 ```
 
@@ -117,7 +117,7 @@ All tests pass, build succeeds.
 
 **2. [Naming Convention] Project naming difference**
 - **Plan used:** Atrocidades.Generator.Web
-- **Actual:** AtrocidadesRSS.Generator.Web (consistent with solution naming)
+- **Actual:** OpenJustice.Generator.Web (consistent with solution naming)
 - **No impact on functionality**
 
 ## Auth Gates

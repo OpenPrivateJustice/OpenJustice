@@ -127,7 +127,7 @@ Key decisions from Phase 4 Plan 1:
 - [Phase 5]: Additive history parsing preserves existing case import stability
 - [Phase 5]: Service resilience: returns empty collections instead of throwing on missing history
 - [Phase 5]: Index-based diff selection ensures deterministic/stable A/B output
-- [Phase 07]: Wired AddAtrocidadesRssConfiguration into Generator.Web Program.cs with ValidateOnStart()
+- [Phase 07]: Wired AddOpenJusticeConfiguration into Generator.Web Program.cs with ValidateOnStart()
 - [Phase 07]: Created comprehensive docs/configuration.md mapping all runtime config keys
 - [Phase 08]: Added --inserts pg_dump flag for INSERT-based SQL output compatible with Reader import
 - [Phase 08]: Added contract tests to ensure export format remains Reader-compatible

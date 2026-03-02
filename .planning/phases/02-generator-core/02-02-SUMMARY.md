@@ -22,19 +22,19 @@ tech_stack:
     - Atomic state transitions with audit logging
 key_files:
   created:
-    - src/AtrocidadesRSS.Generator/Controllers/CurationController.cs
-    - src/AtrocidadesRSS.Generator/Contracts/Curation/ApproveCaseRequest.cs
-    - src/AtrocidadesRSS.Generator/Contracts/Curation/RejectCaseRequest.cs
-    - src/AtrocidadesRSS.Generator/Contracts/Curation/VerifyCaseRequest.cs
-    - src/AtrocidadesRSS.Generator/Domain/Enums/CurationStatus.cs
-    - src/AtrocidadesRSS.Generator/Services/Curation/CurationService.cs
-    - src/AtrocidadesRSS.Generator/Services/History/CaseAuditLogService.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/CaseAuditLog.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Curation/CurationServiceTests.cs
+    - src/OpenJustice.Generator/Controllers/CurationController.cs
+    - src/OpenJustice.Generator/Contracts/Curation/ApproveCaseRequest.cs
+    - src/OpenJustice.Generator/Contracts/Curation/RejectCaseRequest.cs
+    - src/OpenJustice.Generator/Contracts/Curation/VerifyCaseRequest.cs
+    - src/OpenJustice.Generator/Domain/Enums/CurationStatus.cs
+    - src/OpenJustice.Generator/Services/Curation/CurationService.cs
+    - src/OpenJustice.Generator/Services/History/CaseAuditLogService.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/CaseAuditLog.cs
+    - tests/OpenJustice.Generator.Tests/Curation/CurationServiceTests.cs
   modified:
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/Case.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/AppDbContext.cs
-    - src/AtrocidadesRSS.Generator/ServiceCollectionExtensions.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/Case.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/AppDbContext.cs
+    - src/OpenJustice.Generator/ServiceCollectionExtensions.cs
 key_decisions:
   - CurationStatus enum added with Pending/Approved/Rejected states
   - Verified marker stored in existing IsVerified field
@@ -95,7 +95,7 @@ metrics:
 ## Verification
 
 ```
-dotnet test tests/AtrocidadesRSS.Generator.Tests
+dotnet test tests/OpenJustice.Generator.Tests
 Passed! - Failed: 0, Passed: 36, Skipped: 0, Total: 36
 ```
 

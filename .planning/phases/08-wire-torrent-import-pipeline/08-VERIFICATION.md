@@ -32,11 +32,11 @@ gaps: []
 
 | Artifact | Expected    | Status | Details |
 | -------- | ----------- | ------ | ------- |
-| `src/AtrocidadesRSS.Generator/Services/Export/SnapshotExportService.cs` | Contains --inserts flag | ✓ VERIFIED | Line 220: `sb.Append("--inserts ");` with Reader Contract documentation |
-| `src/AtrocidadesRSS.Reader/Services/Sync/TorrentSyncService.cs` | Orchestrates download→import | ✓ VERIFIED | SyncAsync calls ImportSnapshotAsync (line 143), returns failure on import error |
-| `src/AtrocidadesRSS.Reader/Services/Data/SqliteCaseStore.cs` | Parser accepts Generator naming | ✓ VERIFIED | Regex patterns on lines 470, 529 support Cases/CaseFieldHistory |
-| `src/AtrocidadesRSS.Reader/Pages/Sync/Sync.razor` | Uses real import flow | ✓ VERIFIED | LoadDatabase uses GetDownloadedSqlContent(); shows stats after import |
-| `tests/AtrocidadesRSS.Generator.Tests/Export/SnapshotExportServiceTests.cs` | Contract tests exist | ✓ VERIFIED | 11 tests pass, includes BuildPgDumpArguments_ContainsInsertsFlag_ForReaderCompatibility |
+| `src/OpenJustice.Generator/Services/Export/SnapshotExportService.cs` | Contains --inserts flag | ✓ VERIFIED | Line 220: `sb.Append("--inserts ");` with Reader Contract documentation |
+| `src/OpenJustice.Reader/Services/Sync/TorrentSyncService.cs` | Orchestrates download→import | ✓ VERIFIED | SyncAsync calls ImportSnapshotAsync (line 143), returns failure on import error |
+| `src/OpenJustice.Reader/Services/Data/SqliteCaseStore.cs` | Parser accepts Generator naming | ✓ VERIFIED | Regex patterns on lines 470, 529 support Cases/CaseFieldHistory |
+| `src/OpenJustice.Reader/Pages/Sync/Sync.razor` | Uses real import flow | ✓ VERIFIED | LoadDatabase uses GetDownloadedSqlContent(); shows stats after import |
+| `tests/OpenJustice.Generator.Tests/Export/SnapshotExportServiceTests.cs` | Contract tests exist | ✓ VERIFIED | 11 tests pass, includes BuildPgDumpArguments_ContainsInsertsFlag_ForReaderCompatibility |
 
 ### Key Link Verification
 

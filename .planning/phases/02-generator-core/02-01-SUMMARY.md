@@ -25,19 +25,19 @@ tech_stack:
     - Repository pattern via CaseWorkflowService
 key_files:
   created:
-    - src/AtrocidadesRSS.Generator/Controllers/CasesController.cs
-    - src/AtrocidadesRSS.Generator/Contracts/Cases/CreateCaseRequest.cs
-    - src/AtrocidadesRSS.Generator/Contracts/Cases/UpdateCaseRequest.cs
-    - src/AtrocidadesRSS.Generator/Validation/Cases/CreateCaseRequestValidator.cs
-    - src/AtrocidadesRSS.Generator/Validation/Cases/UpdateCaseRequestValidator.cs
-    - src/AtrocidadesRSS.Generator/Services/Cases/CaseReferenceCodeGenerator.cs
-    - src/AtrocidadesRSS.Generator/Services/Cases/CaseWorkflowService.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Cases/CasesControllerTests.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Cases/CaseWorkflowServiceTests.cs
+    - src/OpenJustice.Generator/Controllers/CasesController.cs
+    - src/OpenJustice.Generator/Contracts/Cases/CreateCaseRequest.cs
+    - src/OpenJustice.Generator/Contracts/Cases/UpdateCaseRequest.cs
+    - src/OpenJustice.Generator/Validation/Cases/CreateCaseRequestValidator.cs
+    - src/OpenJustice.Generator/Validation/Cases/UpdateCaseRequestValidator.cs
+    - src/OpenJustice.Generator/Services/Cases/CaseReferenceCodeGenerator.cs
+    - src/OpenJustice.Generator/Services/Cases/CaseWorkflowService.cs
+    - tests/OpenJustice.Generator.Tests/Cases/CasesControllerTests.cs
+    - tests/OpenJustice.Generator.Tests/Cases/CaseWorkflowServiceTests.cs
   modified:
-    - src/AtrocidadesRSS.Generator/AtrocidadesRSS.Generator.csproj
-    - src/AtrocidadesRSS.Generator/ServiceCollectionExtensions.cs
-    - AtrocidadesRSS.sln
+    - src/OpenJustice.Generator/OpenJustice.Generator.csproj
+    - src/OpenJustice.Generator/ServiceCollectionExtensions.cs
+    - OpenJustice.sln
 decisions:
   - Use FluentValidation for declarative validation rules
   - Reference code generated at create time only, never regenerated on edit
@@ -90,7 +90,7 @@ Deliver the core case management API for the private generator with strong valid
 ## Verification
 
 ```
-dotnet test tests/AtrocidadesRSS.Generator.Tests
+dotnet test tests/OpenJustice.Generator.Tests
 Passed! - Failed: 0, Passed: 19, Skipped: 0, Total: 19
 ```
 

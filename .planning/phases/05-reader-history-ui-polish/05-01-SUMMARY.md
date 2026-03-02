@@ -5,15 +5,15 @@ subsystem: reader
 tags: [history, timeline, diff, viewmodels, data-layer]
 dependency_graph:
   requires:
-    - src/AtrocidadesRSS.Reader/Services/Data/ILocalCaseStore
-    - src/AtrocidadesRSS.Reader/Services/Data/SqliteCaseStore
-    - src/AtrocidadesRSS.Generator.Web/Models/Cases/CaseFieldHistoryViewModel
+    - src/OpenJustice.Reader/Services/Data/ILocalCaseStore
+    - src/OpenJustice.Reader/Services/Data/SqliteCaseStore
+    - src/OpenJustice.Generator.Web/Models/Cases/CaseFieldHistoryViewModel
   provides:
-    - src/AtrocidadesRSS.Reader/Models/Cases/CaseHistoryViewModel
-    - src/AtrocidadesRSS.Reader/Services/Cases/ICaseHistoryService
-    - src/AtrocidadesRSS.Reader/Services/Cases/CaseHistoryService
+    - src/OpenJustice.Reader/Models/Cases/CaseHistoryViewModel
+    - src/OpenJustice.Reader/Services/Cases/ICaseHistoryService
+    - src/OpenJustice.Reader/Services/Cases/CaseHistoryService
   affects:
-    - src/AtrocidadesRSS.Reader/Program.cs
+    - src/OpenJustice.Reader/Program.cs
 tech_stack:
   added:
     - LocalCaseFieldHistory record (data entity)
@@ -30,13 +30,13 @@ tech_stack:
     - Index-based stable A/B selection
 key_files:
   created:
-    - src/AtrocidadesRSS.Reader/Models/Cases/CaseHistoryViewModel.cs
-    - src/AtrocidadesRSS.Reader/Services/Cases/ICaseHistoryService.cs
-    - src/AtrocidadesRSS.Reader/Services/Cases/CaseHistoryService.cs
+    - src/OpenJustice.Reader/Models/Cases/CaseHistoryViewModel.cs
+    - src/OpenJustice.Reader/Services/Cases/ICaseHistoryService.cs
+    - src/OpenJustice.Reader/Services/Cases/CaseHistoryService.cs
   modified:
-    - src/AtrocidadesRSS.Reader/Services/Data/ILocalCaseStore.cs
-    - src/AtrocidadesRSS.Reader/Services/Data/SqliteCaseStore.cs
-    - src/AtrocidadesRSS.Reader/Program.cs
+    - src/OpenJustice.Reader/Services/Data/ILocalCaseStore.cs
+    - src/OpenJustice.Reader/Services/Data/SqliteCaseStore.cs
+    - src/OpenJustice.Reader/Program.cs
 key_decisions:
   - Additive history parsing preserves existing case import behavior
   - Service resilience: returns empty collections instead of throwing
@@ -67,7 +67,7 @@ Successfully created the reader-side history data foundation enabling Phase 5 UI
 
 ## Verification
 
-- ✅ `dotnet build src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj` succeeds
+- ✅ `dotnet build src/OpenJustice.Reader/OpenJustice.Reader.csproj` succeeds
 - ✅ Timeline/diff UI can consume real history data from local store APIs
 - ✅ No regressions in existing search/details compile path
 - ✅ Deterministic ordering (newest first) for all timeline queries

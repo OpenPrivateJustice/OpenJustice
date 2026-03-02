@@ -11,7 +11,7 @@ gaps:
     artifacts:
       - path: ".planning/phases/04-reader-core/04-04-PLAN.md"
         issue: "Plan exists but not completed"
-      - path: "src/AtrocidadesRSS.Reader/Pages/Cases/CaseDetails.razor"
+      - path: "src/OpenJustice.Reader/Pages/Cases/CaseDetails.razor"
         issue: "May need implementation verification"
     missing:
       - "RDR-14: Complete case details view with all fields"

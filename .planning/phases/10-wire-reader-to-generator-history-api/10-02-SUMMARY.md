@@ -23,9 +23,9 @@ tech_stack:
     - Graceful fallback when case exists locally
 key_files:
   modified:
-    - src/AtrocidadesRSS.Reader/Services/Cases/CaseHistoryService.cs
-    - src/AtrocidadesRSS.Reader/Pages/Cases/CaseHistory.razor
-    - src/AtrocidadesRSS.Reader/Pages/Cases/CaseDetails.razor
+    - src/OpenJustice.Reader/Services/Cases/CaseHistoryService.cs
+    - src/OpenJustice.Reader/Pages/Cases/CaseHistory.razor
+    - src/OpenJustice.Reader/Pages/Cases/CaseDetails.razor
 decisions:
   - "CaseHistoryService now exclusively uses GeneratorHistoryApiClient - no more local SqliteCaseStore history queries"
   - "401 responses show explicit session-expired UI instead of empty history"
@@ -89,9 +89,9 @@ All methods preserve:
 
 | Path | Provides |
 |------|----------|
-| src/AtrocidadesRSS.Reader/Services/Cases/CaseHistoryService.cs | History orchestration over GeneratorHistoryApiClient with existing timeline/diff semantics |
-| src/AtrocidadesRSS.Reader/Pages/Cases/CaseHistory.razor | UI wiring for live timeline/diff loading and unauthorized error handling |
-| src/AtrocidadesRSS.Reader/Pages/Cases/CaseDetails.razor | History link behavior aligned with live API-backed history availability |
+| src/OpenJustice.Reader/Services/Cases/CaseHistoryService.cs | History orchestration over GeneratorHistoryApiClient with existing timeline/diff semantics |
+| src/OpenJustice.Reader/Pages/Cases/CaseHistory.razor | UI wiring for live timeline/diff loading and unauthorized error handling |
+| src/OpenJustice.Reader/Pages/Cases/CaseDetails.razor | History link behavior aligned with live API-backed history availability |
 
 ## Key Links (Updated)
 
@@ -100,7 +100,7 @@ All methods preserve:
 
 ## Verification
 
-1. Build succeeded: `dotnet build src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj` ✓
+1. Build succeeded: `dotnet build src/OpenJustice.Reader/OpenJustice.Reader.csproj` ✓
 2. CaseHistoryService no longer imports or uses ILocalCaseStore ✓
 3. Timeline and diff UI render data from Generator API ✓
 4. Confidence badges use ChangeConfidence from API response ✓

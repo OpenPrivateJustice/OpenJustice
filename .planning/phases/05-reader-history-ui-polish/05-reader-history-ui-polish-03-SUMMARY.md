@@ -22,11 +22,11 @@ tech-stack:
 key-files:
   created: []
   modified:
-    - src/AtrocidadesRSS.Reader/Pages/Sync/Sync.razor
-    - src/AtrocidadesRSS.Reader/Pages/Search/Search.razor
-    - src/AtrocidadesRSS.Reader/Pages/Cases/CaseDetails.razor
-    - src/AtrocidadesRSS.Reader/Pages/Cases/CaseHistory.razor
-    - src/AtrocidadesRSS.Reader/wwwroot/css/app.css
+    - src/OpenJustice.Reader/Pages/Sync/Sync.razor
+    - src/OpenJustice.Reader/Pages/Search/Search.razor
+    - src/OpenJustice.Reader/Pages/Cases/CaseDetails.razor
+    - src/OpenJustice.Reader/Pages/Cases/CaseHistory.razor
+    - src/OpenJustice.Reader/wwwroot/css/app.css
 
 key-decisions:
   - "Used Bootstrap spinner components for consistency"
@@ -70,11 +70,11 @@ completed: 2026-03-02
 3. **Task 3: Apply responsive layout polish** - `eb670ae` (feat)
 
 ## Files Created/Modified
-- `src/AtrocidadesRSS.Reader/Pages/Sync/Sync.razor` - Button loading spinners, retry action, Portuguese error messages
-- `src/AtrocidadesRSS.Reader/Pages/Search/Search.razor` - Error state display with retry button
-- `src/AtrocidadesRSS.Reader/Pages/Cases/CaseDetails.razor` - Error state with retry, mobile button layout
-- `src/AtrocidadesRSS.Reader/Pages/Cases/CaseHistory.razor` - Diff loading state, responsive columns, filter controls
-- `src/AtrocidadesRSS.Reader/wwwroot/css/app.css` - Mobile responsive media queries
+- `src/OpenJustice.Reader/Pages/Sync/Sync.razor` - Button loading spinners, retry action, Portuguese error messages
+- `src/OpenJustice.Reader/Pages/Search/Search.razor` - Error state display with retry button
+- `src/OpenJustice.Reader/Pages/Cases/CaseDetails.razor` - Error state with retry, mobile button layout
+- `src/OpenJustice.Reader/Pages/Cases/CaseHistory.razor` - Diff loading state, responsive columns, filter controls
+- `src/OpenJustice.Reader/wwwroot/css/app.css` - Mobile responsive media queries
 
 ## Decisions Made
 - Used existing Bootstrap spinner patterns for consistency

@@ -21,17 +21,17 @@ tech_stack:
     - RFC7807 problem details for 404 responses
 key_files:
   created:
-    - src/AtrocidadesRSS.Generator/Services/History/ICaseFieldHistoryService.cs
-    - src/AtrocidadesRSS.Generator/Services/History/CaseFieldHistoryService.cs
-    - src/AtrocidadesRSS.Generator/Contracts/Cases/CaseFieldHistoryDto.cs
-    - src/AtrocidadesRSS.Generator/Controllers/CaseHistoryController.cs
-    - tests/AtrocidadesRSS.Generator.Tests/History/CaseFieldHistoryServiceTests.cs
-    - tests/AtrocidadesRSS.Generator.Tests/History/CaseHistoryControllerTests.cs
+    - src/OpenJustice.Generator/Services/History/ICaseFieldHistoryService.cs
+    - src/OpenJustice.Generator/Services/History/CaseFieldHistoryService.cs
+    - src/OpenJustice.Generator/Contracts/Cases/CaseFieldHistoryDto.cs
+    - src/OpenJustice.Generator/Controllers/CaseHistoryController.cs
+    - tests/OpenJustice.Generator.Tests/History/CaseFieldHistoryServiceTests.cs
+    - tests/OpenJustice.Generator.Tests/History/CaseHistoryControllerTests.cs
   modified:
-    - src/AtrocidadesRSS.Generator/Services/Cases/CaseWorkflowService.cs
-    - src/AtrocidadesRSS.Generator/ServiceCollectionExtensions.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Cases/CaseWorkflowServiceTests.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Curation/CurationServiceTests.cs
+    - src/OpenJustice.Generator/Services/Cases/CaseWorkflowService.cs
+    - src/OpenJustice.Generator/ServiceCollectionExtensions.cs
+    - tests/OpenJustice.Generator.Tests/Cases/CaseWorkflowServiceTests.cs
+    - tests/OpenJustice.Generator.Tests/Curation/CurationServiceTests.cs
 decisions:
   - "Append-only pattern chosen for immutable audit trail"
   - "Confidence scores preserved per field change without rollback coupling"

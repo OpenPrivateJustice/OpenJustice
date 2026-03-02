@@ -1,0 +1,125 @@
+@using OpenJustice.Reader.Models.Cases
+
+<div class="case-metadata">
+    <h5 class="section-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" 
+             class="bi bi-info-circle me-2" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+        </svg>
+        Metadados
+    </h5>
+
+    @if (Metadata == null)
+    {
+        <p class="text-muted">Nenhum metadado disponível para este caso.</p>
+    }
+    else
+    {
+        <div class="metadata-grid">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-5">Registrado em:</dt>
+                        <dd class="col-sm-7">@Metadata.RegisteredAt.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                        @if (!string.IsNullOrEmpty(Metadata.RegisteredBy))
+                        {
+                            <dt class="col-sm-5">Registrado por:</dt>
+                            <dd class="col-sm-7">@Metadata.RegisteredBy</dd>
+                        }
+
+                        @if (Metadata.LastVerifiedAt.HasValue)
+                        {
+                            <dt class="col-sm-5">Última verificação:</dt>
+                            <dd class="col-sm-7">@Metadata.LastVerifiedAt.Value.ToString("dd/MM/yyyy HH:mm")</dd>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Metadata.LastVerifiedBy))
+                        {
+                            <dt class="col-sm-5">Verificado por:</dt>
+                            <dd class="col-sm-7">@Metadata.LastVerifiedBy</dd>
+                        }
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-5">Versão:</dt>
+                        <dd class="col-sm-7">
+                            <span class="badge bg-secondary">v@(Metadata.Version)</span>
+                        </dd>
+
+                        @if (Metadata.RelatedCaseCodes.Count > 0)
+                        {
+                            <dt class="col-sm-5">Casos relacionados:</dt>
+                            <dd class="col-sm-7">
+                                @foreach (var caseCode in Metadata.RelatedCaseCodes)
+                                {
+                                    <a href="/cases/@caseCode" class="badge bg-light text-dark text-decoration-none me-1">
+                                        @caseCode
+                                    </a>
+                                }
+                            </dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Metadata.DataQualityNotes))
+            {
+                <div class="mt-3">
+                    <h6>Notas de Qualidade:</h6>
+                    <p class="text-muted small">@Metadata.DataQualityNotes</p>
+                </div>
+            }
+
+            <!-- Tags Section -->
+            @if (Tags.Count > 0)
+            {
+                <div class="mt-3">
+                    <h6>Tags:</h6>
+                    <div class="tags-container">
+                        @foreach (var tag in Tags)
+                        {
+                            <span class="badge bg-primary me-1 mb-1">@tag</span>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public CaseMetadataViewModel? Metadata { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<string> Tags { get; set; } = Array.Empty<string>();
+}
+
+<style>
+    .case-metadata .section-title {
+        display: flex;
+        align-items: center;
+        color: #212529;
+        border-bottom: 2px solid #dee2e6;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .metadata-grid dt {
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+    .metadata-grid dd {
+        margin-bottom: 0.5rem;
+    }
+
+    .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+</style>

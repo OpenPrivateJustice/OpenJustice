@@ -28,17 +28,17 @@ tech-stack:
 
 key-files:
   created:
-    - src/AtrocidadesRSS.Generator/Services/Discovery/RssAggregatorService.cs
-    - src/AtrocidadesRSS.Generator/Services/Discovery/RedditThreadScraperService.cs
-    - src/AtrocidadesRSS.Generator/Services/Discovery/DiscoveredCaseReviewService.cs
-    - src/AtrocidadesRSS.Generator/Controllers/DiscoveryController.cs
-    - src/AtrocidadesRSS.Generator/Contracts/Discovery/DiscoveredCaseDto.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/DiscoveredCase.cs
-    - src/AtrocidadesRSS.Generator/Configuration/DiscoveryOptions.cs
-    - src/AtrocidadesRSS.Generator/Domain/Enums/DiscoveryStatus.cs
-    - src/AtrocidadesRSS.Generator/Domain/Enums/DiscoverySourceType.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Discovery/RssAggregatorServiceTests.cs
-    - tests/AtrocidadesRSS.Generator.Tests/Discovery/RedditThreadScraperServiceTests.cs
+    - src/OpenJustice.Generator/Services/Discovery/RssAggregatorService.cs
+    - src/OpenJustice.Generator/Services/Discovery/RedditThreadScraperService.cs
+    - src/OpenJustice.Generator/Services/Discovery/DiscoveredCaseReviewService.cs
+    - src/OpenJustice.Generator/Controllers/DiscoveryController.cs
+    - src/OpenJustice.Generator/Contracts/Discovery/DiscoveredCaseDto.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/DiscoveredCase.cs
+    - src/OpenJustice.Generator/Configuration/DiscoveryOptions.cs
+    - src/OpenJustice.Generator/Domain/Enums/DiscoveryStatus.cs
+    - src/OpenJustice.Generator/Domain/Enums/DiscoverySourceType.cs
+    - tests/OpenJustice.Generator.Tests/Discovery/RssAggregatorServiceTests.cs
+    - tests/OpenJustice.Generator.Tests/Discovery/RedditThreadScraperServiceTests.cs
 
 key-decisions:
   - "Discovery items remain gated by curator review - not auto-promoted"
@@ -87,17 +87,17 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 
-- `src/AtrocidadesRSS.Generator/Configuration/DiscoveryOptions.cs` - RSS/Reddit config options
-- `src/AtrocidadesRSS.Generator/Contracts/Discovery/DiscoveredCaseDto.cs` - DTOs and request classes
-- `src/AtrocidadesRSS.Generator/Controllers/DiscoveryController.cs` - REST API endpoints
-- `src/AtrocidadesRSS.Generator/Domain/Enums/DiscoveryStatus.cs` - Pending/Approved/Rejected
-- `src/AtrocidadesRSS.Generator/Domain/Enums/DiscoverySourceType.cs` - RSS/Reddit types
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/DiscoveredCase.cs` - Entity
-- `src/AtrocidadesRSS.Generator/Services/Discovery/DiscoveredCaseReviewService.cs` - Review workflow
-- `src/AtrocidadesRSS.Generator/Services/Discovery/RedditThreadScraperService.cs` - Reddit scraper
-- `src/AtrocidadesRSS.Generator/Services/Discovery/RssAggregatorService.cs` - RSS aggregator
-- `tests/AtrocidadesRSS.Generator.Tests/Discovery/RssAggregatorServiceTests.cs` - RSS tests
-- `tests/AtrocidadesRSS.Generator.Tests/Discovery/RedditThreadScraperServiceTests.cs` - Reddit tests
+- `src/OpenJustice.Generator/Configuration/DiscoveryOptions.cs` - RSS/Reddit config options
+- `src/OpenJustice.Generator/Contracts/Discovery/DiscoveredCaseDto.cs` - DTOs and request classes
+- `src/OpenJustice.Generator/Controllers/DiscoveryController.cs` - REST API endpoints
+- `src/OpenJustice.Generator/Domain/Enums/DiscoveryStatus.cs` - Pending/Approved/Rejected
+- `src/OpenJustice.Generator/Domain/Enums/DiscoverySourceType.cs` - RSS/Reddit types
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/DiscoveredCase.cs` - Entity
+- `src/OpenJustice.Generator/Services/Discovery/DiscoveredCaseReviewService.cs` - Review workflow
+- `src/OpenJustice.Generator/Services/Discovery/RedditThreadScraperService.cs` - Reddit scraper
+- `src/OpenJustice.Generator/Services/Discovery/RssAggregatorService.cs` - RSS aggregator
+- `tests/OpenJustice.Generator.Tests/Discovery/RssAggregatorServiceTests.cs` - RSS tests
+- `tests/OpenJustice.Generator.Tests/Discovery/RedditThreadScraperServiceTests.cs` - Reddit tests
 
 ## Decisions Made
 - Discovery items remain gated by curator review before promotion to official cases
@@ -113,7 +113,7 @@ Each task was committed atomically:
 - **Found during:** Task 1 verification
 - **Issue:** RSS test expected discovered cases but SyndicationFeed parsing returned null in test context
 - **Fix:** Modified test to handle both cases (parsing succeeds or fails gracefully)
-- **Files modified:** tests/AtrocidadesRSS.Generator.Tests/Discovery/RssAggregatorServiceTests.cs
+- **Files modified:** tests/OpenJustice.Generator.Tests/Discovery/RssAggregatorServiceTests.cs
 - **Verification:** Tests pass - 43/43 passing
 - **Committed in:** 906deca
 

@@ -24,13 +24,13 @@ tech_stack:
     - Explicit 401 handling with redirect to login URL
 key_files:
   created:
-    - src/AtrocidadesRSS.Reader/Services/Cases/IGeneratorHistoryApiClient.cs
-    - src/AtrocidadesRSS.Reader/Services/Cases/GeneratorHistoryApiClient.cs
+    - src/OpenJustice.Reader/Services/Cases/IGeneratorHistoryApiClient.cs
+    - src/OpenJustice.Reader/Services/Cases/GeneratorHistoryApiClient.cs
   modified:
-    - src/AtrocidadesRSS.Reader/Configuration/ReaderOptions.cs
-    - src/AtrocidadesRSS.Reader/wwwroot/appsettings.json
-    - src/AtrocidadesRSS.Reader/Program.cs
-    - src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj
+    - src/OpenJustice.Reader/Configuration/ReaderOptions.cs
+    - src/OpenJustice.Reader/wwwroot/appsettings.json
+    - src/OpenJustice.Reader/Program.cs
+    - src/OpenJustice.Reader/OpenJustice.Reader.csproj
 decisions:
   - "Used IHttpClientFactory for proper connection pooling and lifetime management"
   - "Created dedicated exception type (GeneratorHistoryApiUnauthorizedException) for explicit 401 handling"
@@ -98,14 +98,14 @@ Registered in DI:
 
 | Path | Provides |
 |------|----------|
-| src/AtrocidadesRSS.Reader/Configuration/ReaderOptions.cs | Generator history API + auth settings with startup validation |
-| src/AtrocidadesRSS.Reader/Services/Cases/IGeneratorHistoryApiClient.cs | Contract for authenticated history API calls |
-| src/AtrocidadesRSS.Reader/Services/Cases/GeneratorHistoryApiClient.cs | HTTP implementation with Authorization header and 401 handling |
-| src/AtrocidadesRSS.Reader/Program.cs | DI wiring for GeneratorHistoryApiClient |
+| src/OpenJustice.Reader/Configuration/ReaderOptions.cs | Generator history API + auth settings with startup validation |
+| src/OpenJustice.Reader/Services/Cases/IGeneratorHistoryApiClient.cs | Contract for authenticated history API calls |
+| src/OpenJustice.Reader/Services/Cases/GeneratorHistoryApiClient.cs | HTTP implementation with Authorization header and 401 handling |
+| src/OpenJustice.Reader/Program.cs | DI wiring for GeneratorHistoryApiClient |
 
 ## Verification
 
-1. Build succeeded: `dotnet build src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj` ✓
+1. Build succeeded: `dotnet build src/OpenJustice.Reader/OpenJustice.Reader.csproj` ✓
 2. Options validation includes GeneratorHistoryApi required fields ✓
 3. GeneratorHistoryApiClient contains Authorization header and explicit 401 redirect ✓
 

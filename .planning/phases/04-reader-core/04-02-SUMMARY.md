@@ -31,15 +31,15 @@ tech_stack:
     - State machine for sync workflow
 key_files:
   created:
-    - src/AtrocidadesRSS.Reader/Services/Sync/ISyncServices.cs
-    - src/AtrocidadesRSS.Reader/Services/Sync/VersionService.cs
-    - src/AtrocidadesRSS.Reader/Services/Sync/TorrentSyncService.cs
-    - src/AtrocidadesRSS.Reader/Services/Data/ILocalCaseStore.cs
-    - src/AtrocidadesRSS.Reader/Services/Data/SqliteCaseStore.cs
-    - src/AtrocidadesRSS.Reader/Pages/Sync/Sync.razor
+    - src/OpenJustice.Reader/Services/Sync/ISyncServices.cs
+    - src/OpenJustice.Reader/Services/Sync/VersionService.cs
+    - src/OpenJustice.Reader/Services/Sync/TorrentSyncService.cs
+    - src/OpenJustice.Reader/Services/Data/ILocalCaseStore.cs
+    - src/OpenJustice.Reader/Services/Data/SqliteCaseStore.cs
+    - src/OpenJustice.Reader/Pages/Sync/Sync.razor
   modified:
-    - src/AtrocidadesRSS.Reader/Program.cs
-    - src/AtrocidadesRSS.Reader/_Imports.razor
+    - src/OpenJustice.Reader/Program.cs
+    - src/OpenJustice.Reader/_Imports.razor
 decisions:
   - "Used HTTP download fallback for torrent (browser WASM limitation)"
   - "In-memory storage for local cases (production would use sql.js or IndexedDB)"
@@ -91,7 +91,7 @@ Deliver the Reader data synchronization pipeline: torrent download, version chec
 
 ## Verification
 
-- Solution builds successfully: `dotnet build src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj`
+- Solution builds successfully: `dotnet build src/OpenJustice.Reader/OpenJustice.Reader.csproj`
 - All services properly registered in DI
 - Sync page functional with state machine transitions
 

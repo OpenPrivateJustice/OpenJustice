@@ -27,16 +27,16 @@ tech-stack:
 
 key-files:
   created:
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/Case.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/CrimeType.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/CaseType.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/JudicialStatus.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/Source.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/Evidence.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/Tag.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/CaseTag.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/CaseFieldHistory.cs
-    - src/AtrocidadesRSS.Generator/Infrastructure/Persistence/AppDbContext.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/Case.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/CrimeType.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/CaseType.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/JudicialStatus.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/Source.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/Evidence.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/Tag.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/CaseTag.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/Entities/CaseFieldHistory.cs
+    - src/OpenJustice.Generator/Infrastructure/Persistence/AppDbContext.cs
   modified: []
 
 key-decisions:
@@ -81,16 +81,16 @@ completed: 2026-03-01
 **Plan metadata:** `130f7bd` (docs: complete plan)
 
 ## Files Created/Modified
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/Case.cs` - Main case aggregate with victim, accused, crime details, judicial info, and navigation properties
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/CrimeType.cs` - Crime type lookup table
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/CaseType.cs` - Modality (attempted/consummated) lookup
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/JudicialStatus.cs` - Judicial status lookup
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/Source.cs` - Sources/reportages linked to cases
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/Evidence.cs` - Evidence linked to cases
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/Tag.cs` - Tag categorization
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/CaseTag.cs` - Many-to-many join table with composite key
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/Entities/CaseFieldHistory.cs` - Append-only field change history
-- `src/AtrocidadesRSS.Generator/Infrastructure/Persistence/AppDbContext.cs` - DbContext with full fluent API configuration
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/Case.cs` - Main case aggregate with victim, accused, crime details, judicial info, and navigation properties
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/CrimeType.cs` - Crime type lookup table
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/CaseType.cs` - Modality (attempted/consummated) lookup
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/JudicialStatus.cs` - Judicial status lookup
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/Source.cs` - Sources/reportages linked to cases
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/Evidence.cs` - Evidence linked to cases
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/Tag.cs` - Tag categorization
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/CaseTag.cs` - Many-to-many join table with composite key
+- `src/OpenJustice.Generator/Infrastructure/Persistence/Entities/CaseFieldHistory.cs` - Append-only field change history
+- `src/OpenJustice.Generator/Infrastructure/Persistence/AppDbContext.cs` - DbContext with full fluent API configuration
 
 ## Decisions Made
 - Used modern EF Core 10 ToTable(lambda) syntax for check constraints instead of deprecated HasCheckConstraint

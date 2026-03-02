@@ -1,15 +1,15 @@
 #!/bin/bash
-# Inicia ambos os projetos AtrocidadesRSS (Reader + Generator)
+# Inicia ambos os projetos OpenJustice (Reader + Generator)
 
-echo "Iniciando AtrocidadesRSS Reader (porta 5280)..."
-cd /home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Reader
+echo "Iniciando OpenJustice Reader (porta 5280)..."
+cd /home/eduardo/Projects/OpenJustice/src/OpenJustice.Reader
 dotnet run --urls "http://0.0.0.0:5280" &
 READER_PID=$!
 
 sleep 2
 
-echo "Iniciando AtrocidadesRSS Generator (porta 5001)..."
-cd /home/eduardo/Projects/AtrocidadesRSS/src/AtrocidadesRSS.Generator.Web
+echo "Iniciando OpenJustice Generator (porta 5001)..."
+cd /home/eduardo/Projects/OpenJustice/src/OpenJustice.Generator.Web
 dotnet run --urls "http://0.0.0.0:5001" &
 GENERATOR_PID=$!
 

@@ -35,13 +35,13 @@ gaps: []
 
 | Artifact | Expected | Status | Details |
 |----------|----------|--------|---------|
-| `src/AtrocidadesRSS.Reader/Configuration/ReaderOptions.cs` | Generator history API + auth settings with startup validation | ✓ VERIFIED | Contains `GeneratorHistoryApiOptions` class with BaseUrl, AccessToken, LoginUrl, RequestTimeoutSeconds; validated in `ReaderOptionsValidator` |
-| `src/AtrocidadesRSS.Reader/Services/Cases/IGeneratorHistoryApiClient.cs` | Contract for authenticated history API calls | ✓ VERIFIED | Interface defines `GetCaseHistoryAsync` and `GetFieldHistoryAsync`; includes `GeneratorHistoryApiUnauthorizedException` |
-| `src/AtrocidadesRSS.Reader/Services/Cases/GeneratorHistoryApiClient.cs` | HTTP implementation with Authorization header and 401 handling | ✓ VERIFIED | Always adds Authorization header; handles 404 as empty; throws exception on 401 with LoginUrl |
-| `src/AtrocidadesRSS.Reader/Program.cs` | DI wiring for GeneratorHistoryApiClient | ✓ VERIFIED | Lines 23-50 wire configuration, HttpClient factory, and singleton registration |
-| `src/AtrocidadesRSS.Reader/Services/Cases/CaseHistoryService.cs` | History orchestration over GeneratorHistoryApiClient | ✓ VERIFIED | All methods use IGeneratorHistoryApiClient; no local SqliteCaseStore queries |
-| `src/AtrocidadesRSS.Reader/Pages/Cases/CaseHistory.razor` | UI wiring for live timeline/diff loading | ✓ VERIFIED | Loads from Generator API; handles 401 with session-expired UI |
-| `src/AtrocidadesRSS.Reader/Pages/Cases/CaseDetails.razor` | History link behavior | ✓ VERIFIED | Calls `HasHistoryAsync` from API; graceful fallback if auth fails |
+| `src/OpenJustice.Reader/Configuration/ReaderOptions.cs` | Generator history API + auth settings with startup validation | ✓ VERIFIED | Contains `GeneratorHistoryApiOptions` class with BaseUrl, AccessToken, LoginUrl, RequestTimeoutSeconds; validated in `ReaderOptionsValidator` |
+| `src/OpenJustice.Reader/Services/Cases/IGeneratorHistoryApiClient.cs` | Contract for authenticated history API calls | ✓ VERIFIED | Interface defines `GetCaseHistoryAsync` and `GetFieldHistoryAsync`; includes `GeneratorHistoryApiUnauthorizedException` |
+| `src/OpenJustice.Reader/Services/Cases/GeneratorHistoryApiClient.cs` | HTTP implementation with Authorization header and 401 handling | ✓ VERIFIED | Always adds Authorization header; handles 404 as empty; throws exception on 401 with LoginUrl |
+| `src/OpenJustice.Reader/Program.cs` | DI wiring for GeneratorHistoryApiClient | ✓ VERIFIED | Lines 23-50 wire configuration, HttpClient factory, and singleton registration |
+| `src/OpenJustice.Reader/Services/Cases/CaseHistoryService.cs` | History orchestration over GeneratorHistoryApiClient | ✓ VERIFIED | All methods use IGeneratorHistoryApiClient; no local SqliteCaseStore queries |
+| `src/OpenJustice.Reader/Pages/Cases/CaseHistory.razor` | UI wiring for live timeline/diff loading | ✓ VERIFIED | Loads from Generator API; handles 401 with session-expired UI |
+| `src/OpenJustice.Reader/Pages/Cases/CaseDetails.razor` | History link behavior | ✓ VERIFIED | Calls `HasHistoryAsync` from API; graceful fallback if auth fails |
 
 ### Key Link Verification
 

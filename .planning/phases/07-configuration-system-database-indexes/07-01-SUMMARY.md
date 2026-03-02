@@ -28,16 +28,16 @@ key_files:
   created:
     - docs/configuration.md
   modified:
-    - src/AtrocidadesRSS.Generator.Web/Program.cs
+    - src/OpenJustice.Generator.Web/Program.cs
   referenced:
-    - src/AtrocidadesRSS.Generator/appsettings.json
-    - src/AtrocidadesRSS.Generator/appsettings.Development.json
-    - src/AtrocidadesRSS.Generator/Configuration/AppConfiguration.cs
-    - src/AtrocidadesRSS.Generator/Configuration/GeneratorOptions.cs
-    - src/AtrocidadesRSS.Generator/ServiceCollectionExtensions.cs
+    - src/OpenJustice.Generator/appsettings.json
+    - src/OpenJustice.Generator/appsettings.Development.json
+    - src/OpenJustice.Generator/Configuration/AppConfiguration.cs
+    - src/OpenJustice.Generator/Configuration/GeneratorOptions.cs
+    - src/OpenJustice.Generator/ServiceCollectionExtensions.cs
 decisions:
   - Used IValidateOptions pattern for startup validation (already present in codebase)
-  - Wired AddAtrocidadesRssConfiguration into Generator.Web Program.cs
+  - Wired AddOpenJusticeConfiguration into Generator.Web Program.cs
   - Added ValidateOnStart() to trigger validation at boot time
   - Created comprehensive documentation mapping 1:1 to runtime config keys
 metrics:
@@ -72,9 +72,9 @@ Verification confirmed:
 
 ### Task 2: Wire fail-fast startup validation (COMPLETED)
 
-Modified `src/AtrocidadesRSS.Generator.Web/Program.cs` to:
+Modified `src/OpenJustice.Generator.Web/Program.cs` to:
 1. Import the Generator configuration namespace
-2. Call `AddAtrocidadesRssConfiguration(builder.Configuration)` to register configuration binding
+2. Call `AddOpenJusticeConfiguration(builder.Configuration)` to register configuration binding
 3. Call `builder.Services.ValidateOnStart()` to trigger validation at boot time
 
 This ensures the application fails immediately at startup if required configuration is missing or invalid, rather than failing lazily on first use.
@@ -125,7 +125,7 @@ None - this plan did not require external authentication.
 ## Self-Check
 
 - [x] Created files exist: docs/configuration.md
-- [x] Modified files exist: src/AtrocidadesRSS.Generator.Web/Program.cs
+- [x] Modified files exist: src/OpenJustice.Generator.Web/Program.cs
 - [x] Commit exists: 12a61b6
 
 ## Self-Check Result: PASSED

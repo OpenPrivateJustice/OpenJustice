@@ -36,15 +36,15 @@ tech_stack:
     - Paged result pattern
 key_files:
   created:
-    - src/AtrocidadesRSS.Reader/Models/Search/CaseSearchQuery.cs
-    - src/AtrocidadesRSS.Reader/Models/Search/PagedResult.cs
-    - src/AtrocidadesRSS.Reader/Services/Search/ICaseSearchService.cs
-    - src/AtrocidadesRSS.Reader/Services/Search/CaseSearchService.cs
-    - src/AtrocidadesRSS.Reader/Components/Search/CaseFilters.razor
-    - src/AtrocidadesRSS.Reader/Components/Search/ResultsTable.razor
+    - src/OpenJustice.Reader/Models/Search/CaseSearchQuery.cs
+    - src/OpenJustice.Reader/Models/Search/PagedResult.cs
+    - src/OpenJustice.Reader/Services/Search/ICaseSearchService.cs
+    - src/OpenJustice.Reader/Services/Search/CaseSearchService.cs
+    - src/OpenJustice.Reader/Components/Search/CaseFilters.razor
+    - src/OpenJustice.Reader/Components/Search/ResultsTable.razor
   modified:
-    - src/AtrocidadesRSS.Reader/Pages/Search/Search.razor
-    - src/AtrocidadesRSS.Reader/Program.cs
+    - src/OpenJustice.Reader/Pages/Search/Search.razor
+    - src/OpenJustice.Reader/Program.cs
 decisions:
   - "Fuzzy matching uses Levenshtein distance with max distance scaled by search term length"
   - "Filters applied as AND conditions after initial query from local store"
@@ -104,7 +104,7 @@ Implement the core reader search experience with fuzzy name matching, composable
 
 ## Verification
 
-- Solution builds successfully: `dotnet build src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj`
+- Solution builds successfully: `dotnet build src/OpenJustice.Reader/OpenJustice.Reader.csproj`
 - All services properly registered in DI
 - Search page functional with filter composition and pagination
 

@@ -28,12 +28,12 @@ tech_stack:
     - Threshold-based confidence badge coloring (>=80: green, >=50: yellow, <50: red)
 key_files:
   created:
-    - src/AtrocidadesRSS.Reader/Pages/Cases/CaseHistory.razor
-    - src/AtrocidadesRSS.Reader/Pages/Cases/CaseHistory.razor.css
+    - src/OpenJustice.Reader/Pages/Cases/CaseHistory.razor
+    - src/OpenJustice.Reader/Pages/Cases/CaseHistory.razor.css
   modified:
-    - src/AtrocidadesRSS.Reader/Pages/Cases/CaseDetails.razor
-    - src/AtrocidadesRSS.Reader/Components/Cases/CaseSources.razor
-    - src/AtrocidadesRSS.Reader/Components/Cases/CaseEvidence.razor
+    - src/OpenJustice.Reader/Pages/Cases/CaseDetails.razor
+    - src/OpenJustice.Reader/Components/Cases/CaseSources.razor
+    - src/OpenJustice.Reader/Components/Cases/CaseEvidence.razor
 decisions:
   - Used standard anchor navigation for breadcrumbs instead of JS history manipulation
   - Used index-based selection for diff to ensure deterministic ordering
@@ -92,7 +92,7 @@ Deliver the reader history UI and case-level confidence visualization, including
 
 ## Verification Results
 
-- [x] Build passes: `dotnet build src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj`
+- [x] Build passes: `dotnet build src/OpenJustice.Reader/OpenJustice.Reader.csproj`
 - [x] CaseHistory route at `/cases/{caseId}/history` renders timeline entries
 - [x] Diff comparison controls functional with A/B selectors
 - [x] Confidence badges display 0-100% values with consistent threshold coloring

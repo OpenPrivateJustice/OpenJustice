@@ -1,6 +1,6 @@
-# AtrocidadesRSS Generator Configuration
+# OpenJustice Generator Configuration
 
-This document describes all configuration options for the AtrocidadesRSS Generator application.
+This document describes all configuration options for the OpenJustice Generator application.
 
 ## Configuration Files
 
@@ -17,7 +17,7 @@ Database connection configuration.
 
 | Key | Type | Required | Description | Example |
 |-----|------|----------|-------------|---------|
-| `DefaultConnection` | string | Yes | PostgreSQL connection string | `Host=localhost;Database=atrocidadesrss;Username=postgres;Password=your_password` |
+| `DefaultConnection` | string | Yes | PostgreSQL connection string | `Host=localhost;Database=openjustice;Username=postgres;Password=your_password` |
 
 ### Database
 
@@ -28,7 +28,7 @@ Detailed database connection settings (alternative to `ConnectionStrings`).
 | `ConnectionString` | string | Yes* | Full PostgreSQL connection string | - |
 | `Host` | string | No* | PostgreSQL server hostname | `localhost` |
 | `Port` | int | No | PostgreSQL port | `5432` |
-| `Name` | string | No | Database name | `atrocidadesrss` |
+| `Name` | string | No | Database name | `openjustice` |
 | `Username` | string | No | Database username | `postgres` |
 | `Password` | string | No | Database password | - |
 | `MaxRetryCount` | int | No | Maximum retry attempts for transient failures | `3` |
@@ -125,7 +125,7 @@ For local development, create or update `appsettings.Development.json` with your
     }
   },
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=atrocidadesrss_dev;Username=your_username;Password=your_password"
+    "DefaultConnection": "Host=localhost;Database=openjustice_dev;Username=your_username;Password=your_password"
   }
 }
 ```
@@ -134,7 +134,7 @@ For local development, create or update `appsettings.Development.json` with your
 
 1. **Database**: Use a local PostgreSQL instance. The default dev connection uses:
    - Host: `localhost`
-   - Database: `atrocidadesrss_dev`
+   - Database: `openjustice_dev`
    - Username: `postgres`
 
 2. **Logging**: Development config enables verbose logging for troubleshooting.
@@ -158,7 +158,7 @@ All configuration can be overridden via environment variables using ASP.NET Core
 
 ```bash
 # Connection string
-export ConnectionStrings__DefaultConnection="Host=prod.example.com;Database=atrocidadesrss"
+export ConnectionStrings__DefaultConnection="Host=prod.example.com;Database=openjustice"
 
 # Database settings
 export Database__Host="prod.example.com"
@@ -175,13 +175,13 @@ export FilePaths__SnapshotDirectory="/data/snapshots"
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=postgres.example.com;Database=atrocidadesrss;Username=atrocidades;Password=secure_password"
+    "DefaultConnection": "Host=postgres.example.com;Database=openjustice;Username=atrocidades;Password=secure_password"
   },
   "FilePaths": {
-    "SnapshotDirectory": "/var/data/atrocidadesrss/snapshots",
-    "BackupDirectory": "/var/data/atrocidadesrss/backups",
-    "ExportDirectory": "/var/data/atrocidadesrss/exports",
-    "TempDirectory": "/tmp/atrocidadesrss"
+    "SnapshotDirectory": "/var/data/openjustice/snapshots",
+    "BackupDirectory": "/var/data/openjustice/backups",
+    "ExportDirectory": "/var/data/openjustice/exports",
+    "TempDirectory": "/tmp/openjustice"
   },
   "Export": {
     "FilePrefix": "atrocidades_snapshot",

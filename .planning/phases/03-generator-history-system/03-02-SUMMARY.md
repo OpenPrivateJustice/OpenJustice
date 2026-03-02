@@ -23,14 +23,14 @@ tech_stack:
     - Field filtering for timeline
 key_files:
   created:
-    - src/AtrocidadesRSS.Generator.Web/Models/Cases/CaseFieldHistoryViewModel.cs
-    - src/AtrocidadesRSS.Generator.Web/Pages/Cases/CaseHistory.razor
-    - src/AtrocidadesRSS.Generator.Web/Pages/Cases/CaseHistory.razor.css
-    - tests/AtrocidadesRSS.Generator.Tests/History/CaseHistoryApiContractTests.cs
+    - src/OpenJustice.Generator.Web/Models/Cases/CaseFieldHistoryViewModel.cs
+    - src/OpenJustice.Generator.Web/Pages/Cases/CaseHistory.razor
+    - src/OpenJustice.Generator.Web/Pages/Cases/CaseHistory.razor.css
+    - tests/OpenJustice.Generator.Tests/History/CaseHistoryApiContractTests.cs
   modified:
-    - src/AtrocidadesRSS.Generator.Web/Services/GeneratorApiClient.cs
-    - src/AtrocidadesRSS.Generator.Web/Pages/Cases/CaseEdit.razor
-    - tests/AtrocidadesRSS.Generator.Tests/AtrocidadesRSS.Generator.Tests.csproj
+    - src/OpenJustice.Generator.Web/Services/GeneratorApiClient.cs
+    - src/OpenJustice.Generator.Web/Pages/Cases/CaseEdit.razor
+    - tests/OpenJustice.Generator.Tests/OpenJustice.Generator.Tests.csproj
 decisions:
   - "Append-only history captured in plan 03-01 provides foundation for timeline"
   - "Confidence scores (0-100) displayed as labels for curator trust assessment"

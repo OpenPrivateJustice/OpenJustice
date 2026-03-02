@@ -33,19 +33,19 @@ tech_stack:
     - Safe URL handling with target attributes
 key_files:
   created:
-    - src/AtrocidadesRSS.Reader/Models/Cases/CaseDetailViewModel.cs
-    - src/AtrocidadesRSS.Reader/Services/Cases/ICaseDetailsService.cs
-    - src/AtrocidadesRSS.Reader/Services/Cases/CaseDetailsService.cs
-    - src/AtrocidadesRSS.Reader/Components/Cases/SensitiveContentGate.razor
-    - src/AtrocidadesRSS.Reader/Components/Cases/CaseHeader.razor
-    - src/AtrocidadesRSS.Reader/Components/Cases/CaseSources.razor
-    - src/AtrocidadesRSS.Reader/Components/Cases/CaseEvidence.razor
-    - src/AtrocidadesRSS.Reader/Components/Cases/CaseJudicialInfo.razor
-    - src/AtrocidadesRSS.Reader/Components/Cases/CaseMetadata.razor
-    - src/AtrocidadesRSS.Reader/Pages/Cases/CaseDetails.razor
+    - src/OpenJustice.Reader/Models/Cases/CaseDetailViewModel.cs
+    - src/OpenJustice.Reader/Services/Cases/ICaseDetailsService.cs
+    - src/OpenJustice.Reader/Services/Cases/CaseDetailsService.cs
+    - src/OpenJustice.Reader/Components/Cases/SensitiveContentGate.razor
+    - src/OpenJustice.Reader/Components/Cases/CaseHeader.razor
+    - src/OpenJustice.Reader/Components/Cases/CaseSources.razor
+    - src/OpenJustice.Reader/Components/Cases/CaseEvidence.razor
+    - src/OpenJustice.Reader/Components/Cases/CaseJudicialInfo.razor
+    - src/OpenJustice.Reader/Components/Cases/CaseMetadata.razor
+    - src/OpenJustice.Reader/Pages/Cases/CaseDetails.razor
   modified:
-    - src/AtrocidadesRSS.Reader/Program.cs
-    - src/AtrocidadesRSS.Reader/_Imports.razor
+    - src/OpenJustice.Reader/Program.cs
+    - src/OpenJustice.Reader/_Imports.razor
 decisions:
   - "Sensitive content gate uses RenderFragment pattern for conditional rendering"
   - "Case details loaded via service that maps LocalCase to full CaseDetailViewModel"
@@ -101,7 +101,7 @@ Complete reader case visualization with sensitive-content safeguards and compreh
 
 ## Verification
 
-- Solution builds successfully: `dotnet build src/AtrocidadesRSS.Reader/AtrocidadesRSS.Reader.csproj`
+- Solution builds successfully: `dotnet build src/OpenJustice.Reader/OpenJustice.Reader.csproj`
 - All services properly registered in DI
 - Case details page renders complete information with sensitive content gate
 - Navigation from search to details works as expected
