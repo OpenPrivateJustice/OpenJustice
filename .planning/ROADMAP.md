@@ -61,7 +61,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 13-01-PLAN.md - Establish Tesseract OCR service foundation with Portuguese quality metadata and fail-fast OCR configuration. (Complete: 2026-03-02)
-- [ ] 13-02-PLAN.md - Wire OCR into the extraction job to produce same-base `.txt` artifacts and persistent OCR failure logs.
+- [x] 13-02-PLAN.md - Wire OCR into the extraction job to produce same-base `.txt` artifacts and persistent OCR failure logs. (Complete: 2026-03-02)
 
 ## Progress
 
@@ -69,4 +69,4 @@ Plans:
 |-------|----------------|--------|-----------|
 | 11. Extractor Foundation and TJGO Search | 3/3 | Complete    | 2026-03-02 |
 | 12. PDF Acquisition Pipeline | 2/2 | Complete    | 2026-03-02 |
-| 13. OCR Text Extraction and Quality Signals | 1/2 | In Progress | 2026-03-02 |
+| 13. OCR Text Extraction and Quality Signals | 2/2 | Complete    | 2026-03-02 |

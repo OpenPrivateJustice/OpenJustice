@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 13 of 13 (OCR Text Extraction and Quality Signals)
-Plan: 1 of 2 in current phase
-Status: In Progress
-Last activity: 2026-03-02 - Completed 13-01 OCR foundation
+Plan: 2 of 2 in current phase
+Status: Completed
+Last activity: 2026-03-02 - Completed 13-02 OCR pipeline integration
 
-Progress: [████████████░░░░░░░░░] 38% (Phase 13 Plan 1 complete)
+Progress: [████████████████████] 100% (Phase 13 complete)
 
 ## Performance Metrics
 
@@ -31,9 +31,10 @@ Progress: [████████████░░░░░░░░░] 38% 
 | v2.0 (11-13) | 5/TBD | 29 min | 5.8 min |
 
 **Recent Trend:**
-- Last completed sequence: Phase 12 -> Phase 13
+- Last completed sequence: Phase 13
 - Trend: Stable
 | Phase 13-ocr-text-extraction P01 | 8 | 2 tasks | 7 files |
+| Phase 13-ocr-text-extraction P02 | 4 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -56,10 +57,13 @@ Progress: [████████████░░░░░░░░░] 38% 
 - [12-02] Query cadence enforced at job level, not service level (simpler, more testable)
 - [13-01] Default OCR language set to Portuguese ('por') for legal document processing
 - [13-01] Quality signals: character count, encoding replacement char count, empty output flag
+- [13-02] OCR invoked after PDF downloads complete, only for successfully downloaded files
+- [13-02] Same-base .txt files saved using Path.ChangeExtension alongside PDFs
+- [13-02] Failure log appends with timestamp, PDF path, language, reason for traceability
 
 ### Pending Todos
 
-- Complete Phase 13 Plan 02 OCR orchestration integration
+- None - Phase 13 complete
 
 ### Blockers/Concerns
 
@@ -68,5 +72,5 @@ Progress: [████████████░░░░░░░░░] 38% 
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 13-01-PLAN.md (OCR text extraction foundation)
+Stopped at: Completed 13-02-PLAN.md (OCR pipeline integration)
 Resume file: None
