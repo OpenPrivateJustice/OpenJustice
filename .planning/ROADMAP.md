@@ -17,6 +17,37 @@
 
 ## Phase Details
 
+### Phase 6: Create Missing VERIFICATION.md Files
+**Goal:** Add VERIFICATION.md artifacts for phases 2, 4, and 5 to satisfy GSD workflow requirements
+
+**Depends on:** Nothing (parallel to other gap closures)
+
+**Requirements:** Process requirement — VERIFICATION.md for phases 2, 4, 5
+
+**Success Criteria** (what must be TRUE):
+1. `.planning/phases/02-generator-core/02-VERIFICATION.md` exists
+2. `.planning/phases/04-reader-core/04-VERIFICATION.md` exists
+3. `.planning/phases/05-reader-history-ui-polish/05-VERIFICATION.md` exists
+4. All three files follow GSD VERIFICATION.md template with scores, gap analysis, and evidence
+
+**Gap Closure:** Closes critical gaps from v1.0 audit — 3 phases missing verification artifacts
+
+### Phase 7: Configuration System & Database Indexes
+**Goal:** Implement appsettings.json configuration system and add composite database indexes
+
+**Depends on:** Nothing
+
+**Requirements:** CFG-01, CFG-02, CFG-03, CFG-04, CFG-05, CFG-06, DB-16
+
+**Success Criteria** (what must be TRUE):
+1. `appsettings.json` exists with database connection string, file paths, torrent settings
+2. `appsettings.Development.json` exists for local development
+3. Startup validation ensures required configuration is present
+4. Composite indexes created on (CrimeTypeId, JudicialStatusId) and (CrimeLocationState, CrimeDate)
+5. Configuration documented in README or separate docs file
+
+**Gap Closure:** Closes orphaned CFG-01 through CFG-06 requirements, upgrades DB-16 from partial to complete
+
 ### Phase 1: Database & Configuration Foundation
 **Goal**: PostgreSQL database schema with all tables, indices, migrations, and configuration system ready
 
@@ -142,6 +173,53 @@ Plans:
 
 ---
 
+### Phase 8: Wire Torrent Import Pipeline
+**Goal:** Connect torrent download to SQL import pipeline, fix SQL contract mismatch between Generator export and Reader parser
+
+**Depends on:** Phase 4 (Reader Core), Phase 2 (Generator export)
+
+**Requirements:** RDR-02, RDR-03, RDR-04, GEN-15
+
+**Success Criteria** (what must be TRUE):
+1. TorrentSyncService.SyncAsync writes downloaded SQL to local database
+2. SQL table names match between Generator export ("Cases"/"CaseFieldHistory") and Reader parser
+3. No hardcoded demo SQL used in production code
+4. Imported database is searchable and complete
+
+**Gap Closure:** Closes integration gap (torrent → SQL import), flow gap "Torrent download → local SQL load"
+
+### Phase 9: Fix History Capture on Create
+**Goal:** Ensure CaseFieldHistory entries are created when cases are created (not only on update)
+
+**Depends on:** Phase 2 (Generator Core), Phase 3 (History System)
+
+**Requirements:** GEN-01, GEN-19
+
+**Success Criteria** (what must be TRUE):
+1. New case creation creates initial CaseFieldHistory entry
+2. History entry includes all field values with current timestamp
+3. History API returns complete timeline for newly created cases
+4. Verified: Curator can view history for brand new cases
+
+**Gap Closure:** Closes integration gap (case creation → history capture), flow gap "Curator creates case"
+
+### Phase 10: Wire Reader to Generator History API
+**Goal:** Replace Reader's local history store with live Generator history API calls
+
+**Depends on:** Phase 8 (torrent import), Phase 3 (History API)
+
+**Requirements:** RDR-22, RDR-23
+
+**Success Criteria** (what must be TRUE):
+1. Reader history UI calls Generator CaseHistoryController API endpoints
+2. Auth headers included in all history API calls
+3. 401 responses handled (token refresh or redirect to login)
+4. Timeline and diff UI display actual Generator history data
+
+**Gap Closure:** Closes integration gap (Phase 3 → Phase 4 history consumption), flow gap "Reader case view → confidence + timeline"
+
+---
+
 ## Progress Table
 
 | Phase | Plans Complete | Status | Completed |
@@ -151,6 +229,11 @@ Plans:
 | 3. Generator History System | 2/2 | Complete | 03-01, 03-02 |
 | 4. Reader Core | 3/4 | Complete    | 2026-03-01 |
 | 5. Reader History UI & Polish | 3/3 | Complete    | 2026-03-02 |
+| 6. Create Missing VERIFICATION.md Files | 0/0 | Pending | - |
+| 7. Configuration System & Database Indexes | 0/0 | Pending | - |
+| 8. Wire Torrent Import Pipeline | 0/0 | Pending | - |
+| 9. Fix History Capture on Create | 0/0 | Pending | - |
+| 10. Wire Reader to Generator History API | 0/0 | Pending | - |
 
 ---
 

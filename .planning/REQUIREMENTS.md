@@ -91,7 +91,7 @@
 - [ ] **DB-13**: Índices para filtragem por estado/localização
 - [ ] **DB-14**: Índices para filtragem por data do crime
 - [ ] **DB-15**: Índices para filtragem por status judicial
-- [x] **DB-16**: Índices compostos para queries combinadas
+- [ ] **DB-16**: Índices compostos para queries combinadas
 
 #### Integridade & Manutenção
 - [ ] **DB-17**: Constraints de integridade referencial entre tabelas
@@ -104,12 +104,12 @@
 ### Configuração (CFG)
 
 #### App Settings
-- [x] **CFG-01**: appsettings.json para configuração de conexão PostgreSQL
-- [x] **CFG-02**: appsettings.json para configuração de paths de arquivos
-- [x] **CFG-03**: appsettings.json para configuração de torrent (tracker, ports)
-- [x] **CFG-04**: Suporte a appsettings.Development.json
-- [x] **CFG-05**: Validação de configurações obrigatórias no startup
-- [x] **CFG-06**: Documentação de todas as opções de configuração
+- [ ] **CFG-01**: appsettings.json para configuração de conexão PostgreSQL
+- [ ] **CFG-02**: appsettings.json para configuração de paths de arquivos
+- [ ] **CFG-03**: appsettings.json para configuração de torrent (tracker, ports)
+- [ ] **CFG-04**: Suporte a appsettings.Development.json
+- [ ] **CFG-05**: Validação de configurações obrigatórias no startup
+- [ ] **CFG-06**: Documentação de todas as opções de configuração
 
 ---
 
@@ -218,22 +218,29 @@
 | DB-13 | Phase 1 | Pending |
 | DB-14 | Phase 1 | Pending |
 | DB-15 | Phase 1 | Pending |
-| DB-16 | Phase 1 | Complete |
+| DB-16 | Phase 7 | Pending |
 | DB-17 | Phase 1 | Pending |
 | DB-18 | Phase 1 | Pending |
 | DB-19 | Phase 1 | Pending |
 | DB-20 | Phase 1 | Pending |
 | DB-21 | Phase 1 | Pending |
 | DB-22 | Phase 1 | Pending |
-| CFG-01 | Phase 1 | Complete |
-| CFG-02 | Phase 1 | Complete |
-| CFG-03 | Phase 1 | Complete |
-| CFG-04 | Phase 1 | Complete |
-| CFG-05 | Phase 1 | Complete |
-| CFG-06 | Phase 1 | Complete |
+| CFG-01 | Phase 7 | Pending |
+| CFG-02 | Phase 7 | Pending |
+| CFG-03 | Phase 7 | Pending |
+| CFG-04 | Phase 7 | Pending |
+| CFG-05 | Phase 7 | Pending |
+| CFG-06 | Phase 7 | Pending |
 
 *Traceability section auto-populated by roadmap creation*
 
+**Gap Closure Phases (v1.0 Audit):**
+- Phase 6: Create Missing VERIFICATION.md Files (process requirement)
+- Phase 7: Configuration System & Database Indexes (CFG-01–06, DB-16)
+- Phase 8: Wire Torrent Import Pipeline (RDR-02, RDR-03, RDR-04, GEN-15)
+- Phase 9: Fix History Capture on Create (GEN-01, GEN-19)
+- Phase 10: Wire Reader to Generator History API (RDR-22, RDR-23)
+
 ---
 
-*Last updated: March 1, 2026 after roadmap creation*
+*Last updated: March 2, 2026 after v1.0 gap closure phase creation*
