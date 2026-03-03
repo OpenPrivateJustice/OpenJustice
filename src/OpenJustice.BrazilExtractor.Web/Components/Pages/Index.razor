@@ -1,0 +1,249 @@
+@page "/"
+@using OpenJustice.BrazilExtractor.Web.Services
+@implements IDisposable
+@inject ExtractionManager ExtractionManager
+
+<div class="container">
+    <div class="page-header">
+        <h1>BrazilExtractor Control Panel</h1>
+        <p class="page-subtitle">Acompanhe e controle extração e OCR em tempo real.</p>
+    </div>
+
+    <div class="top-grid">
+        <div class="status-card">
+            <h2>Status</h2>
+
+            <div class="status-row">
+                <strong>Extraction</strong>
+                <div class="status-indicator @GetStatusClass(State.ExtractionStatus)">
+                    <span class="status-dot"></span>
+                    @State.ExtractionStatus
+                </div>
+            </div>
+
+            <div class="status-row">
+                <strong>OCR Only</strong>
+                <div class="status-indicator @GetStatusClass(State.OcrOnlyStatus)">
+                    <span class="status-dot"></span>
+                    @State.OcrOnlyStatus
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(State.LastError))
+            {
+                <div class="error-message">
+                    <strong>Extraction Error:</strong> @State.LastError
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(State.LastOcrOnlyError))
+            {
+                <div class="error-message">
+                    <strong>OCR Only Error:</strong> @State.LastOcrOnlyError
+                </div>
+            }
+        </div>
+
+        <div class="controls-card">
+            <h2>Controls</h2>
+
+            <div class="control-group">
+                <label>OCR Provider</label>
+                <select @bind="SelectedOcrProvider" disabled="@IsAnyRunning()" class="ocr-provider-select">
+                    <option value="@OcrProvider.OpenAI">OpenAI Vision (GPT-4o)</option>
+                    <option value="@OcrProvider.LlamaCpp">llama.cpp (Local Vision)</option>
+                </select>
+            </div>
+
+            <hr />
+
+            <h3>Run Extraction (Search + Download)</h3>
+            <div class="control-group">
+                <label>Query Date</label>
+                <input type="date" @bind="ExtractionQueryDate" min="2020-01-01" max="2030-12-31" disabled="@IsExtractionRunning()" />
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" @onclick="RunExtraction" disabled="@IsExtractionRunning()">
+                    @(IsExtractionRunning() ? "Running Extraction..." : "▶ Run Extraction")
+                </button>
+
+                @if (IsExtractionRunning())
+                {
+                    <button class="btn btn-danger" @onclick="CancelExtraction">
+                        ⬛ Cancel Extraction
+                    </button>
+                }
+            </div>
+
+            <hr />
+
+            <h3>OCR Only</h3>
+            <div class="control-group">
+                <label>OCR Only Query Date</label>
+                <input type="date" @bind="OcrOnlyQueryDate" min="2020-01-01" max="2030-12-31" disabled="@IsOcrOnlyRunning()" />
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" @onclick="RunOcr" disabled="@IsOcrOnlyRunning()">
+                    @(IsOcrOnlyRunning() ? "Running OCR Only..." : "OCR Only")
+                </button>
+
+                @if (IsOcrOnlyRunning())
+                {
+                    <button class="btn btn-danger" @onclick="CancelOcrOnly">
+                        ⬛ Cancel OCR
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <h2>Last Run Statistics</h2>
+
+        <div class="workflow-panels">
+            <div class="workflow-panel">
+                <h3>Extraction</h3>
+                <p class="page-subtitle">Esta etapa só busca e baixa PDFs. OCR é manual no botão "OCR Only".</p>
+                <div class="stats-grid">
+                    <div class="stat">
+                        <span class="stat-label">Date</span>
+                        <span class="stat-value">@State.LastDateQueried</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">PDFs Downloaded</span>
+                        <span class="stat-value">@State.LastPdfCount</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Run Time</span>
+                        <span class="stat-value">@State.LastRunTime?.ToLocalTime()</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-panel">
+                <h3>OCR Only</h3>
+                <div class="stats-grid">
+                    <div class="stat">
+                        <span class="stat-label">Date</span>
+                        <span class="stat-value">@State.LastOcrOnlyDateQueried</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">OCR Succeeded</span>
+                        <span class="stat-value">@State.LastOcrOnlySucceeded</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">OCR Failed</span>
+                        <span class="stat-value">@State.LastOcrOnlyFailed</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Run Time</span>
+                        <span class="stat-value">@State.LastOcrOnlyRunTime?.ToLocalTime()</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="logs-card">
+        <h2>Logs</h2>
+
+        <div class="split-logs-grid">
+            <div>
+                <div class="card-title-row">
+                    <h3>Extraction Logs</h3>
+                    <span class="log-counter">@State.ExtractionLogs.Count</span>
+                </div>
+                <div class="logs-container">
+                    @foreach (var log in State.ExtractionLogs)
+                    {
+                        <div class="log-entry">@log</div>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <div class="card-title-row">
+                    <h3>OCR Only Logs</h3>
+                    <span class="log-counter">@State.OcrOnlyLogs.Count</span>
+                </div>
+                <div class="logs-container">
+                    @foreach (var log in State.OcrOnlyLogs)
+                    {
+                        <div class="log-entry">@log</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ExtractorState State => ExtractionManager.State;
+    private DateTime ExtractionQueryDate { get; set; } = DateTime.Today;
+    private DateTime OcrOnlyQueryDate { get; set; } = DateTime.Today;
+
+    private OcrProvider SelectedOcrProvider
+    {
+        get => State.SelectedOcrProvider;
+        set
+        {
+            if (State.SelectedOcrProvider != value)
+            {
+                ExtractionManager.SetOcrProvider(value);
+            }
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        ExtractionManager.StateChanged += OnManagerStateChanged;
+    }
+
+    private void OnManagerStateChanged()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ExtractionManager.StateChanged -= OnManagerStateChanged;
+    }
+
+    private bool IsExtractionRunning() => State.ExtractionStatus == ExtractorStatus.Running;
+    private bool IsOcrOnlyRunning() => State.OcrOnlyStatus == ExtractorStatus.Running;
+    private bool IsAnyRunning() => IsExtractionRunning() || IsOcrOnlyRunning();
+
+    private string GetStatusClass(ExtractorStatus status)
+    {
+        return status switch
+        {
+            ExtractorStatus.Running => "status-running",
+            ExtractorStatus.RunningOcr => "status-running",
+            ExtractorStatus.Completed => "status-completed",
+            ExtractorStatus.Error => "status-error",
+            _ => "status-idle"
+        };
+    }
+
+    private async Task RunExtraction()
+    {
+        await ExtractionManager.RunExtractionAsync(ExtractionQueryDate);
+    }
+
+    private async Task RunOcr()
+    {
+        await ExtractionManager.RunOcrOnlyAsync(OcrOnlyQueryDate);
+    }
+
+    private void CancelExtraction()
+    {
+        ExtractionManager.CancelExtraction();
+    }
+
+    private void CancelOcrOnly()
+    {
+        ExtractionManager.CancelOcrOnly();
+    }
+}
